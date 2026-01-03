@@ -10,17 +10,10 @@ const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 export const useNotifications = () => {
   const { effectiveUid } = useAuth();
   const { showToast } = useToast();
-  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
+  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>(() => {
+      return 'Notification' in window ? Notification.permission : 'default';
+  });
   const [fcmToken, setFcmToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    if ('Notification' in window) {
-      setNotificationPermission(Notification.permission);
-      if (Notification.permission === 'granted' && effectiveUid) {
-          activateNotifications();
-      }
-    }
-  }, [effectiveUid]);
 
   const activateNotifications = async () => {
     if (!effectiveUid) return;
@@ -51,6 +44,16 @@ export const useNotifications = () => {
         return false;
     }
   };
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      if (Notification.permission === 'granted' && effectiveUid) {
+          setTimeout(() => {
+            activateNotifications();
+          }, 0);
+      }
+    }
+  }, [effectiveUid]);
 
   const requestPermission = async () => {
     if (!('Notification' in window)) {

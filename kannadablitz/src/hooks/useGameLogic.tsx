@@ -94,24 +94,29 @@ const useGameLogic = () => {
     localStorage.setItem("kannadaFeedbackDuration", JSON.stringify(duration));
   };
 
-  // Check for streak break
-  useEffect(() => {
-    if (!lastPlayedDate) return;
+  const checkStreakValidity = (dateStr: string | null, currentStreak: number) => {
+      if (!dateStr || currentStreak <= 0) return true;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const lastPlayed = new Date(dateStr);
+      lastPlayed.setHours(0, 0, 0, 0);
+      const diffTime = today.getTime() - lastPlayed.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays <= 1;
+  };
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  // Check for streak break on mount (local data)
+  useEffect(() => {
+    const localLastPlayed = getPersistedData("kannadaLastPlayed", null);
+    const localStreak = getPersistedData("kannadaStreak", 0);
     
-    const lastPlayed = new Date(lastPlayedDate);
-    lastPlayed.setHours(0, 0, 0, 0);
-    
-    const diffTime = today.getTime() - lastPlayed.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays > 1 && streak > 0) {
-      setStreak(0);
-      showToast("Streak lost! Play daily to keep it.");
+    if (!checkStreakValidity(localLastPlayed, localStreak)) {
+      setTimeout(() => {
+        setStreak(0);
+        showToast("Streak lost! Play daily to keep it.");
+      }, 0);
     }
-  }, [lastPlayedDate, streak]);
+  }, []); // Run once on mount
 
   // Sync from Firestore on Login
   useEffect(() => {
@@ -134,9 +139,31 @@ const useGameLogic = () => {
             return prev;
         });
         
-        setStreak((prev) => {
-            const val = Math.max(prev, data.streak || 0);
-            return val === prev ? prev : val;
+        setLastPlayedDate(prevDate => {
+             const remoteDate = data.lastPlayedDate;
+             const effectiveDate = remoteDate || prevDate;
+             
+             setStreak((prevStreak) => {
+                const remoteStreak = data.streak || 0;
+                // We want the max of local and remote, BUT only if valid.
+                // Actually, if remote has a newer date, we trust it.
+                // If local is newer, we trust local.
+                
+                // Simplified: usage the max streak found, but validate it against the *latest* date we have.
+                // This is complex because we are inside setters.
+                
+                // Let's just use the remote data if it exists and is valid.
+                let val = Math.max(prevStreak, remoteStreak);
+                
+                if (!checkStreakValidity(effectiveDate, val)) {
+                    val = 0;
+                }
+                
+                return val === prevStreak ? prevStreak : val;
+            });
+
+             if (remoteDate && remoteDate !== prevDate) return remoteDate;
+             return prevDate;
         });
 
         setCompletedDays((prev) => {
@@ -156,11 +183,6 @@ const useGameLogic = () => {
         setChallengeDuration((prev) => {
             const val = Math.max(prev, data.challengeDuration || 7);
             return val === prev ? prev : val;
-        });
-
-        setLastPlayedDate(prev => {
-             if (data.lastPlayedDate && data.lastPlayedDate !== prev) return data.lastPlayedDate;
-             return prev;
         });
       }
     });

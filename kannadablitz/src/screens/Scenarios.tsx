@@ -62,7 +62,9 @@ export default function Scenarios({ state, actions, onOpenSettings }: ScenariosP
 
   // Reset UI state on scenario change
   useEffect(() => {
-    setSelectedIdx(null); // eslint-disable-line react-hooks/rules-of-hooks, react-hooks/exhaustive-deps
+    setTimeout(() => {
+        setSelectedIdx(null);
+    }, 0);
 
     // Blur active element defensively
     const active = document.activeElement as HTMLElement | null;

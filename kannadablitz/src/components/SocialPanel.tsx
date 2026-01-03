@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Copy, User, Edit2, Save, Trash2, X, Lock, Share2, LogOut, ChevronDown, ChevronRight, Users } from "./Icons";
 import Button from "./Button";
 import { useSocial } from "../hooks/useSocial";
@@ -38,17 +38,17 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
 
   const shareCardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (isEditing) return;
-    if (currentName) setNewName(currentName);
-    if (currentEmoji) setNewEmoji(currentEmoji);
-    if (myProfile.passcode) setNewPasscode(myProfile.passcode);
-  }, [myProfile, localProfile, isEditing]); // Added localProfile dependency
+  const startEditing = () => {
+    setNewName(currentName || "");
+    setNewEmoji(currentEmoji || "😀");
+    setNewPasscode(myProfile.passcode || "");
+    setIsEditing(true);
+  };
 
   const copyLink = () => {
     if (!currentName) {
         setError("Please set a username before inviting friends.");
-        setIsEditing(true);
+        startEditing();
         return;
     }
     if (inviteLink && navigator.clipboard) {
@@ -293,7 +293,7 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                   </div>
                   
                   <div className="social-panel-recovery-actions">
-                       <button onClick={() => setIsEditing(true)} className="social-panel-edit-button">
+                       <button onClick={startEditing} className="social-panel-edit-button">
                           <Edit2 size={16} />
                        </button>
                        {effectiveUid && localStorage.getItem("recovered_uid") === effectiveUid ? (

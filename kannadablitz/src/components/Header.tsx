@@ -1,8 +1,8 @@
-import { Home, Bell, BellOff, Settings } from "./Icons";
+import { Home, Bell, BellOff, Settings, Globe } from "./Icons";
 import ThemeToggle from "./ThemeToggle";
 import Button from "./Button";
-import { type SupportedLanguage } from "../data";
-import LanguageSelector from "./LanguageSelector";
+import { type SupportedLanguage, supportedLanguages } from "../data";
+import IconSelect from "./IconSelect";
 import { useNotifications } from "../hooks/useNotifications";
 
 interface HeaderProps {
@@ -42,6 +42,11 @@ export default function Header({
     }
   };
 
+  const handleLanguageChange = (val: string) => {
+    setCurrentLanguage(val as SupportedLanguage);
+    resetGame();
+  };
+
   return (
     <div className="fc-header" data-variant={variant}>
       <div className="fc-left">
@@ -77,10 +82,12 @@ export default function Header({
             {isEnabled ? <Bell size={20} /> : <BellOff size={20} />}
         </button>
         {showLanguageSelector && (
-          <LanguageSelector
-            currentLanguage={currentLanguage}
-            setCurrentLanguage={setCurrentLanguage}
-            resetGame={resetGame}
+          <IconSelect
+            options={supportedLanguages}
+            value={currentLanguage}
+            onChange={handleLanguageChange}
+            icon={<Globe size={20} />}
+            ariaLabel="Select language"
           />
         )}
         {right}

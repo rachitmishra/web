@@ -1,0 +1,32 @@
+@layer components {
+  .icon-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    background: var(--neutral-100);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+  }
+  
+  .icon-select {
+    background: transparent;
+    border: none;
+    color: var(--text-title);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    appearance: none;
+    cursor: pointer;
+  }
+  
+  .icon-select:focus {
+    outline: none;
+    color: var(--primary);
+  }
+  
+  .icon-select::-ms-expand {
+    display: none;
+  }
+}
