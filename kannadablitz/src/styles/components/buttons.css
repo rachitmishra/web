@@ -1,0 +1,203 @@
+@layer components {
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    border: none;
+    letter-spacing: 0.02em;
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  .btn--primary {
+    background: var(--primary);
+    color: var(--on-primary);
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .btn--primary:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn--gold {
+    background: linear-gradient(to bottom right, var(--accent-yellow-next), var(--accent-yellow));
+    color: white;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.3);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .btn--surface {
+    background: var(--btn-surface-bg);
+    color: var(--btn-surface-text);
+    padding: 1rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--neutral-200);
+  }
+  .btn--surface:hover {
+    border-color: var(--neutral-300);
+    background: var(--neutral-50);
+  }
+
+  .btn--danger {
+    background: var(--btn-danger-bg);
+    color: var(--btn-danger-text);
+    padding: 0.75rem 1rem;
+  }
+
+  .btn--neutral {
+    background: var(--neutral-100);
+    color: var(--muted-text);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--neutral-200);
+  }
+  .btn--neutral:hover {
+    background: var(--neutral-200);
+    color: var(--text-title);
+  }
+
+  .btn--outline {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 0.75rem 1.5rem;
+  }
+  .btn--outline:hover {
+    background: var(--primary);
+    color: white;
+  }
+
+  .btn--full {
+    inline-size: 100%;
+  }
+
+  .btn--icon {
+    color: var(--btn-icon-bg);
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: none;
+    transition: background-color 0.2s;
+  }
+
+  .btn--icon:hover {
+    color: var(--primary);
+    background-color: var(--neutral-100);
+  }
+
+  .btn-inner {
+    position: relative;
+    border-radius: 0.6rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-weight: 800;
+    font-size: 1.125rem;
+    color: var(--cta-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: "Bowlby One", sans-serif;
+  }
+
+  /* Legacy helper class for non-button tags */
+  .icon-btn {
+    @extend .btn.icon-btn;
+  }
+
+  .next-btn {
+    inline-size: 100%;
+    background: var(--primary);
+    color: var(--on-primary);
+    border-radius: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .next-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  .next-btn:active {
+    transform: scale(0.98);
+  }
+  .next-btn .btn-inner {
+    justify-content: space-between;
+    width: 100%;
+    color: var(--on-primary);
+  }
+
+  .retry-btn {
+    background: var(--btn-danger-bg);
+    color: var(--btn-danger-text);
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.3);
+    transition: background 0.2s;
+  }
+  .retry-btn:hover {
+    background: var(--danger);
+  }
+
+  .home-btn:not(.btn) {
+    background: var(--btn-surface-bg);
+    color: var(--primary);
+    inline-size: 100%;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.1s;
+    border: 1px solid var(--neutral-200);
+  }
+  .home-btn:not(.btn):active {
+    transform: scale(0.95);
+  }
+
+  .start-drill-btn {
+    position: relative;
+    inline-size: 100%;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, var(--accent-yellow), var(--accent-yellow-next));
+    box-shadow: 0 10px 15px -3px rgba(217, 119, 6, 0.2);
+    margin-bottom: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .start-drill-btn:hover {
+    box-shadow: 0 20px 25px -5px rgba(217, 119, 6, 0.3);
+    transform: translateY(-2px);
+  }
+  .start-drill-btn .btn-inner {
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+}

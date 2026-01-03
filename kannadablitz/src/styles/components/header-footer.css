@@ -1,0 +1,93 @@
+@layer components {
+  /* =========================================
+     6. COMPONENTS - HEADER & FOOTER
+     ========================================= */
+  .fc-header {
+    display: flex;
+    padding: 0.75rem 0rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .fc-header[data-variant="light"] .btn--icon {
+    color: var(--header-icon);
+  }
+  .fc-header[data-variant="light"] .fc-title {
+    color: var(--header-text);
+  }
+  .fc-header[data-variant="dark"] .btn--icon {
+    color: var(--header-icon);
+  }
+  .fc-header[data-variant="dark"] .fc-title {
+    color: var(--header-text);
+  }
+
+  .fc-left,
+  .fc-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-inline-size: 1.25rem;
+  }
+  .fc-right {
+    justify-content: flex-end;
+  }
+  .fc-title {
+    font-weight: 700;
+    color: var(--muted-text);
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    flex: 1;
+    text-align: start;
+    margin-inline-start: 1rem;
+    text-transform: uppercase;
+  }
+
+  .fc-footer {
+    padding: 1.5rem 0;
+    flex-shrink: 0;
+  }
+  .app-footer {
+    padding: 1.5rem;
+    margin-top: 0;
+    text-align: center;
+    border-top: 1px solid var(--neutral-200);
+    background: var(--bg-slate);
+    inline-size: 100%;
+  }
+  
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    inline-size: 100%;
+    max-inline-size: var(--max-w-mobile);
+    margin: 0 auto;
+  }
+
+  .footer-logo {
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--muted-text);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+    font-family: "Bowlby One", sans-serif;
+  }
+  
+  .footer-logo:hover {
+    color: var(--primary);
+  }
+
+  .footer-text {
+    font-size: 0.7rem;
+    color: var(--muted-text-2);
+  }
+
+  .fc-counter {
+    font-size: 0.875rem;
+    font-family: monospace;
+    color: var(--muted-text-2);
+    font-weight: 600;
+  }
+}

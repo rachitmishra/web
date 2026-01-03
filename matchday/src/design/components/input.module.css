@@ -1,0 +1,36 @@
+.container {
+    min-height: 80px;
+}
+.input,
+.prefix {
+    padding: 12px 8px;
+    background-color: rgba(60, 179, 114, 0.195);
+}
+.inputBorderRadiusDefault {
+    border: 0;
+    border-radius: 8px;
+    width: 100%;
+}
+.inputBorderRadiusWithPrefix {
+    border: 0;
+    border-radius: 0 8px 8px 0;
+    width: 100%;
+}
+.inputContainer {
+    display: flex;
+}
+.prefix {
+    border-radius: 8px 0 0 8px;
+    color: darkslategrey;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+.input:focus {
+    outline-width: 0px;
+}
+.error {
+    color: indianred;
+    border-radius: 4px;
+    margin: 4px 0px;
+    padding: 4px;
+    font-size: 12px;
+}

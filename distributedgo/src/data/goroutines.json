@@ -1,0 +1,256 @@
+{
+  "course_title": "Goroutines, Concurrency & Parallelism in Go (Deep Dive)",
+  "duration_days": 14,
+  "daily_time_minutes": 60,
+  "difficulty": "Senior Backend / Staff Engineer Level",
+  "assumptions": [
+    "Comfortable with Go syntax",
+    "Basic understanding of functions and structs",
+    "Desire to write safe, high-performance concurrent systems"
+  ],
+  "books_referenced": [
+    "The Go Programming Language – Donovan & Kernighan",
+    "Concurrency in Go – Katherine Cox-Buday"
+  ],
+  "days": [
+    {
+      "day": 1,
+      "title": "Why Goroutines Exist – Concurrency vs Parallelism",
+      "real_life_example": "Web servers handle thousands of requests concurrently using goroutines without one thread per request.",
+      "theory_deep_dive": [
+        "Concurrency vs parallelism (not the same)",
+        "Why threads do not scale",
+        "Blocking I/O vs async",
+        "Go's philosophy: share memory by communicating"
+      ],
+      "readings": [
+        "Concurrency in Go – Chapter 1",
+        "Go Blog – 'Concurrency is Not Parallelism' (Rob Pike)",
+        "Go Tour – Concurrency section"
+      ],
+      "go_code": "go func() {\n  fmt.Println(\"Hello from goroutine\")\n}()\n\nfmt.Println(\"Hello from main\")",
+      "hands_on_goal": "Understand non-deterministic execution order"
+    },
+    {
+      "day": 2,
+      "title": "Goroutine Lifecycle & Scheduler Internals",
+      "real_life_example": "High-QPS services rely on Go scheduler to multiplex millions of goroutines onto a few OS threads.",
+      "theory_deep_dive": [
+        "G-M-P model (Goroutine, Machine, Processor)",
+        "Work stealing",
+        "Preemption",
+        "Why goroutines are cheap"
+      ],
+      "readings": [
+        "Go Blog – 'The Go Scheduler'",
+        "Go Runtime Source – runtime/proc.go",
+        "GopherCon – 'Scheduler Deep Dive'"
+      ],
+      "go_code": "for i := 0; i < 100000; i++ {\n  go func() {\n    time.Sleep(time.Second)\n  }()\n}",
+      "hands_on_goal": "Spawn massive goroutine counts safely"
+    },
+    {
+      "day": 3,
+      "title": "Memory Model & Happens-Before Guarantees",
+      "real_life_example": "Incorrect memory visibility causes rare, unreproducible production bugs.",
+      "theory_deep_dive": [
+        "Go memory model",
+        "Happens-before relationship",
+        "Why race-free code matters",
+        "Compiler and CPU reordering"
+      ],
+      "readings": [
+        "Go Memory Model (official docs)",
+        "Concurrency in Go – Chapter 4"
+      ],
+      "go_code": "var x int\n\ngo func() { x = 1 }()\nfmt.Println(x)",
+      "hands_on_goal": "Understand why this code is unsafe"
+    },
+    {
+      "day": 4,
+      "title": "Data Races & Race Detector",
+      "real_life_example": "Race conditions often appear only under peak load.",
+      "theory_deep_dive": [
+        "What is a data race",
+        "Read-write vs write-write races",
+        "Why races are worse than crashes",
+        "How Go detects races"
+      ],
+      "readings": [
+        "Go Blog – 'Race Detector'",
+        "Concurrency in Go – Chapter 3"
+      ],
+      "bash": [
+        "go test -race ./..."
+      ],
+      "go_code": "var counter int\n\ngo func() { counter++ }()\ngo func() { counter++ }()",
+      "hands_on_goal": "Trigger and fix race conditions"
+    },
+    {
+      "day": 5,
+      "title": "Mutexes – Power and Danger",
+      "real_life_example": "Incorrect mutex usage causes deadlocks or throughput collapse.",
+      "theory_deep_dive": [
+        "sync.Mutex internals",
+        "Lock contention",
+        "Critical sections",
+        "When mutexes are the right tool"
+      ],
+      "readings": [
+        "Go Blog – 'Mutexes'",
+        "Go Source – sync/mutex.go"
+      ],
+      "go_code": "var mu sync.Mutex\n\nmu.Lock()\nshared++\nmu.Unlock()",
+      "hands_on_goal": "Protect shared state correctly"
+    },
+    {
+      "day": 6,
+      "title": "RWMutex & Performance Trade-offs",
+      "real_life_example": "Read-heavy caches benefit from RWMutex; write-heavy ones suffer.",
+      "theory_deep_dive": [
+        "Read vs write locks",
+        "Writer starvation",
+        "Lock upgrading pitfalls"
+      ],
+      "readings": [
+        "Go Doc – sync.RWMutex",
+        "Uber Go Style Guide – Concurrency"
+      ],
+      "hands_on_goal": "Benchmark Mutex vs RWMutex"
+    },
+    {
+      "day": 7,
+      "title": "Channels – The Core Abstraction",
+      "real_life_example": "Pipelines use channels to safely pass data between stages.",
+      "theory_deep_dive": [
+        "Unbuffered vs buffered channels",
+        "Blocking semantics",
+        "Channel ownership",
+        "Closing channels correctly"
+      ],
+      "readings": [
+        "Concurrency in Go – Chapter 2",
+        "Go Spec – Channels"
+      ],
+      "go_code": "ch := make(chan int)\n\ngo func() { ch <- 42 }()\nfmt.Println(<-ch)",
+      "hands_on_goal": "Build safe producer-consumer pipeline"
+    },
+    {
+      "day": 8,
+      "title": "Select, Timeouts & Cancellation",
+      "real_life_example": "APIs must not wait forever on downstream dependencies.",
+      "theory_deep_dive": [
+        "select statement semantics",
+        "Timeouts with time.After",
+        "Non-blocking operations",
+        "Avoiding goroutine leaks"
+      ],
+      "readings": [
+        "Go Blog – 'Go Concurrency Patterns'",
+        "Concurrency in Go – Chapter 5"
+      ],
+      "go_code": "select {\ncase v := <-ch:\n  fmt.Println(v)\ncase <-time.After(time.Second):\n  fmt.Println(\"timeout\")\n}",
+      "hands_on_goal": "Prevent blocking and leaks"
+    },
+    {
+      "day": 9,
+      "title": "Context Package – Structured Concurrency",
+      "real_life_example": "Request-scoped cancellation propagates across goroutines.",
+      "theory_deep_dive": [
+        "Why context exists",
+        "Cancellation trees",
+        "Deadlines vs timeouts",
+        "Anti-patterns"
+      ],
+      "readings": [
+        "Go Blog – 'Contexts'",
+        "Effective Go – Context section"
+      ],
+      "go_code": "ctx, cancel := context.WithTimeout(context.Background(), time.Second)\ndefer cancel()",
+      "hands_on_goal": "Build cancelable goroutines"
+    },
+    {
+      "day": 10,
+      "title": "Worker Pools & Bounded Parallelism",
+      "real_life_example": "Unlimited goroutines can overwhelm databases.",
+      "theory_deep_dive": [
+        "Bounded concurrency",
+        "Fan-out / fan-in",
+        "Semaphore patterns",
+        "Backpressure"
+      ],
+      "readings": [
+        "Go Blog – 'Pipelines and Cancellation'",
+        "Concurrency in Go – Chapter 6"
+      ],
+      "go_code": "sem := make(chan struct{}, 10)\nsem <- struct{}{}\ngo func() {\n  defer func(){ <-sem }()\n  work()\n}()",
+      "hands_on_goal": "Limit concurrency safely"
+    },
+    {
+      "day": 11,
+      "title": "Atomic Operations & Lock-Free Programming",
+      "real_life_example": "Counters and metrics avoid locks using atomics.",
+      "theory_deep_dive": [
+        "sync/atomic package",
+        "When atomics are safe",
+        "False sharing",
+        "Why lock-free is hard"
+      ],
+      "readings": [
+        "Go Doc – sync/atomic",
+        "Go Blog – 'Atomic Counters'"
+      ],
+      "go_code": "atomic.AddInt64(&counter, 1)",
+      "hands_on_goal": "Replace mutex with atomics where appropriate"
+    },
+    {
+      "day": 12,
+      "title": "Goroutine Leaks, Deadlocks & Debugging",
+      "real_life_example": "Leaked goroutines cause memory bloat and CPU spikes.",
+      "theory_deep_dive": [
+        "Common deadlock patterns",
+        "Blocked goroutines",
+        "Using pprof and trace",
+        "Reading stack dumps"
+      ],
+      "readings": [
+        "Go Blog – 'Profiling Go Programs'",
+        "Uber – 'Debugging Go in Production'"
+      ],
+      "bash": [
+        "go test -run Test -bench . -cpuprofile cpu.out",
+        "go tool pprof cpu.out"
+      ],
+      "hands_on_goal": "Detect and fix leaks"
+    },
+    {
+      "day": 13,
+      "title": "Concurrency Patterns Used in Production",
+      "real_life_example": "Rate limiters, pipelines, schedulers, fan-in systems.",
+      "theory_deep_dive": [
+        "Pipeline pattern",
+        "Fan-in / fan-out",
+        "Circuit breakers",
+        "Supervisor trees"
+      ],
+      "readings": [
+        "Go Blog – 'Advanced Concurrency Patterns'",
+        "Uber Engineering – 'Go Concurrency Patterns'"
+      ],
+      "hands_on_goal": "Combine multiple patterns safely"
+    },
+    {
+      "day": 14,
+      "title": "Capstone – Concurrent System Design",
+      "real_life_example": "Concurrent web crawler or task processor.",
+      "hands_on_goal": [
+        "Use goroutines + channels",
+        "Add context cancellation",
+        "Limit concurrency",
+        "Prevent leaks",
+        "Document failure modes"
+      ]
+    }
+  ]
+}
+ 

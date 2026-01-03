@@ -1,0 +1,41 @@
+@layer utilities {
+  .header-card,
+  .levels-container,
+  .badges-panel,
+  .fc-header,
+  .fc-footer,
+  .card-front,
+  .card-back,
+  .stat-box,
+  .extension-card,
+  .level-btn,
+  .option-btn {
+    transition: background-color 160ms ease, border-color 160ms ease,
+      color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .font-script {
+    font-family: "Brush Script MT", cursive;
+  }
+  .text-accent-yellow {
+    color: var(--accent-yellow-next);
+  }
+  .text-accent-pink {
+    color: var(--accent-pink);
+  }
+  .text-green {
+    color: var(--accent-green);
+  }
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+  .shrink-0 {
+    flex-shrink: 0;
+  }
+  .w-full {
+    inline-size: 100%;
+  }
+  .mt-6 {
+    margin-top: 1.5rem;
+  }
+}

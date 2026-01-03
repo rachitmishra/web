@@ -1,0 +1,33 @@
+.key-wave-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0; /* Behind everything */
+    overflow: hidden;
+}
+
+.wave-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    animation: expand-wave 1.5s ease-out forwards;
+    opacity: 0.3;
+}
+
+@keyframes expand-wave {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 0.3;
+    }
+    100% {
+        width: 250vmax; /* Use vmax to cover biggest dimension */
+        height: 250vmax;
+        opacity: 0;
+    }
+}

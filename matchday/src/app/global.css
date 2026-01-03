@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@import url('https://fonts.googleapis.com/css2?family=Bayon&family=Sarpanch:wght@400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+}
+
+body {
+    font-family: 'DM Sans', Helvetica;
+    background-color: whitesmoke;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-width: 320px;
+}
+
+main {
+    display: flex;
+    min-height: 100vh;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+    isolation: isolate;
+}
+
+:root {
+    --color-primary: seagreen;
+    --color-secondary: whitesmoke;
+    --color-background: whitesmoke;
+    --color-text-primary: #222;
+    --color-text-secondary: #333;
+    --color-text-tertiary: #555;
+    --color-text-accent: seagreen;
+    --color-text-primary-on-dark: white;
+    --color-text-secondary-on-dark: whitesmoke;
+    --color-text-tertiary-on-dark: whitesmoke;
+    --color-bg-default: #f9fcff;
+    --color-bg-negative: indianred;
+    --color-bg-img-card: linear-gradient(147deg, #f9fcff 0%, #f3f5f7 74%);
+    --color-bg-accent: linear-gradient(
+        120deg,
+        mediumseagreen,
+        rgb(23, 186, 97),
+        rgb(87, 217, 146)
+    );
+    --color-shadow: #6c6c6c;
+    --color-shadow-accent: rgb(59, 177, 112);
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --system-theme-color: #f38daef;
+        --color-bg-card: #2b4162;
+        --color-bg-img-card: linear-gradient(315deg, #2b4162 0%, #12100e 74%);
+    }
+}
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'GRAD' 0, 'opsz' 24;
+}

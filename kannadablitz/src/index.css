@@ -1,0 +1,11 @@
+@layer reset, base, utilities, animations, components;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter&family=Bowlby+One&display=swap");
+
+@import "./styles/variables.css";
+@import "./styles/reset.css";
+@import "./styles/base.css";
+@import "./styles/utilities.css";
+@import "./styles/animations.css";
+@import "./styles/components.css";
+@import "./styles/wordbank.css";

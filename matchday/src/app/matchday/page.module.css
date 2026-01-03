@@ -1,0 +1,20 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 16px;
+    background-color: #e5e5f7;
+    opacity: 0.8;
+    background-image: repeating-radial-gradient(
+            circle at 0 0,
+            transparent 0,
+            #e5e5f7 2px
+        ),
+        repeating-linear-gradient(120deg, mediumseagreen, rgb(23, 186, 97));
+}
+.container {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+}

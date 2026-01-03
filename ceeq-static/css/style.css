@@ -1,0 +1,48 @@
+html, body{
+ height:100%;
+}
+
+.b {
+    background-color: #212121;
+    height:100%;
+}
+
+.c{
+	margin:120px 0px;
+  color: white;
+}
+
+.d{
+	margin-top:32px;
+}
+
+.fa {
+	font-size: 20px;
+	padding:4px;
+  display:block;
+  color: #03A9F4;
+}
+
+.nav {
+  background-color: #212121;
+  border-color: #212121
+}
+.mm {
+	font: 72px nunito;
+}
+
+.mf {
+	margin-top:24px;
+	font: 28px nunito;
+}
+
+.navbar-text a {
+	text-decoration: none;
+	color: #FAFAFA;
+	margin-top: 2px;
+}
+
+.tv {
+  position: relative;
+  top: 50%;
+}

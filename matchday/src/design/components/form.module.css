@@ -1,0 +1,6 @@
+.form {
+    min-height: 100vh;
+    min-width: 100vw;
+    max-width: 50vw;
+    padding: 24px;
+}

@@ -1,0 +1,158 @@
+@layer base {
+  :root {
+    /* Colors - Primary (Intellectual Slate) */
+    --primary-dark: #334155; /* Slate 700 */
+    --primary: #475569;      /* Slate 600 */
+    --primary-light: #94a3b8; /* Slate 400 */
+    --primary-light-next: #e2e8f0; /* Slate 200 */
+    --primary-gradient-end: #64748b; /* Slate 500 */
+    --primary-variant: #1e293b; /* Slate 800 */
+
+    /* Colors - Accents (Kannada Heritage: Sandalwood Gold & Silk Red) */
+    --accent-yellow: #d97706; /* Amber 600 - Rich Sandalwood/Gold */
+    --accent-yellow-next: #f59e0b; /* Amber 500 */
+    --accent-yellow-rgb: 217, 119, 6;
+    --accent-pink: #e11d48; /* Rose 600 - Deep Silk Red */
+    --accent-green: #059669; /* Emerald 600 - Natural Green */
+    --accent-green-light: #ecfdf5; /* Emerald 50 */
+    --accent-cyan: #0891b2; /* Cyan 600 */
+    --accent-cyan-rgb: 8, 145, 178;
+
+    /* Colors - Status */
+    --success: #15803d; /* Green 700 */
+    --success-dark: #14532d; /* Green 900 */
+    --on-success: white;
+    --danger: #be123c; /* Rose 700 */
+    --danger-light: #ffe4e6; /* Rose 100 */
+    --on-danger: white;
+    --info-bg: #f8fafc; /* Slate 50 */
+
+    /* Colors - Gold/Rewards (Muted Luxury) */
+    --gold: #b45309; /* Amber 700 */
+    --gold-dark: #78350f; /* Amber 900 */
+    --gold-gradient-start: #f59e0b; /* Amber 500 */
+    --gold-gradient-end: #d97706; /* Amber 600 */
+    --on-gold: #fffbeb; /* Amber 50 */
+
+    /* Colors - Surface & Text */
+    --surface-bg: #ffffff;
+    --surface-text: #1c1917; /* Stone 900 - Warm Black */
+    --surface-text-on-dark: #e7e5e4; /* Stone 200 */
+    --text-title: #292524; /* Stone 800 */
+    --muted-text: #57534e; /* Stone 600 */
+    --muted-text-2: #78716c; /* Stone 500 */
+    --on-surface: var(--neutral-900);
+    --on-primary: #ffffff;
+    --on-dark: #ffffff;
+
+    /* Colors - Neutrals (Warm Stone/Paper) */
+    --neutral-50: #fafaf9; /* Stone 50 */
+    --neutral-100: #f5f5f4; /* Stone 100 */
+    --neutral-200: #e7e5e4; /* Stone 200 */
+    --neutral-300: #d6d3d1; /* Stone 300 */
+    --neutral-400: #a8a29e; /* Stone 400 */
+    --neutral-500: #78716c; /* Stone 500 */
+    --neutral-800: #44403c; /* Stone 700 */
+    --neutral-900: #292524; /* Stone 800 */
+    
+    /* Background Gradient - Warm Parchment */
+    --bg-slate: #fafaf9; 
+    --bg-primary: #fafaf9; /* Stone 50 */
+    --bg-primary-end: #f5f5f4; /* Stone 100 */
+
+    /* UI Tokens - Header (Semantic) */
+    --header-text: #57534e; /* Stone 600 */
+    --header-icon: #78716c; /* Stone 500 */
+    --header-card-border: #d6d3d1; /* Stone 300 */
+
+    /* UI Tokens - Card */
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* Softer shadows */
+    --card-front-bg: #ffffff;
+    --card-front-text: #1c1917;
+
+    /* UI Tokens - Buttons */
+    --btn-primary-bg: var(--primary);
+    --btn-primary-text: var(--on-primary);
+    --btn-surface-bg: #ffffff;
+    --btn-surface-text: var(--surface-text);
+    --btn-neutral-bg: var(--neutral-800);
+    --btn-neutral-text: var(--neutral-50);
+    --btn-danger-bg: var(--danger);
+    --btn-danger-text: var(--on-danger);
+    --btn-icon-bg: var(--header-icon);
+    --cta-text: var(--on-primary);
+
+    /* UI Tokens - Extension */
+    --extension-gradient-start: #64748b; /* Slate 500 */
+    --extension-gradient-end: #475569; /* Slate 600 */
+    --extension-border: #334155; /* Slate 700 */
+
+    /* Misc */
+    --glass-overlay: rgba(255, 255, 255, 0.8);
+    --max-w-mobile: 600px;
+  }
+
+  /* Dark Theme Overrides (Deep Slate & Gold) */
+  [data-theme="dark"] {
+    /* Primary - Sophisticated Dark Slate */
+    --primary-dark: #0f172a; /* Slate 900 */
+    --primary: #334155;      /* Slate 700 */
+    --primary-light: #475569; /* Slate 600 */
+
+    --accent-yellow: #fbbf24; /* Amber 400 */
+    --accent-pink: #f43f5e; /* Rose 500 */
+    --accent-green: #34d399; /* Emerald 400 */
+    --success: #34d399;
+    --danger: #fb7185;
+    --info-bg: #1e293b; /* Slate 800 */
+    --gold: #fbbf24;
+
+    /* Neutrals - Cool Grey/Slate */
+    --neutral-50: #020617; /* Slate 950 */
+    --neutral-100: #0f172a; /* Slate 900 */
+    --neutral-200: #1e293b; /* Slate 800 */
+    --neutral-300: #334155; /* Slate 700 */
+    --neutral-400: #475569; /* Slate 600 */
+    --neutral-500: #64748b; /* Slate 500 */
+    --neutral-800: #cbd5e1; /* Slate 300 */
+    --neutral-900: #f1f5f9; /* Slate 100 */
+    
+    /* Backgrounds - Night Sky */
+    --bg-slate: #020617;
+    --bg-primary: #020617;
+    --bg-primary-end: #0f172a;
+
+    --surface-bg: #1e293b;
+    --surface-text: #f1f5f9;
+    --surface-text-on-dark: #e2e8f0;
+    --text-title: #f8fafc;
+    --on-gold: #451a03;
+
+    --muted-text: #94a3b8;
+    --muted-text-2: #64748b;
+
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --card-front-bg: #1e293b;
+    --card-front-text: #e2e8f0;
+
+    /* Button overrides */
+    --btn-neutral-bg: var(--neutral-700);
+    --btn-neutral-text: var(--neutral-50);
+    --btn-surface-bg: var(--neutral-100);
+    --btn-surface-text: var(--neutral-900);
+    --cta-text: #ffffff;
+    --btn-icon-bg: var(--header-icon);
+
+    /* Extension overrides */
+    --extension-gradient-start: #1e293b;
+    --extension-gradient-end: #0f172a;
+    --extension-border: #334155;
+
+    /* Header overrides */
+    --header-text: #cbd5e1;
+    --header-icon: #94a3b8;
+    --header-card-border: #334155;
+    
+    --glass-overlay: rgba(2, 6, 23, 0.85);
+  }
+}

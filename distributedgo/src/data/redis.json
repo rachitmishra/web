@@ -1,0 +1,259 @@
+{
+  "course_title": "Redis Internals & Production Systems with Go",
+  "duration_days": 14,
+  "daily_time_minutes": 60,
+  "difficulty": "Senior Backend / Staff Engineer Level",
+  "assumptions": [
+    "Strong Go fundamentals",
+    "Basic understanding of networking",
+    "Interest in high-performance backend systems"
+  ],
+  "days": [
+    {
+      "day": 1,
+      "title": "Why Redis Exists – In-Memory Data Structures as a Service",
+      "real_life_example": "Twitter uses Redis to cache timelines and reduce database load under massive read traffic.",
+      "theory_deep_dive": [
+        "Why databases alone are insufficient at scale",
+        "Latency vs durability trade-offs",
+        "Redis as a data structure server, not just a cache",
+        "Single-threaded design rationale"
+      ],
+      "readings": [
+        "Redis in Action – Chapter 1",
+        "Redis Docs – Introduction",
+        "Antirez – 'The Design of Redis'"
+      ],
+      "bash": [
+        "docker run -d --name redis -p 6379:6379 redis:7",
+        "redis-cli ping"
+      ],
+      "hands_on_goal": "Run Redis locally and validate sub-millisecond operations"
+    },
+    {
+      "day": 2,
+      "title": "Redis Data Structures – Choosing the Right Weapon",
+      "real_life_example": "Instagram uses sorted sets for feeds and rankings.",
+      "theory_deep_dive": [
+        "Strings, Lists, Sets, Hashes, Sorted Sets",
+        "Time and space complexity",
+        "Encoding optimizations (ziplist, intset, listpack)",
+        "Why wrong data structure choices kill performance"
+      ],
+      "readings": [
+        "Redis Docs – Data Types Overview",
+        "Redis in Action – Chapter 3"
+      ],
+      "bash": [
+        "redis-cli SET user:1:name \"Alice\"",
+        "redis-cli HSET user:1 age 30 city Delhi",
+        "redis-cli ZADD leaderboard 100 user1 200 user2"
+      ],
+      "hands_on_goal": "Model the same data using multiple Redis structures and compare behavior"
+    },
+    {
+      "day": 3,
+      "title": "Redis Memory Model & Eviction Policies",
+      "real_life_example": "Ad tech platforms rely on Redis eviction policies to prevent cache stampedes.",
+      "theory_deep_dive": [
+        "In-memory storage layout",
+        "maxmemory settings",
+        "LRU vs LFU vs volatile policies",
+        "Cache thrashing scenarios"
+      ],
+      "readings": [
+        "Redis Docs – Memory Optimization",
+        "Redis in Action – Chapter 5",
+        "Cloudflare – 'How We Use Redis'"
+      ],
+      "bash": [
+        "redis-cli CONFIG SET maxmemory 100mb",
+        "redis-cli CONFIG SET maxmemory-policy allkeys-lfu"
+      ],
+      "hands_on_goal": "Force eviction and observe key survival patterns"
+    },
+    {
+      "day": 4,
+      "title": "Redis Persistence – RDB vs AOF vs Reality",
+      "real_life_example": "Session stores prefer speed over durability; financial counters do not.",
+      "theory_deep_dive": [
+        "RDB snapshots",
+        "Append Only File (AOF)",
+        "fsync policies",
+        "Crash recovery guarantees"
+      ],
+      "readings": [
+        "Redis Docs – Persistence",
+        "Redis in Action – Chapter 4"
+      ],
+      "bash": [
+        "redis-cli CONFIG SET appendonly yes",
+        "redis-cli CONFIG SET appendfsync everysec"
+      ],
+      "hands_on_goal": "Crash Redis and verify data recovery behavior"
+    },
+    {
+      "day": 5,
+      "title": "Redis as a Cache – Patterns & Pitfalls",
+      "real_life_example": "E-commerce sites cache product pages to survive flash sales.",
+      "theory_deep_dive": [
+        "Cache-aside pattern",
+        "Write-through vs write-behind",
+        "Cache stampede",
+        "TTL design"
+      ],
+      "readings": [
+        "Redis Docs – Caching",
+        "AWS – 'Caching Best Practices'"
+      ],
+      "go_code": "val, err := rdb.Get(ctx, key).Result()\nif err == redis.Nil {\n  val = fetchFromDB()\n  rdb.Set(ctx, key, val, time.Minute)\n}",
+      "hands_on_goal": "Implement cache-aside pattern safely in Go"
+    },
+    {
+      "day": 6,
+      "title": "Redis for Rate Limiting",
+      "real_life_example": "APIs use Redis to enforce per-user request limits.",
+      "theory_deep_dive": [
+        "Fixed window vs sliding window",
+        "Token bucket algorithm",
+        "Atomicity with Lua scripts"
+      ],
+      "readings": [
+        "Redis Docs – Rate Limiting",
+        "Cloudflare – 'Rate Limiting with Redis'"
+      ],
+      "go_code": "script := redis.NewScript(`\nlocal current = redis.call('INCR', KEYS[1])\nif current == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end\nreturn current\n`)",
+      "hands_on_goal": "Build atomic rate limiter using Lua"
+    },
+    {
+      "day": 7,
+      "title": "Redis Transactions & Lua Scripting",
+      "real_life_example": "Gaming systems update scores atomically using Lua.",
+      "theory_deep_dive": [
+        "MULTI/EXEC limitations",
+        "Optimistic locking with WATCH",
+        "Why Lua scripts are preferred"
+      ],
+      "readings": [
+        "Redis Docs – Transactions",
+        "Redis Docs – Lua Scripting"
+      ],
+      "hands_on_goal": "Replace MULTI with Lua for atomic updates"
+    },
+    {
+      "day": 8,
+      "title": "Redis Pub/Sub vs Streams",
+      "real_life_example": "Chat systems use Pub/Sub; event systems use Streams.",
+      "theory_deep_dive": [
+        "Pub/Sub delivery semantics",
+        "Redis Streams internals",
+        "Consumer groups in Streams",
+        "When Redis is not Kafka"
+      ],
+      "readings": [
+        "Redis Docs – Pub/Sub",
+        "Redis Docs – Streams",
+        "Antirez – 'Redis Streams Explained'"
+      ],
+      "bash": [
+        "redis-cli XADD events * type login user 1",
+        "redis-cli XREAD COUNT 10 STREAMS events 0"
+      ],
+      "hands_on_goal": "Build a basic stream consumer group"
+    },
+    {
+      "day": 9,
+      "title": "Redis for Queues & Background Jobs",
+      "real_life_example": "Sidekiq uses Redis lists for background job processing.",
+      "theory_deep_dive": [
+        "LPUSH/RPOP queues",
+        "Reliable queues with BRPOPLPUSH",
+        "Failure handling"
+      ],
+      "readings": [
+        "Redis in Action – Chapter 6",
+        "Sidekiq Wiki – Redis Design"
+      ],
+      "hands_on_goal": "Implement reliable Redis-backed job queue"
+    },
+    {
+      "day": 10,
+      "title": "Distributed Locks with Redis",
+      "real_life_example": "Cron jobs use Redis locks to avoid duplicate execution.",
+      "theory_deep_dive": [
+        "SET NX PX pattern",
+        "Failure modes",
+        "Redlock controversy"
+      ],
+      "readings": [
+        "Redis Docs – Distributed Locks",
+        "Martin Kleppmann – 'How to Do Distributed Locking'"
+      ],
+      "go_code": "ok, _ := rdb.SetNX(ctx, key, value, time.Second*10).Result()",
+      "hands_on_goal": "Implement safe lock with expiry and ownership"
+    },
+    {
+      "day": 11,
+      "title": "Redis Replication & High Availability",
+      "real_life_example": "Session stores require replicas to survive node loss.",
+      "theory_deep_dive": [
+        "Master-replica replication",
+        "Replication backlog",
+        "Failover mechanics",
+        "Redis Sentinel"
+      ],
+      "readings": [
+        "Redis Docs – Replication",
+        "Redis Docs – Sentinel"
+      ],
+      "hands_on_goal": "Simulate master failure and observe failover"
+    },
+    {
+      "day": 12,
+      "title": "Redis Cluster & Sharding",
+      "real_life_example": "Large-scale caches shard data across Redis Cluster.",
+      "theory_deep_dive": [
+        "Hash slots",
+        "Key distribution",
+        "Multi-key operation limitations",
+        "Resharding costs"
+      ],
+      "readings": [
+        "Redis Docs – Cluster Specification",
+        "Redis in Action – Chapter 9"
+      ],
+      "hands_on_goal": "Understand key hashing and slot placement"
+    },
+    {
+      "day": 13,
+      "title": "Performance Tuning & Monitoring",
+      "real_life_example": "High latency spikes indicate slow Lua scripts.",
+      "theory_deep_dive": [
+        "Latency sources",
+        "Slow log",
+        "Command time complexity",
+        "Connection pooling"
+      ],
+      "readings": [
+        "Redis Docs – Latency Monitoring",
+        "Datadog – 'Monitoring Redis'"
+      ],
+      "bash": [
+        "redis-cli SLOWLOG GET"
+      ],
+      "hands_on_goal": "Identify and fix slow Redis operations"
+    },
+    {
+      "day": 14,
+      "title": "Capstone – Redis in a Real System",
+      "real_life_example": "E-commerce backend using Redis for cache, rate limits, locks, and queues.",
+      "hands_on_goal": [
+        "Implement cache-aside",
+        "Add rate limiting",
+        "Use Redis locks",
+        "Add background job queue",
+        "Document failure scenarios"
+      ]
+    }
+  ]
+}

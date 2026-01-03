@@ -1,0 +1,22 @@
+.button {
+    background-color: mediumseagreen;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 0px;
+    margin: 0 auto;
+    color: whitesmoke;
+    cursor: pointer;
+    width: 100%;
+    background: conic-gradient(
+        120deg,
+        mediumseagreen,
+        rgb(23, 186, 97),
+        rgb(87, 217, 146)
+    );
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 0.5s;
+}
+.button:hover {
+    background-position: 0 0;
+}

@@ -1,0 +1,10 @@
+.user {
+    border-radius: 40px;
+    text-align: center;
+    background-color: crimson;
+    font-size: 14px;
+    color: var(--color-text-primary-on-dark);
+    width: 24px;
+    padding-top: 2px;
+    font-weight: 500;
+}

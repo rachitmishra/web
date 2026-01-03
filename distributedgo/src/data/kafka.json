@@ -1,0 +1,225 @@
+{
+  "course_title": "Kafka Internals & Production Systems with Go",
+  "duration_days": 14,
+  "daily_time_minutes": 60,
+  "difficulty": "Senior Backend / Staff Engineer Level",
+  "assumptions": [
+    "Strong Go fundamentals",
+    "Basic Docker knowledge",
+    "Interest in production-grade distributed systems"
+  ],
+  "days": [
+    {
+      "day": 1,
+      "title": "Kafka as a Distributed Commit Log (Deep Mental Model)",
+      "real_life_example": "LinkedIn uses Kafka as the source of truth; databases are downstream projections.",
+      "theory_deep_dive": [
+        "What a commit log really is (vs queue)",
+        "Why immutability simplifies distributed systems",
+        "Kafka as time-ordered state machine input",
+        "Why replayability beats real-time correctness"
+      ],
+      "readings": [
+        "Kafka: The Definitive Guide – Chapter 1",
+        "Designing Data-Intensive Applications – Chapter 11",
+        "Confluent Blog – 'What is a Distributed Commit Log?'",
+        "Martin Kleppmann – 'Turning the Database Inside Out'"
+      ],
+      "bash": [
+        "docker compose up -d",
+        "kafka-topics.sh --create --topic events --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092",
+        "kafka-console-producer.sh --topic events --bootstrap-server localhost:9092"
+      ],
+      "hands_on_goal": "Replay events multiple times to prove Kafka is not a queue"
+    },
+    {
+      "day": 2,
+      "title": "Partitions, Ordering, and Determinism",
+      "real_life_example": "Payments are partitioned by order_id to prevent state corruption.",
+      "theory_deep_dive": [
+        "Why global ordering is impossible",
+        "Partition = ordering + parallelism boundary",
+        "Hashing pitfalls and hot partitions",
+        "Key design as data modeling"
+      ],
+      "readings": [
+        "Kafka Definitive Guide – Chapter 4",
+        "Confluent – 'Kafka Partitions Explained'",
+        "Uber Engineering – 'Scaling Kafka Consumers'"
+      ],
+      "bash": [
+        "kafka-topics.sh --describe --topic events --bootstrap-server localhost:9092"
+      ],
+      "go_code": "package main\n\nimport (\n  \"context\"\n  \"github.com/segmentio/kafka-go\"\n)\n\nfunc main() {\n  w := kafka.NewWriter(kafka.WriterConfig{\n    Brokers: []string{\"localhost:9092\"},\n    Topic:   \"events\",\n  })\n\n  w.WriteMessages(context.Background(), kafka.Message{\n    Key:   []byte(\"order-123\"),\n    Value: []byte(\"payment_initiated\"),\n  })\n}",
+      "hands_on_goal": "Prove ordering per key, not per topic"
+    },
+    {
+      "day": 3,
+      "title": "Producer Internals: Throughput vs Safety",
+      "real_life_example": "Ad impressions tolerate duplicates; payments do not.",
+      "theory_deep_dive": [
+        "Producer buffer lifecycle",
+        "acks=all and ISR guarantees",
+        "Idempotent producer internals",
+        "Batching, linger.ms, compression"
+      ],
+      "readings": [
+        "Kafka Definitive Guide – Chapter 5",
+        "Confluent – 'Kafka Producer Internals'",
+        "Stripe Engineering – 'Event Delivery Guarantees'"
+      ],
+      "go_code": "kafka.NewWriter(kafka.WriterConfig{\n  Brokers: []string{\"localhost:9092\"},\n  Topic: \"events\",\n  RequiredAcks: kafka.RequireAll,\n  BatchSize: 100,\n  BatchTimeout: time.Millisecond * 10,\n  Compression: kafka.Snappy,\n})",
+      "hands_on_goal": "Benchmark throughput vs reliability"
+    },
+    {
+      "day": 4,
+      "title": "Consumer Internals & Offset Ownership",
+      "real_life_example": "Analytics prefers correctness over freshness.",
+      "theory_deep_dive": [
+        "Why pull beats push",
+        "Offset commit ≠ message processed",
+        "Lag as a system health metric",
+        "Consumer crash semantics"
+      ],
+      "readings": [
+        "Kafka Definitive Guide – Chapter 6",
+        "Confluent – 'Kafka Consumer Internals'",
+        "Netflix Tech – 'Consumer Lag Explained'"
+      ],
+      "go_code": "r := kafka.NewReader(kafka.ReaderConfig{\n  Brokers: []string{\"localhost:9092\"},\n  GroupID: \"analytics\",\n  Topic: \"events\",\n})\n\nfor {\n  msg, _ := r.ReadMessage(context.Background())\n  process(msg)\n}",
+      "hands_on_goal": "Observe lag increase under slow processing"
+    },
+    {
+      "day": 5,
+      "title": "Consumer Groups & Rebalance Storms",
+      "real_life_example": "Kubernetes pod restarts cause rebalance cascades.",
+      "theory_deep_dive": [
+        "Group coordinator protocol",
+        "Rebalance phases",
+        "Stop-the-world effect",
+        "Cooperative rebalancing"
+      ],
+      "readings": [
+        "Confluent – 'Cooperative Rebalancing'",
+        "Uber – 'Avoiding Kafka Rebalances'"
+      ],
+      "hands_on_goal": "Kill consumers and log rebalance pauses"
+    },
+    {
+      "day": 6,
+      "title": "Delivery Semantics & Idempotency",
+      "real_life_example": "Banks accept duplicates but never loss.",
+      "theory_deep_dive": [
+        "Why exactly-once is a lie",
+        "Business-level correctness",
+        "Idempotency keys",
+        "Deduplication windows"
+      ],
+      "go_code": "if processed[event.ID] {\n  return\n}\nprocessed[event.ID] = true",
+      "readings": [
+        "DDIA – Chapter 8",
+        "AWS – 'Idempotency in Distributed Systems'"
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Dead Letter Queues & Failure Isolation",
+      "real_life_example": "Fraud pipelines isolate malformed events.",
+      "theory_deep_dive": [
+        "Poison pills",
+        "Retry storms",
+        "DLQ vs retry topics"
+      ],
+      "go_code": "if retries > 3 {\n  dlqWriter.WriteMessages(ctx, msg)\n}",
+      "readings": [
+        "Confluent – 'DLQ Patterns'",
+        "DoorDash Engineering – 'Failure Handling'"
+      ]
+    },
+    {
+      "day": 8,
+      "title": "Event Design & Schema Evolution",
+      "real_life_example": "Schema break silently corrupts analytics.",
+      "theory_deep_dive": [
+        "Events as public APIs",
+        "Forward vs backward compatibility",
+        "Why removing fields is dangerous"
+      ],
+      "readings": [
+        "Kafka Definitive Guide – Chapter 8",
+        "LinkedIn – 'Schema Governance'"
+      ]
+    },
+    {
+      "day": 9,
+      "title": "Kafka Storage Internals",
+      "real_life_example": "User profile state via log compaction.",
+      "theory_deep_dive": [
+        "Segment files",
+        "Index structures",
+        "Compaction vs deletion"
+      ],
+      "readings": [
+        "Confluent – 'Log Compaction Deep Dive'",
+        "Redpanda – 'Kafka Storage Internals'"
+      ]
+    },
+    {
+      "day": 10,
+      "title": "Backpressure & System Protection",
+      "real_life_example": "Kafka overwhelms downstream DB.",
+      "theory_deep_dive": [
+        "Pull-based throttling",
+        "Worker pools",
+        "Queue depth monitoring"
+      ],
+      "go_code": "sem := make(chan struct{}, 10)",
+      "readings": [
+        "Uber – 'Backpressure in Event Systems'"
+      ]
+    },
+    {
+      "day": 11,
+      "title": "Transactions & EOS Reality",
+      "real_life_example": "Financial ledgers avoid partial writes.",
+      "theory_deep_dive": [
+        "Transactional producers",
+        "Why EOS rarely worth it"
+      ],
+      "readings": [
+        "Confluent – 'Exactly Once Semantics'"
+      ]
+    },
+    {
+      "day": 12,
+      "title": "Kafka in Production",
+      "real_life_example": "Retention misconfig caused data loss.",
+      "theory_deep_dive": [
+        "Cluster sizing",
+        "Failure drills",
+        "Runbooks"
+      ],
+      "readings": [
+        "LinkedIn – 'Operating Kafka at Scale'"
+      ]
+    },
+    {
+      "day": 13,
+      "title": "Security & Multi-Tenancy",
+      "real_life_example": "Multiple teams, one cluster.",
+      "theory_deep_dive": [
+        "ACLs",
+        "Topic isolation"
+      ],
+      "readings": [
+        "Netflix – 'Securing Event Pipelines'"
+      ]
+    },
+    {
+      "day": 14,
+      "title": "Capstone: Event-Driven System",
+      "real_life_example": "Order → Payment → Notification",
+      "hands_on_goal": "Production-ready Kafka system with retries, DLQ, metrics"
+    }
+  ]
+}

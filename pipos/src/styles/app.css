@@ -1,0 +1,683 @@
+/* App Layout */
+.app-container {
+  height: 100vh; /* Fallback */
+  height: 100dvh; /* Dynamic Viewport Height */
+  width: 100vw;
+  background-color: #FFFDF5;
+  font-family: sans-serif;
+  color: #111827; /* gray-900 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.app-header {
+  background-color: white;
+  border-bottom: 2px solid #ddd6fe; /* violet-100 */
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-content {
+  max-width: 42rem; /* 2xl */
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon-box {
+  background-color: #8b5cf6; /* violet-500 */
+  padding: 0.625rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: rotate(-3deg);
+}
+
+.header-title {
+  font-weight: 900;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  color: #4c1d95; /* violet-900 */
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.header-subtitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #a78bfa; /* violet-400 */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.level-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.level-label {
+  font-size: 0.625rem;
+  font-weight: 900;
+  color: #a78bfa; /* violet-400 */
+  text-transform: uppercase;
+}
+
+.xp-bar-container {
+  width: 6rem;
+  height: 0.75rem;
+  background-color: #ede9fe; /* violet-100 */
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid #ddd6fe; /* violet-200 */
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, #e879f9, #8b5cf6); /* fuchsia-400 to violet-500 */
+  transition: width 500ms;
+}
+
+.xp-badge {
+  background-color: #fde047; /* yellow-300 */
+  color: #713f12; /* yellow-900 */
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-bottom: 2px solid #facc15; /* yellow-400 */
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  max-width: 42rem; /* 2xl */
+  margin: 0 auto;
+  width: 100%;
+  padding: 1rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Practice View */
+.practice-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1.5rem;
+}
+
+.practice-title-container {
+  text-align: center;
+}
+
+.practice-title {
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #4c1d95; /* violet-900 */
+  margin: 0 0 0.5rem 0;
+}
+
+.practice-subtitle {
+  color: #8b5cf6; /* violet-500 */
+  font-weight: 500;
+  margin: 0;
+}
+
+.practice-keyboard {
+  transform: scale(1.1);
+  transform-origin: top;
+  box-shadow: 0 20px 50px rgba(139,92,246,0.3);
+}
+
+.practice-tip {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 2px solid #ede9fe; /* violet-100 */
+  text-align: center;
+  max-width: 24rem;
+}
+
+.tip-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563; /* gray-600 */
+  margin: 0;
+}
+
+.tip-highlight {
+  font-weight: 900;
+  color: #d946ef; /* fuchsia-500 */
+  display: block;
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Navigation */
+.app-nav {
+  background-color: white;
+  border-top: 2px solid #ddd6fe; /* violet-100 */
+  z-index: 50;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.nav-content {
+  max-width: 42rem; /* 2xl */
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem;
+}
+
+.nav-button {
+  padding: 0.75rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 4.5rem;
+  transition: all 200ms;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af; /* gray-400 */
+}
+
+.nav-button:hover {
+  background-color: #f9fafb; /* gray-50 */
+}
+
+.nav-button-active {
+  color: #7c3aed; /* violet-600 */
+  background-color: #f5f3ff; /* violet-50 */
+  transform: scale(1.05);
+}
+
+.nav-label {
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nav-button-center {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 9999px; /* full */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 4.5rem;
+  transition: all 200ms;
+  color: #9ca3af;
+}
+
+.nav-button-center:hover {
+  background-color: #f9fafb;
+}
+
+.nav-button-center-active {
+  color: #7c3aed; /* violet-600 */
+  transform: translateY(-1.5rem);
+}
+
+.center-icon-container {
+  border-radius: 9999px;
+  padding: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 4px solid white;
+  transition: all 200ms;
+  background-color: #e5e7eb; /* gray-200 */
+}
+
+.center-icon-active {
+  background: linear-gradient(to bottom right, #d946ef, #7c3aed); /* fuchsia-500 to violet-600 */
+  transform: scale(1.1);
+}
+
+/* Roadmap View Styles */
+.roadmap-container {
+  padding-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.roadmap-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.roadmap-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #4c1d95; /* violet-900 */
+  margin: 0;
+}
+
+.roadmap-subtitle {
+  color: #7c3aed; /* violet-600 */
+  font-weight: 500;
+  margin: 0;
+}
+
+.roadmap-grid {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.roadmap-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  transition: all 200ms;
+  border: 4px solid transparent;
+}
+
+.roadmap-item-locked {
+  background-color: #f3f4f6; /* gray-100 */
+  opacity: 0.8;
+  transform: scale(0.95);
+  filter: grayscale(0.5);
+}
+
+.roadmap-item-unlocked {
+  border-color: white;
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.2);
+  transform: scale(1) rotate(1deg);
+  cursor: pointer;
+}
+
+.roadmap-item-unlocked:active {
+  transform: scale(0.98) rotate(1deg);
+}
+
+/* Item Colors */
+.bg-orange-400 { background-color: #fb923c; }
+.bg-pink-400 { background-color: #f472b6; }
+.bg-violet-400 { background-color: #a78bfa; }
+.bg-cyan-400 { background-color: #22d3ee; }
+.bg-lime-400 { background-color: #a3e635; }
+.bg-yellow-400 { background-color: #facc15; }
+.bg-rose-500 { background-color: #f43f5e; } /* Added for Note Ninja */
+.bg-rose-400 { background-color: #fb7185; }
+.bg-fuchsia-400 { background-color: #e879f9; }
+
+.item-number {
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 3rem;
+  position: absolute;
+  top: -0.25rem;
+  right: -0.5rem;
+  transform: rotate(12deg);
+}
+
+.item-content {
+  position: relative;
+  z-index: 10;
+}
+
+.item-title {
+  font-weight: 900;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.item-title-unlocked { color: white; }
+.item-title-locked { color: #6b7280; /* gray-500 */ }
+
+.item-desc {
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0 0;
+  font-weight: 700;
+}
+
+.item-desc-unlocked { color: rgba(255, 255, 255, 0.9); }
+.item-desc-locked { color: #9ca3af; /* gray-400 */ }
+
+.mission-box {
+  margin-top: 1rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+  padding: 0.75rem;
+  backdrop-filter: blur(4px);
+}
+
+.mission-label {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem 0;
+  opacity: 0.8;
+}
+
+.mission-list {
+  font-size: 0.875rem;
+  color: white;
+  font-weight: 700;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mission-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bullet-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: white;
+}
+
+.locked-footer {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #9ca3af; /* gray-400 */
+}
+
+.lock-icon {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  color: #d1d5db; /* gray-300 */
+  z-index: 20;
+}
+
+/* Game View Styles */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.input-toggles {
+  display: flex;
+  gap: 0.5rem;
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #ede9fe; /* violet-100 */
+}
+
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: all 200ms;
+  border: none;
+  cursor: pointer;
+}
+
+.toggle-mic-active {
+  background-color: #fce7f3; /* fuchsia-100 */
+  color: #c026d3; /* fuchsia-600 */
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 0 2px #f5d0fe; /* fuchsia-200 */
+}
+
+.toggle-midi-active {
+  background-color: #dbeafe; /* blue-100 */
+  color: #2563eb; /* blue-600 */
+  box-shadow: 0 0 0 2px #bfdbfe; /* blue-200 */
+}
+
+.toggle-inactive {
+  background-color: #f9fafb; /* gray-50 */
+  color: #6b7280; /* gray-500 */
+}
+
+.toggle-inactive:hover {
+  background-color: #f5f3ff; /* violet-50 */
+  color: #8b5cf6; /* violet-500 */
+}
+
+.game-card {
+  background: linear-gradient(to bottom right, #8b5cf6, #d946ef, #fb923c); /* violet, fuchsia, orange */
+  border-radius: 2rem;
+  padding: 2rem;
+  color: white;
+  width: 100%;
+  max-width: 28rem;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  border: 4px solid white;
+}
+
+.game-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  background: radial-gradient(circle at center, white, transparent, transparent);
+  pointer-events: none;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.game-title {
+  font-size: 1.875rem;
+  font-weight: 900;
+  font-style: italic;
+  transform: rotate(-2deg);
+  margin: 0;
+}
+
+.input-feedback {
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.game-instruction {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 1.5rem 0;
+  font-weight: 500;
+  position: relative;
+  z-index: 10;
+}
+
+.game-display-area {
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.play-button {
+  background-color: white;
+  color: #c026d3; /* fuchsia-600 */
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 900;
+  font-size: 1.125rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+}
+
+.play-button:active {
+  transform: scale(0.95);
+}
+
+.game-message-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.target-note {
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: white;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07));
+  animation: bounce 1s infinite;
+}
+
+.game-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  position: relative;
+  z-index: 10;
+}
+
+.stat-badge {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.keyboard-wrapper {
+  width: 100%;
+  max-width: 32rem;
+}
+
+.keyboard-instruction {
+  text-align: center;
+  color: #a78bfa; /* violet-400 */
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+  /* Header */
+  .header-content {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .header-title {
+    font-size: 1.125rem;
+  }
+  
+  .header-icon-box {
+    padding: 0.5rem;
+  }
+  
+  .xp-bar-container {
+    width: 4rem;
+  }
+  
+  /* Navigation */
+  .nav-button, .nav-button-center {
+    min-width: 3.5rem;
+    padding: 0.5rem;
+  }
+  
+  /* Game View */
+  .game-card {
+    padding: 1.25rem;
+    border-width: 3px;
+  }
+  
+  .game-title {
+    font-size: 1.5rem;
+  }
+  
+  .target-note {
+    font-size: 3.5rem;
+  }
+  
+  /* Roadmap */
+  .roadmap-item {
+    padding: 1rem;
+  }
+  
+  .item-title {
+    font-size: 1.125rem;
+  }
+}

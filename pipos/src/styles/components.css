@@ -1,0 +1,235 @@
+/* PianoBuddy - Robotic LED Style */
+.buddy-container {
+  position: fixed;
+  z-index: 40;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  touch-action: none; /* Important for dragging */
+  transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy transition */
+}
+
+.buddy-container:active {
+  cursor: grabbing;
+  transition: none; /* No transition while dragging */
+}
+
+.buddy-pinned-bottom {
+  top: 85vh; /* Fallback */
+  top: calc(100dvh - 10rem);
+  right: 1.5rem;
+}
+
+.buddy-pinned-top {
+  top: 5.5rem; /* Just below header */
+  right: 1.5rem;
+}
+
+.buddy-container-static {
+  position: relative;
+  bottom: auto;
+  right: auto;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.buddy-container-static .buddy-robot-body {
+  width: 100%;
+  height: 12rem;
+  border-radius: 2rem;
+}
+
+.buddy-container-static .buddy-led-text {
+  font-size: 2.5rem;
+}
+
+.buddy-robot-body {
+  position: relative;
+  width: 9rem;
+  height: 6rem;
+  background: linear-gradient(145deg, #1f2937, #111827); /* Dark metallic */
+  border-radius: 1.5rem; /* Squircle-ish */
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #374151; /* gray-700 bezel */
+  transition: all 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.buddy-screen {
+  width: 85%;
+  height: 70%;
+  background-color: #000;
+  border-radius: 0.75rem;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #111827;
+}
+
+.buddy-screen-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.buddy-led-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  color: #22d3ee; /* cyan-400 */
+  text-shadow: 0 0 5px #06b6d4, 0 0 10px #06b6d4; /* cyan glow */
+  margin: 0;
+  text-align: center;
+  font-size: 0.85rem;
+  line-height: 1.1;
+  padding: 0 0.5rem;
+  white-space: pre-wrap;
+  z-index: 2;
+  letter-spacing: 0.05em;
+}
+
+/* Body Mood Animations */
+.buddy-body-happy {
+  border-color: #22d3ee;
+  transform: translateY(-0.5rem);
+}
+
+.buddy-body-playing {
+  border-color: #a78bfa; /* violet-400 */
+  transform: rotate(3deg) scale(1.05);
+}
+
+.buddy-body-hover:hover {
+  transform: translateY(-0.25rem);
+}
+
+.buddy-body-listening {
+  border-color: #34d399; /* emerald-400 */
+  box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+}
+
+.buddy-body-surprised {
+  border-color: #f472b6; /* pink-400 */
+  transform: scale(0.95) rotate(-2deg);
+}
+
+/* PianoKeyboard */
+.piano-keyboard-container {
+  position: relative;
+  display: flex;
+  justify-content: center; /* Center if it fits */
+  padding: 1rem;
+  background-color: #111827; /* gray-900 */
+  border-radius: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow-x: auto;
+  border-bottom: 8px solid #1f2937; /* gray-800 */
+}
+
+/* Ensure the flex container inside allows centering but doesn't force stretching */
+.keys-wrapper {
+  display: flex;
+  position: relative;
+  min-width: min-content; /* Ensure it takes up needed space */
+}
+
+.piano-key {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 100ms;
+  user-select: none;
+  flex-shrink: 0; /* Prevent keys from shrinking */
+}
+
+.piano-key-black {
+  background-color: #111827; /* gray-900 */
+  color: white;
+  height: 8rem;
+  width: 2.5rem;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+  z-index: 10;
+  border-left: 1px solid #1f2937; /* gray-800 */
+  border-right: 1px solid #1f2937;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.piano-key-white {
+  background-color: white;
+  color: #111827; /* gray-900 */
+  height: 12rem;
+  width: 3.5rem;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  z-index: 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.piano-key-white:active {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+.piano-key-active-black {
+  background-color: #c026d3; /* fuchsia-600 */
+  margin-top: 0.25rem;
+  transform: scale(0.95);
+}
+
+.piano-key-active-white {
+  background-color: #fde047; /* yellow-300 */
+  height: 11.8rem;
+}
+
+.piano-key-label-black {
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #9ca3af; /* gray-400 */
+}
+
+.piano-key-label-white {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #9ca3af; /* gray-400 */
+}
+
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+  .buddy-container {
+    bottom: 5rem;
+    right: 1rem;
+    transform: scale(0.8);
+    transform-origin: bottom right;
+  }
+  
+  .buddy-container-static {
+    margin: 1rem auto;
+  }
+
+  .buddy-container-static .buddy-robot-body {
+    height: 8rem;
+    border-radius: 1.5rem;
+  }
+
+  .buddy-container-static .buddy-led-text {
+    font-size: 1.5rem;
+  }
+}
