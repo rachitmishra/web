@@ -1,0 +1,35 @@
+@layer components {
+  /* =========================================
+     11. COMPONENTS - FAILED VIEW
+     ========================================= */
+  .failed-view {
+    block-size: 100dvh;
+    inline-size: 100%;
+    max-inline-size: var(--max-w-mobile);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--neutral-50);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .fail-icon {
+    color: var(--danger);
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+  }
+  .fail-title {
+    font-size: 1.875rem;
+    font-weight: 900;
+    color: var(--text-title);
+    margin: 0 0 0.5rem 0;
+  }
+  .fail-desc {
+    color: var(--muted-text);
+    margin-bottom: 2rem;
+    max-inline-size: 20rem;
+    line-height: 1.5;
+  }
+}

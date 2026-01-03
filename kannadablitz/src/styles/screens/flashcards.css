@@ -1,0 +1,147 @@
+@layer components {
+  /* =========================================
+     8. COMPONENTS - FLASHCARDS
+     ========================================= */
+  .flashcards-view {
+    display: flex;
+    flex-direction: column;
+    block-size: 100dvh;
+    inline-size: 100%;
+    max-inline-size: var(--max-w-mobile);
+    margin: 0 auto;
+    background: var(--bg-slate);
+    padding: 0 1.5rem;
+    overflow: hidden; /* Prevent body scroll */
+  }
+  [data-theme="dark"] .flashcards-view {
+    background: var(--bg-slate);
+  }
+  [data-theme="dark"] .flashcards-view .next-btn {
+    background: var(--primary);
+    color: var(--on-primary);
+    box-shadow: none;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .fc-footer {
+    padding: 1.5rem 0;
+    flex-shrink: 0;
+  }
+
+  .fc-counter {
+    font-size: 0.875rem;
+    font-family: monospace;
+    color: var(--muted-text-2);
+    font-weight: 600;
+  }
+
+  /* 3D Card */
+  .card-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+    perspective: 1000px;
+    overflow-y: auto;
+    width: 100%;
+  }
+  .card-3d-wrapper {
+    inline-size: 100%;
+    max-inline-size: 340px;
+    aspect-ratio: 3/4;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+    cursor: pointer;
+    flex-shrink: 0; /* Don't shrink the card itself */
+  }
+  .card-3d-wrapper.flipped {
+    transform: rotateY(180deg);
+  }
+  .card-3d-wrapper:not(.flipped) .card-front {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  }
+  .card-3d-wrapper.flipped .card-front {
+    box-shadow: none;
+  }
+  .card-3d-wrapper.flipped .card-back {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card-3d-wrapper,
+    .card-face {
+      transition: none !important;
+    }
+  }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 260ms ease,
+      transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 1px solid var(--neutral-200);
+  }
+  .card-front {
+    background: var(--surface-bg);
+    z-index: 10;
+  }
+
+  .card-back {
+    background: var(--neutral-900);
+    color: var(--neutral-50);
+    transform: rotateY(180deg);
+  }
+
+  .card-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+    color: var(--muted-text);
+  }
+  .label-accent {
+    color: var(--accent-yellow);
+  }
+  .card-main-text {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    font-weight: 900;
+    margin: 0 0 1.5rem 0;
+    color: var(--text-title);
+  }
+  .card-front .card-main-text {
+    color: var(--text-title);
+  }
+  .card-back .card-main-text {
+    color: white;
+  }
+  .card-sub-text {
+    font-size: 1.25rem;
+    color: var(--accent-yellow);
+    font-weight: 600;
+    margin: 0;
+  }
+  .tap-hint {
+    margin-top: 2.5rem;
+    font-size: 0.8rem;
+    color: var(--muted-text-2);
+    font-weight: 500;
+    opacity: 0.7;
+  }
+  .pulse-icon {
+    animation: pulse 2s infinite;
+    color: var(--primary);
+  }
+}

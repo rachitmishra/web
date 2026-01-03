@@ -8,4 +8,11 @@
 @import "./styles/utilities.css";
 @import "./styles/animations.css";
 @import "./styles/components.css";
-@import "./styles/wordbank.css";
+@import "./styles/components/social.css";
+@import "./styles/screens/dashboard.css";
+@import "./styles/screens/strategy.css";
+@import "./styles/screens/flashcards.css";
+@import "./styles/screens/scenarios.css";
+@import "./styles/screens/result.css";
+@import "./styles/screens/failure.css";
+@import "./styles/screens/wordbank.css";

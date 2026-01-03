@@ -1,0 +1,135 @@
+@layer components {
+  /* =========================================
+     11. COMPONENTS - RESULT VIEW
+     ========================================= */
+  .result-view {
+    block-size: 100dvh;
+    inline-size: 100%;
+    max-inline-size: var(--max-w-mobile);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-slate);
+    color: var(--text-title);
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-bg-blob {
+    display: none;
+  }
+
+  .result-content {
+    position: relative;
+    z-index: 10;
+    inline-size: 100%;
+  }
+
+  .trophy-wrapper {
+    display: inline-block;
+    padding: 1rem;
+    border-radius: 50%;
+    background: var(--surface-bg);
+    border: 1px solid var(--neutral-200);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+  }
+  .trophy-icon {
+    color: var(--accent-yellow);
+    filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+  }
+
+  .result-title {
+    font-size: 2.25rem;
+    font-weight: 900;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.02em;
+    color: var(--text-title);
+  }
+  .result-subtitle {
+    color: var(--muted-text);
+    font-size: 1.125rem;
+    margin: 0 0 2rem 0;
+  }
+
+  .new-badge-card {
+    background: linear-gradient(
+      to right,
+      var(--neutral-100),
+      var(--surface-bg)
+    );
+    border: 1px solid var(--accent-yellow);
+    padding: 4px;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    transform: scale(1);
+    transition: transform 0.3s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .new-badge-card:hover {
+    transform: scale(1.02);
+  }
+  .badge-card-inner {
+    padding: 1.5rem;
+    border-radius: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .badge-card-icon {
+    color: var(--accent-yellow);
+  }
+  .badge-text-group {
+    text-align: left;
+  }
+  .badge-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--muted-text);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+  .badge-name {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--accent-yellow-dark);
+    margin: 0;
+  }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    inline-size: 100%;
+    margin-bottom: 2rem;
+  }
+  .result-stat-box {
+    background: var(--surface-bg);
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid var(--neutral-200);
+  }
+  .rs-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted-text);
+    margin: 0;
+  }
+  .rs-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-title);
+  }
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    inline-size: 100%;
+  }
+}

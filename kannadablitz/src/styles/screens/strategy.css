@@ -1,0 +1,107 @@
+@layer components {
+  /* =========================================
+     10. COMPONENTS - STRATEGY VIEW
+     ========================================= */
+  .strategy-view {
+    block-size: 100dvh;
+    inline-size: 100%;
+    background-color: var(--bg-slate);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--header-text);
+  }
+  .strategy-view .fc-header {
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background: transparent;
+  }
+
+  .strategy-view-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0 1.5rem;
+    max-inline-size: var(--max-w-mobile);
+    margin: 0 auto;
+  }
+
+  .strategy-header {
+    flex-shrink: 0;
+    margin-bottom: 1.5rem;
+  }
+  .classified-text {
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--primary);
+    opacity: 0.7;
+    margin-bottom: 0.5rem;
+  }
+  .strategy-title {
+    font-size: clamp(1.75rem, 5vw, 2.25rem);
+    font-weight: 900;
+    color: var(--text-title);
+    background: none;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .tips-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .tip-card {
+    position: relative;
+    background: var(--surface-bg);
+    border: 1px solid var(--neutral-200);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    transition: all 0.3s;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+  .tip-content-wrapper {
+    display: flex;
+    gap: 1rem;
+  }
+  .tip-icon-box {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.125rem;
+    background: var(--neutral-100);
+    color: var(--primary);
+  }
+  .tip-label {
+    color: var(--text-title);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.25rem 0;
+    font-size: 0.85rem;
+  }
+  .tip-text {
+    color: var(--muted-text);
+    line-height: 1.6;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .strategy-footer {
+    margin-top: 2rem;
+    color: var(--muted-text);
+    inline-size: 100%;
+    max-inline-size: var(--max-w-mobile);
+    margin: 0 auto;
+  }
+}
