@@ -24,7 +24,7 @@
 - [~] Task: Conductor - User Manual Verification 'Phase 2: Profile & Firestore Integration' (Protocol in workflow.md)
 
 ## Phase 3: Header Integration & Navigation
-- [ ] Task: Implement User Header Menu
+- [x] Task: Implement User Header Menu e9ad7c8
     - Update `Header.tsx` to include Sign In / Profile dropdown.
     - **Tests:** Verify UI reflects auth state changes.
 - [ ] Task: Setup Protected Routes
