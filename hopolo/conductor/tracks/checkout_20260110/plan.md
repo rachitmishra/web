@@ -10,7 +10,7 @@
 - [~] Task: Conductor - User Manual Verification 'Phase 1: Checkout Foundation & Order Summary' (Protocol in workflow.md)
 
 ## Phase 2: Razorpay Integration & Payment Flow
-- [ ] Task: Integrate Razorpay SDK
+- [x] Task: Integrate Razorpay SDK a220ec6
     - Write tests for SDK loading and modal triggering (mocked).
     - Implement Razorpay integration logic in the Checkout page.
 - [ ] Task: Handle Payment Success & Create Order
