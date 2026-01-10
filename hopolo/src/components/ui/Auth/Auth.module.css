@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.input {
+  padding: var(--spacing-3);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+}
+
+.input:focus {
+  outline: 2px solid var(--color-primary);
+  border-color: transparent;
+}
