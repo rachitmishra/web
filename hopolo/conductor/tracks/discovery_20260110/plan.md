@@ -11,7 +11,7 @@
     - **Tests:** Verify service handles success and error states.
 - [~] Task: Conductor - User Manual Verification 'Phase 1: Firebase Integration & Data Fetching' (Protocol in workflow.md)
 
-## Phase 2: Discovery UI Components
+## Phase 2: Discovery UI Components [checkpoint: c450e18]
 - [x] Task: Create Hero Component 9255c93
     - Implement `src/components/ui/Hero/Hero.tsx` and `.module.css`.
     - **Tests:** Verify rendering of promotion text and background.
@@ -22,7 +22,7 @@
 - [x] Task: Create CategoryTabs Component fd66c64
     - Implement `src/components/ui/CategoryTabs/CategoryTabs.tsx`.
     - **Tests:** Verify active tab state and click callback.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Discovery UI Components' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Discovery UI Components' (Protocol in workflow.md)
 
 ## Phase 3: Homepage Assembly & Filtering
 - [ ] Task: Implement Homepage with Grid and Filtering
