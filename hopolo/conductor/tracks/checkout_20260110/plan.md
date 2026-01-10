@@ -4,7 +4,7 @@
 - [x] Task: Create Checkout Page Layout & Summary ad74747
     - Write tests for order summary breakdown and totals.
     - Implement `src/pages/Checkout.tsx` with summary UI.
-- [ ] Task: Implement Address Selection & Management
+- [x] Task: Implement Address Selection & Management daafbf7
     - Write tests for fetching saved addresses and manual entry validation.
     - Implement Address section in Checkout page.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Checkout Foundation & Order Summary' (Protocol in workflow.md)
