@@ -1,7 +1,7 @@
 # Track Plan: Initialize Core UI Components and Layout
 
 ## Phase 1: Foundation & Layout
-- [ ] Task: Define Global CSS Variables and Reset
+- [x] Task: Define Global CSS Variables and Reset bac20e5
     - Define colors, spacing, and typography in `index.css` or `App.css`.
     - Ensure box-sizing is set to border-box globally.
 - [ ] Task: Create MainLayout Component
