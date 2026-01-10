@@ -31,8 +31,9 @@ describe('App Routing', () => {
     const productCard = await waitFor(() => screen.getByTestId('product-card-1'));
     fireEvent.click(productCard);
     
+    // Should be on Product Detail page
     await waitFor(() => {
-      expect(screen.getByText(/product detail: 1/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /product 1/i })).toBeInTheDocument();
     });
   });
 
@@ -43,7 +44,7 @@ describe('App Routing', () => {
       </MemoryRouter>
     );
     
-    await waitFor(() => screen.getByText(/product detail: 1/i));
+    await waitFor(() => screen.getByRole('heading', { name: /product 1/i }));
     
     const backButton = screen.getByRole('button', { name: /back/i });
     fireEvent.click(backButton);
