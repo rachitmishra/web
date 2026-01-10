@@ -12,7 +12,7 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Layout' (Protocol in workflow.md)
 
 ## Phase 2: Core Components
-- [ ] Task: Create Button Component
+- [x] Task: Create Button Component 91f5b9a
     - Create `src/components/ui/Button/Button.tsx`.
     - Create `src/components/ui/Button/Button.module.css`.
     - Implement variants (primary, secondary) and states (disabled, loading).
