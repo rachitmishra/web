@@ -15,7 +15,7 @@
 - [x] Task: Create Hero Component 9255c93
     - Implement `src/components/ui/Hero/Hero.tsx` and `.module.css`.
     - **Tests:** Verify rendering of promotion text and background.
-- [ ] Task: Create ProductCard Component
+- [x] Task: Create ProductCard Component 81cb9b7
     - Implement `src/components/ui/ProductCard/ProductCard.tsx` and `.module.css`.
     - Display Image, Name, Price, Rating, and "Add to Cart".
     - **Tests:** Verify all details are rendered correctly.
