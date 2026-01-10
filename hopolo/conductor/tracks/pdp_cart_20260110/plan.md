@@ -28,7 +28,7 @@
     - Update `MainLayout` or create a `Header` component.
     - Listen to `cartService` state to update the item count badge.
     - **Tests:** Verify badge reflects the number of items in the cart.
-- [ ] Task: Implement Mini-Cart Drawer
+- [x] Task: Implement Mini-Cart Drawer d45dcda
     - Create `src/components/ui/MiniCart/MiniCart.tsx` (slide-out drawer).
     - Auto-open drawer when an item is added.
     - **Tests:** Verify drawer opens/closes and displays current cart items.
