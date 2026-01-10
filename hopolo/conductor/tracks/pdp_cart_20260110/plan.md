@@ -23,7 +23,7 @@
     - **Tests:** Verify display of these contextual areas.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Product Detail Page (PDP)' (Protocol in workflow.md)
 
-## Phase 3: Shopping Cart UI & Header Integration
+## Phase 3: Shopping Cart UI & Header Integration [checkpoint: 51d62f8]
 - [x] Task: Create Header Cart Icon & Badge 691188b
     - Update `MainLayout` or create a `Header` component.
     - Listen to `cartService` state to update the item count badge.
