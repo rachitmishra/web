@@ -13,6 +13,7 @@ export interface UserProfile {
   displayName?: string;
   emoji?: string;
   addresses?: Address[];
+  role?: 'user' | 'admin';
 }
 
 const getUserRef = (uid: string) => doc(db, 'users', uid);
