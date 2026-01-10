@@ -4,7 +4,7 @@
 - [x] Task: Implement Admin Route Guard a1bb450
     - Write tests for RBAC redirection.
     - Implement `src/components/ui/Auth/AdminRoute.tsx` checking for `role: 'admin'` in Firestore.
-- [ ] Task: Create Orders Dashboard UI
+- [x] Task: Create Orders Dashboard UI 4afa20f
     - Write tests for order table rendering.
     - Implement `src/pages/Admin/Orders.tsx` with sorting and filtering.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Admin Authorization & Core Dashboard' (Protocol in workflow.md)
