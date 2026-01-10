@@ -23,11 +23,11 @@
     - **Tests:** Verify that profile data is loaded and updates are reflected.
 - [~] Task: Conductor - User Manual Verification 'Phase 2: Profile & Firestore Integration' (Protocol in workflow.md)
 
-## Phase 3: Header Integration & Navigation
+## Phase 3: Header Integration & Navigation [checkpoint: 434bc39]
 - [x] Task: Implement User Header Menu e9ad7c8
     - Update `Header.tsx` to include Sign In / Profile dropdown.
     - **Tests:** Verify UI reflects auth state changes.
 - [x] Task: Setup Protected Routes d7daf8c
     - Protect `/profile` so only authenticated users can access it.
     - **Tests:** Verify redirection to `/` or sign-in for unauthenticated users.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Header Integration & Navigation' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 3: Header Integration & Navigation' (Protocol in workflow.md)
