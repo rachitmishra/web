@@ -12,7 +12,7 @@
 - [~] Task: Conductor - User Manual Verification 'Phase 1: Firebase Integration & Data Fetching' (Protocol in workflow.md)
 
 ## Phase 2: Discovery UI Components
-- [ ] Task: Create Hero Component
+- [x] Task: Create Hero Component 9255c93
     - Implement `src/components/ui/Hero/Hero.tsx` and `.module.css`.
     - **Tests:** Verify rendering of promotion text and background.
 - [ ] Task: Create ProductCard Component
