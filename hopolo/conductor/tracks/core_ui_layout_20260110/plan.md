@@ -22,7 +22,7 @@
     - Create `src/components/ui/Input/Input.module.css`.
     - Support labels and error messages.
     - **Tests:** Verify text entry, label rendering, and error display.
-- [ ] Task: Create Card Component
+- [x] Task: Create Card Component 43442df
     - Create `src/components/ui/Card/Card.tsx`.
     - Create `src/components/ui/Card/Card.module.css`.
     - **Tests:** Verify content rendering and basic styling classes.
