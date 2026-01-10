@@ -25,7 +25,7 @@
 - [~] Task: Conductor - User Manual Verification 'Phase 2: Discovery UI Components' (Protocol in workflow.md)
 
 ## Phase 3: Homepage Assembly & Filtering
-- [ ] Task: Implement Homepage with Grid and Filtering
+- [x] Task: Implement Homepage with Grid and Filtering f0f2360
     - Combine `Hero`, `CategoryTabs`, and a grid of `ProductCard`s.
     - Implement local state filtering logic based on selected tab.
     - **Tests:** Verify that switching tabs updates the visible products.
