@@ -1,6 +1,6 @@
 # Track Plan: Storefront Home & Product Discovery
 
-## Phase 1: Firebase Integration & Data Fetching
+## Phase 1: Firebase Integration & Data Fetching [checkpoint: f809051]
 - [x] Task: Initialize Firebase and Firestore Service ed7ed07
     - Install `firebase` dependency.
     - Create `src/lib/firebase.ts` with configuration.
@@ -9,7 +9,7 @@
     - Create `src/services/productService.ts`.
     - Implement `fetchProducts` and `fetchCategories`.
     - **Tests:** Verify service handles success and error states.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Firebase Integration & Data Fetching' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 1: Firebase Integration & Data Fetching' (Protocol in workflow.md)
 
 ## Phase 2: Discovery UI Components
 - [ ] Task: Create Hero Component
