@@ -1,6 +1,6 @@
 # Track Plan: Storefront Home & Product Discovery
 
-## Phase 1: Firebase Integration & Data Fetching [checkpoint: f809051]
+## Phase 1: Firebase Integration & Data Fetching [checkpoint: 971880d]
 - [x] Task: Initialize Firebase and Firestore Service ed7ed07
     - Install `firebase` dependency.
     - Create `src/lib/firebase.ts` with configuration.
