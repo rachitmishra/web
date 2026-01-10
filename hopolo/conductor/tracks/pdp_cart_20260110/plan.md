@@ -15,7 +15,7 @@
     - Update `src/pages/ProductDetail.tsx` with description, price, and gallery.
     - Implement a local `QuantitySelector` component.
     - **Tests:** Verify rendering of all product details and initial quantity state.
-- [ ] Task: Integrate Add to Cart Logic
+- [x] Task: Integrate Add to Cart Logic 2c43c83
     - Connect the PDP "Add to Cart" button to the `cartService`.
     - **Tests:** Verify service call with correct product and quantity.
 - [ ] Task: Implement Related Products & Reviews Sections
