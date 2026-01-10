@@ -3,12 +3,29 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
 import * as cartService from '../../../services/cartService';
+import { auth } from '../../../lib/firebase';
 
 vi.mock('../../../services/cartService');
+vi.mock('../../../lib/firebase', () => {
+  const auth = {
+    currentUser: null,
+    onAuthStateChanged: vi.fn((cb) => {
+      // Simulate immediate callback with current user
+      cb(null);
+      return vi.fn(); // Unsubscribe
+    }),
+  };
+  return { auth, db: {} };
+});
 
 describe('Header', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (auth.currentUser as any) = null;
+    (auth.onAuthStateChanged as any).mockImplementation((cb: any) => {
+      cb(auth.currentUser);
+      return vi.fn();
+    });
   });
 
   it('should render the logo and cart icon', () => {
@@ -23,7 +40,6 @@ describe('Header', () => {
   });
 
   it('should display the correct item count badge', () => {
-    // Mock subscription to trigger with 3 items
     (cartService.subscribeToCart as any).mockImplementation((callback: any) => {
       callback([
         { product: { id: '1' }, quantity: 1 },
@@ -39,5 +55,25 @@ describe('Header', () => {
     );
 
     expect(screen.getByText('3')).toBeInTheDocument();
+  });
+
+  it('should show "Sign In" when logged out', () => {
+    (auth.currentUser as any) = null;
+    render(
+      <MemoryRouter>
+        <Header onOpenCart={() => {}} />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/sign in/i)).toBeInTheDocument();
+  });
+
+  it('should show user menu when logged in', () => {
+    (auth.currentUser as any) = { uid: '123' };
+    render(
+      <MemoryRouter>
+        <Header onOpenCart={() => {}} />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/account/i)).toBeInTheDocument();
   });
 });

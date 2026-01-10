@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 import { subscribeToCart, CartItem } from '../../../services/cartService';
+import { auth } from '../../../lib/firebase';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
 interface HeaderProps {
   onOpenCart: () => void;
@@ -9,13 +11,23 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
   const [itemCount, setItemCount] = useState(0);
+  const [user, setUser] = useState<User | null>(auth.currentUser);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = subscribeToCart((items: CartItem[]) => {
+    const unsubscribeCart = subscribeToCart((items: CartItem[]) => {
       const totalCount = items.reduce((acc, item) => acc + item.quantity, 0);
       setItemCount(totalCount);
     });
-    return () => unsubscribe();
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return () => {
+      unsubscribeCart();
+      unsubscribeAuth();
+    };
   }, []);
 
   return (
@@ -25,6 +37,12 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
       </Link>
       
       <div className={styles.actions}>
+        {user ? (
+          <Link to="/profile" className={styles.link}>Account</Link>
+        ) : (
+          <Link to="/login" className={styles.link}>Sign In</Link>
+        )}
+
         <button className={styles.cartButton} onClick={onOpenCart} aria-label="Shopping Cart">
           🛒
           {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
