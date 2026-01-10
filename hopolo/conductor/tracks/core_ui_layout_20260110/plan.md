@@ -11,7 +11,7 @@
     - **Tests:** Verify Layout renders children and structural elements.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Layout' (Protocol in workflow.md)
 
-## Phase 2: Core Components
+## Phase 2: Core Components [checkpoint: 127a1ff]
 - [x] Task: Create Button Component 91f5b9a
     - Create `src/components/ui/Button/Button.tsx`.
     - Create `src/components/ui/Button/Button.module.css`.
