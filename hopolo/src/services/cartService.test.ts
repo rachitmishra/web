@@ -66,6 +66,22 @@ describe('cartService', () => {
       data: () => ({ items: mockItems })
     });
 
-    expect(callback).toHaveBeenCalledWith(mockItems);
-  });
-});
+        expect(callback).toHaveBeenCalledWith(mockItems);
+
+      });
+
+    
+
+      it('clearCart should call setDoc with empty items', async () => {
+
+        const { clearCart } = await import('./cartService');
+
+        await clearCart();
+
+        expect(setDoc).toHaveBeenCalledWith(expect.anything(), { items: [] });
+
+      });
+
+    });
+
+    

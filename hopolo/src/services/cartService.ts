@@ -71,3 +71,8 @@ export const updateQuantity = async (productId: string, quantity: number) => {
     await setDoc(cartRef, { items });
   }
 };
+
+export const clearCart = async () => {
+  const cartRef = getCartRef();
+  await setDoc(cartRef, { items: [] });
+};

@@ -5,6 +5,8 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
+import Checkout from './pages/Checkout';
+import Success from './pages/Success';
 import ProtectedRoute from './components/ui/Auth/ProtectedRoute';
 import './App.css';
 
@@ -15,6 +17,8 @@ export const AppRoutes = () => (
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/checkout/success/:orderId" element={<Success />} />
       <Route 
         path="/profile" 
         element={
