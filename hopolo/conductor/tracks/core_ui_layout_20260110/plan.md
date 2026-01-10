@@ -4,7 +4,7 @@
 - [x] Task: Define Global CSS Variables and Reset bac20e5
     - Define colors, spacing, and typography in `index.css` or `App.css`.
     - Ensure box-sizing is set to border-box globally.
-- [ ] Task: Create MainLayout Component
+- [x] Task: Create MainLayout Component 9c3cbbe
     - Create `src/components/layout/MainLayout.tsx`.
     - Create `src/components/layout/MainLayout.module.css` (or similar).
     - Implement Header, Footer, and children rendering.
