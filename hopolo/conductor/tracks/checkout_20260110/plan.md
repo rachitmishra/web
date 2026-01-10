@@ -1,6 +1,6 @@
 # Track Plan: Razorpay Checkout & Order Management
 
-## Phase 1: Checkout Foundation & Order Summary [checkpoint: ce89bc7]
+## Phase 1: Checkout Foundation & Order Summary [checkpoint: 61fac24]
 - [x] Task: Create Checkout Page Layout & Summary ad74747
     - Write tests for order summary breakdown and totals.
     - Implement `src/pages/Checkout.tsx` with summary UI.
