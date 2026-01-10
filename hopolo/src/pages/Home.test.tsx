@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import Home from './Home';
 import * as productService from '../services/productService';
 
@@ -24,7 +25,11 @@ describe('Home Page', () => {
   });
 
   it('should render products and categories on load', async () => {
-    render(<Home />);
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    );
     
     await waitFor(() => {
       expect(screen.getByText(/product 1/i)).toBeInTheDocument();
@@ -34,7 +39,11 @@ describe('Home Page', () => {
   });
 
   it('should filter products when a category tab is clicked', async () => {
-    render(<Home />);
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    );
     
     await waitFor(() => screen.getByText(/electronics/i));
     
