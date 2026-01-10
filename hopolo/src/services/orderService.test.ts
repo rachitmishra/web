@@ -43,4 +43,20 @@ describe('orderService', () => {
     }));
     expect(result).toBe('order_123');
   });
+
+  it('fetchAllOrders should return mapped orders', async () => {
+    const { getDocs } = await import('firebase/firestore');
+    const mockDocs = [
+      { id: 'o1', data: () => ({ total: 100 }) },
+      { id: 'o2', data: () => ({ total: 200 }) },
+    ];
+    (getDocs as any).mockResolvedValue({ docs: mockDocs });
+
+    const { fetchAllOrders } = await import('./orderService');
+    const result = await fetchAllOrders();
+
+    expect(getDocs).toHaveBeenCalled();
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual({ id: 'o1', total: 100 });
+  });
 });
