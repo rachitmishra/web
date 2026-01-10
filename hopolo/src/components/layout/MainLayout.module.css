@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  padding: var(--spacing-4) var(--spacing-8);
+  border-bottom: 1px solid var(--color-surface); /* Minimalist separator if needed, or rely on shadow */
+  background-color: var(--color-surface);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px; /* Max width for content */
+  margin: 0 auto;
+  padding: var(--spacing-8);
+}
+
+.footer {
+  padding: var(--spacing-6) var(--spacing-8);
+  text-align: center;
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  border-top: 1px solid #e5e7eb; /* Subtle border */
+  font-size: 0.875rem;
+}
