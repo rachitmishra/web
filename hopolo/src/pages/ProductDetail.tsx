@@ -4,6 +4,7 @@ import Button from '../components/ui/Button/Button';
 import QuantitySelector from '../components/ui/QuantitySelector/QuantitySelector';
 import styles from './ProductDetail.module.css';
 import { fetchProducts, Product } from '../services/productService';
+import { addToCart } from '../services/cartService';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,11 +12,10 @@ const ProductDetail: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     const loadProduct = async () => {
-      // For now, we fetch all and find the one. 
-      // In a real app, we'd have fetchProductById.
       try {
         const products = await fetchProducts();
         const found = products.find(p => p.id === id);
@@ -28,6 +28,18 @@ const ProductDetail: React.FC = () => {
     };
     loadProduct();
   }, [id]);
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+    setAdding(true);
+    try {
+      await addToCart(product, quantity);
+    } catch (err) {
+      console.error('Failed to add to cart:', err);
+    } finally {
+      setAdding(false);
+    }
+  };
 
   if (loading) return <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Loading...</div>;
   if (!product) return <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Product not found.</div>;
@@ -63,7 +75,8 @@ const ProductDetail: React.FC = () => {
               <QuantitySelector quantity={quantity} onChange={setQuantity} />
               <Button 
                 className={styles.addToCartButton}
-                onClick={() => console.log('Add to cart:', product, quantity)}
+                onClick={handleAddToCart}
+                loading={adding}
               >
                 Add to Cart
               </Button>

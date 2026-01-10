@@ -1,10 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import ProductDetail from './ProductDetail';
 import * as productService from '../services/productService';
+import * as cartService from '../services/cartService';
 
 vi.mock('../services/productService');
+vi.mock('../services/cartService');
 
 const mockProduct: productService.Product = {
   id: '1',
@@ -36,7 +38,7 @@ describe('ProductDetail Page', () => {
     });
   });
 
-  it('should show quantity selector and add to cart button', async () => {
+  it('should call addToCart when add to cart button is clicked', async () => {
     render(
       <MemoryRouter initialEntries={['/product/1']}>
         <Routes>
@@ -45,9 +47,13 @@ describe('ProductDetail Page', () => {
       </MemoryRouter>
     );
 
-    await waitFor(() => {
-      expect(screen.getByLabelText(/increase quantity/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /add to cart/i })).toBeInTheDocument();
-    });
+    const addButton = await waitFor(() => screen.getByRole('button', { name: /add to cart/i }));
+    
+    // Increment quantity to 2
+    fireEvent.click(screen.getByLabelText(/increase quantity/i));
+    
+    fireEvent.click(addButton);
+
+    expect(cartService.addToCart).toHaveBeenCalledWith(mockProduct, 2);
   });
 });
