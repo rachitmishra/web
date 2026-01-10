@@ -10,10 +10,23 @@ export interface Product {
   rating?: number;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+}
+
 export const fetchProducts = async (): Promise<Product[]> => {
   const querySnapshot = await getDocs(collection(db, 'products'));
   return querySnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   })) as Product[];
+};
+
+export const fetchCategories = async (): Promise<Category[]> => {
+  const querySnapshot = await getDocs(collection(db, 'categories'));
+  return querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Category[];
 };

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchProducts } from './productService';
+import { fetchProducts, fetchCategories } from './productService';
 import { getDocs, collection } from 'firebase/firestore';
 
 // Mock firebase/firestore
@@ -39,5 +39,28 @@ describe('productService', () => {
     expect(getDocs).toHaveBeenCalled();
     expect(products).toHaveLength(2);
     expect(products[0]).toEqual({ id: '1', name: 'Product 1', price: 100, category: 'test' });
+  });
+
+  it('fetchProducts should handle errors gracefully', async () => {
+    (getDocs as any).mockRejectedValue(new Error('Firestore error'));
+
+    await expect(fetchProducts()).rejects.toThrow('Firestore error');
+  });
+
+  it('fetchCategories should return a list of categories', async () => {
+    const mockData = [
+      { id: 'cat1', data: () => ({ name: 'Electronics' }) },
+      { id: 'cat2', data: () => ({ name: 'Clothing' }) },
+    ];
+
+    (getDocs as any).mockResolvedValue({
+      docs: mockData,
+    });
+
+    const categories = await fetchCategories();
+
+    expect(collection).toHaveBeenCalledWith(expect.anything(), 'categories');
+    expect(categories).toHaveLength(2);
+    expect(categories[0]).toEqual({ id: 'cat1', name: 'Electronics' });
   });
 });
