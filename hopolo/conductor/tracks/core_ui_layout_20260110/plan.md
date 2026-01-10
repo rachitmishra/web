@@ -17,7 +17,7 @@
     - Create `src/components/ui/Button/Button.module.css`.
     - Implement variants (primary, secondary) and states (disabled, loading).
     - **Tests:** Verify click handling, class application for variants, and disabled state.
-- [ ] Task: Create Input Component
+- [x] Task: Create Input Component 1d69ebd
     - Create `src/components/ui/Input/Input.tsx`.
     - Create `src/components/ui/Input/Input.module.css`.
     - Support labels and error messages.
