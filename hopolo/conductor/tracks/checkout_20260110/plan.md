@@ -9,14 +9,14 @@
     - Implement Address section in Checkout page.
 - [~] Task: Conductor - User Manual Verification 'Phase 1: Checkout Foundation & Order Summary' (Protocol in workflow.md)
 
-## Phase 2: Razorpay Integration & Payment Flow
+## Phase 2: Razorpay Integration & Payment Flow [checkpoint: ae485d5]
 - [x] Task: Integrate Razorpay SDK a220ec6
     - Write tests for SDK loading and modal triggering (mocked).
     - Implement Razorpay integration logic in the Checkout page.
 - [x] Task: Handle Payment Success & Create Order 9e77c9d
     - Write tests for order creation logic in Firestore service.
     - Implement `src/services/orderService.ts` and handle success callbacks.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Razorpay Integration & Payment Flow' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Razorpay Integration & Payment Flow' (Protocol in workflow.md)
 
 ## Phase 3: Reliability & Success Experience
 - [ ] Task: Implement Webhook Verification
