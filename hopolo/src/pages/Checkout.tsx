@@ -7,6 +7,13 @@ import styles from './Checkout.module.css';
 import { subscribeToCart, CartItem } from '../services/cartService';
 import { getUserProfile, Address } from '../services/profileService';
 import { auth } from '../lib/firebase';
+import { loadRazorpayScript } from '../services/paymentService';
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 const Checkout: React.FC = () => {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -14,6 +21,7 @@ const Checkout: React.FC = () => {
   const [selectedAddressIndex, setSelectedAddressIndex] = useState<number>(-1);
   const [newAddress, setNewAddress] = useState<Address>({ street: '', city: '', state: '', zip: '' });
   const [isAddingNew, setIsAddingNew] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +51,42 @@ const Checkout: React.FC = () => {
   const subtotal = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const shipping = 5.99;
   const total = subtotal + shipping;
+
+  const handlePayment = async () => {
+    setLoading(true);
+    const res = await loadRazorpayScript();
+
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      setLoading(false);
+      return;
+    }
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      amount: Math.round(total * 100), // amount in the smallest currency unit
+      currency: 'USD',
+      name: 'Hopolo',
+      description: 'Order Payment',
+      handler: function (response: any) {
+        console.log('Payment Success:', response);
+        // Next task: create order in Firestore
+        alert('Payment Success! ID: ' + response.razorpay_payment_id);
+      },
+      prefill: {
+        name: auth.currentUser?.displayName || '',
+        email: '',
+        contact: ''
+      },
+      theme: {
+        color: '#5D3FD3'
+      }
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+    setLoading(false);
+  };
 
   return (
     <div className={styles.container}>
@@ -138,7 +182,13 @@ const Checkout: React.FC = () => {
             </div>
           </div>
 
-          <Button variant="primary" style={{ marginTop: 'var(--spacing-4)' }}>
+          <Button 
+            variant="primary" 
+            style={{ marginTop: 'var(--spacing-4)' }}
+            onClick={handlePayment}
+            loading={loading}
+            disabled={items.length === 0}
+          >
             Pay Now
           </Button>
         </Card>
