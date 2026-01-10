@@ -8,7 +8,7 @@
     - Create `src/services/authService.ts`.
     - Support `signInWithPhone`, `verifyOtp`, and `signOut`.
     - **Tests:** Mock Firebase Auth to verify sign-in/out logic.
-- [ ] Task: Create Auth UI Components
+- [x] Task: Create Auth UI Components 8689fff
     - Create `src/components/ui/Auth/PhoneSignIn.tsx` and `OtpVerification.tsx`.
     - **Tests:** Verify form submission and state transitions.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Auth Service & UI Foundation' (Protocol in workflow.md)
