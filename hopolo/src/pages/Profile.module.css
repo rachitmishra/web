@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.addressList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.addressCard {
+  padding: var(--spacing-4);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid #e5e7eb;
+}
