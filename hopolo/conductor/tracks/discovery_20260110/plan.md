@@ -19,7 +19,7 @@
     - Implement `src/components/ui/ProductCard/ProductCard.tsx` and `.module.css`.
     - Display Image, Name, Price, Rating, and "Add to Cart".
     - **Tests:** Verify all details are rendered correctly.
-- [ ] Task: Create CategoryTabs Component
+- [x] Task: Create CategoryTabs Component fd66c64
     - Implement `src/components/ui/CategoryTabs/CategoryTabs.tsx`.
     - **Tests:** Verify active tab state and click callback.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Discovery UI Components' (Protocol in workflow.md)
