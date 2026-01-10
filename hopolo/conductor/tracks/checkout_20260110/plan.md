@@ -19,7 +19,7 @@
 - [~] Task: Conductor - User Manual Verification 'Phase 2: Razorpay Integration & Payment Flow' (Protocol in workflow.md)
 
 ## Phase 3: Reliability & Success Experience
-- [ ] Task: Implement Webhook Verification
+- [x] Task: Implement Webhook Verification aa45ebe
     - Write tests for Razorpay signature verification.
     - Implement `api/razorpay-webhook.ts` (Vercel Serverless Function).
 - [ ] Task: Create Success Page & Finalize Cart
