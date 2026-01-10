@@ -31,10 +31,10 @@
     - **Tests:** Verify that switching tabs updates the visible products.
 - [~] Task: Conductor - User Manual Verification 'Phase 3: Homepage Assembly & Filtering' (Protocol in workflow.md)
 
-## Phase 4: Routing to Product Detail Page (PDP)
+## Phase 4: Routing to Product Detail Page (PDP) [checkpoint: f4812db]
 - [x] Task: Setup React Router and Product Route 4218b42
     - Install `react-router-dom`.
     - Create a placeholder PDP at `src/pages/ProductDetail.tsx`.
     - Link `ProductCard` to the PDP route.
     - **Tests:** Verify clicking a card triggers navigation to the correct URL.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Routing to Product Detail Page (PDP)' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 4: Routing to Product Detail Page (PDP)' (Protocol in workflow.md)
