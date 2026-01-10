@@ -5,7 +5,7 @@
     - Install `firebase` dependency.
     - Create `src/lib/firebase.ts` with configuration.
     - **Tests:** Write unit tests for a `productService` mocking Firestore to verify data mapping.
-- [ ] Task: Implement Product Fetching Logic
+- [x] Task: Implement Product Fetching Logic fa00d0c
     - Create `src/services/productService.ts`.
     - Implement `fetchProducts` and `fetchCategories`.
     - **Tests:** Verify service handles success and error states.
