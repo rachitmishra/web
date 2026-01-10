@@ -32,7 +32,7 @@
     - Create `src/components/ui/MiniCart/MiniCart.tsx` (slide-out drawer).
     - Auto-open drawer when an item is added.
     - **Tests:** Verify drawer opens/closes and displays current cart items.
-- [ ] Task: Create Full Cart Page
+- [x] Task: Create Full Cart Page 3ca7e8e
     - Implement `src/pages/Cart.tsx` with route `/cart`.
     - Show line items, subtotal, and checkout CTA.
     - **Tests:** Verify quantity adjustments and subtotal calculation on the page.
