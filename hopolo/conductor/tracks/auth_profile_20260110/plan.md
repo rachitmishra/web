@@ -18,7 +18,7 @@
     - Create `src/services/profileService.ts`.
     - Support `getUserProfile`, `updateUserProfile`, and `saveAddress`.
     - **Tests:** Verify Firestore operations for the `users` collection.
-- [ ] Task: Create Profile Page
+- [x] Task: Create Profile Page 978909d
     - Implement `src/pages/Profile.tsx` with Display Name, Emoji, and Address forms.
     - **Tests:** Verify that profile data is loaded and updates are reflected.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Profile & Firestore Integration' (Protocol in workflow.md)
