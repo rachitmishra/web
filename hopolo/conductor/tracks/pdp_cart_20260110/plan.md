@@ -4,7 +4,7 @@
 - [x] Task: Implement Session ID Utility 8a9ac08
     - Create `src/lib/session.ts` to manage a persistent UUID in `localStorage`.
     - **Tests:** Verify session ID is generated once and persisted.
-- [ ] Task: Create Real-time Cart Service
+- [x] Task: Create Real-time Cart Service 3116736
     - Implement `src/services/cartService.ts` with Firestore `onSnapshot` sync.
     - Support `addToCart`, `removeFromCart`, and `updateQuantity`.
     - **Tests:** Write unit tests for cart operations mocking Firestore snapshots.
