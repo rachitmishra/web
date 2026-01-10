@@ -1,6 +1,6 @@
 # Track Plan: Product Detail Page (PDP) & Real-time Cart
 
-## Phase 1: Session Management & Cart Service
+## Phase 1: Session Management & Cart Service [checkpoint: cebde30]
 - [x] Task: Implement Session ID Utility 8a9ac08
     - Create `src/lib/session.ts` to manage a persistent UUID in `localStorage`.
     - **Tests:** Verify session ID is generated once and persisted.
