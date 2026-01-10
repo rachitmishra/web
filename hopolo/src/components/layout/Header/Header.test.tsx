@@ -15,7 +15,7 @@ describe('Header', () => {
     (cartService.subscribeToCart as any).mockReturnValue(vi.fn());
     render(
       <MemoryRouter>
-        <Header />
+        <Header onOpenCart={() => {}} />
       </MemoryRouter>
     );
     expect(screen.getByText(/hopolo/i)).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('Header', () => {
 
     render(
       <MemoryRouter>
-        <Header />
+        <Header onOpenCart={() => {}} />
       </MemoryRouter>
     );
 

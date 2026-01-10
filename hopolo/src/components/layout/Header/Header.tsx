@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 import { subscribeToCart, CartItem } from '../../../services/cartService';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onOpenCart: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
   const [itemCount, setItemCount] = useState(0);
 
   useEffect(() => {
@@ -21,7 +25,7 @@ const Header: React.FC = () => {
       </Link>
       
       <div className={styles.actions}>
-        <button className={styles.cartButton} aria-label="Shopping Cart">
+        <button className={styles.cartButton} onClick={onOpenCart} aria-label="Shopping Cart">
           🛒
           {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
         </button>
