@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Hero from '../components/ui/Hero/Hero';
 import CategoryTabs from '../components/ui/CategoryTabs/CategoryTabs';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
@@ -9,6 +10,7 @@ const Home: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeCategoryId, setActiveCategoryId] = useState('all');
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadData = async () => {
@@ -70,7 +72,7 @@ const Home: React.FC = () => {
               key={product.id} 
               product={product}
               onAddToCart={(p) => console.log('Add to cart:', p)}
-              onClick={(id) => console.log('Navigate to:', id)}
+              onClick={(id) => navigate(`/product/${id}`)}
             />
           ))}
         </div>

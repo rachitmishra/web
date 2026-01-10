@@ -12,7 +12,11 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onClick }) => {
   return (
-    <Card className={styles.productCard} onClick={() => onClick?.(product.id)}>
+    <Card 
+      className={styles.productCard} 
+      onClick={() => onClick?.(product.id)}
+      data-testid={`product-card-${product.id}`}
+    >
       <div className={styles.imageContainer}>
         {product.image ? (
           <img src={product.image} alt={product.name} className={styles.image} />
