@@ -10,7 +10,7 @@
     - **Tests:** Write unit tests for cart operations mocking Firestore snapshots.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Session Management & Cart Service' (Protocol in workflow.md)
 
-## Phase 2: Product Detail Page (PDP)
+## Phase 2: Product Detail Page (PDP) [checkpoint: 4c504e1]
 - [x] Task: Enhance PDP UI Component 85569d3
     - Update `src/pages/ProductDetail.tsx` with description, price, and gallery.
     - Implement a local `QuantitySelector` component.
