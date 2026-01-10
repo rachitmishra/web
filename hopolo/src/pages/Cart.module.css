@@ -1,0 +1,93 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.cartGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-8);
+}
+
+@media (min-width: 1024px) {
+  .cartGrid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.item {
+  display: flex;
+  gap: var(--spacing-6);
+  align-items: center;
+  padding: var(--spacing-4);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid #f3f4f6;
+}
+
+.itemImage {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  background-color: #f3f4f6;
+}
+
+.itemDetails {
+  flex: 1;
+}
+
+.itemName {
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 4px;
+}
+
+.itemPrice {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.itemActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-4);
+}
+
+.removeButton {
+  color: var(--color-danger);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.totalRow {
+  border-top: 1px solid #e5e7eb;
+  padding-top: var(--spacing-4);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
