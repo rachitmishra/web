@@ -13,7 +13,7 @@
     - **Tests:** Verify form submission and state transitions.
 - [~] Task: Conductor - User Manual Verification 'Phase 1: Auth Service & UI Foundation' (Protocol in workflow.md)
 
-## Phase 2: Profile & Firestore Integration
+## Phase 2: Profile & Firestore Integration [checkpoint: 747736f]
 - [x] Task: Implement Profile Service 2c7e8e6
     - Create `src/services/profileService.ts`.
     - Support `getUserProfile`, `updateUserProfile`, and `saveAddress`.
@@ -21,7 +21,7 @@
 - [x] Task: Create Profile Page 978909d
     - Implement `src/pages/Profile.tsx` with Display Name, Emoji, and Address forms.
     - **Tests:** Verify that profile data is loaded and updates are reflected.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Profile & Firestore Integration' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Profile & Firestore Integration' (Protocol in workflow.md)
 
 ## Phase 3: Header Integration & Navigation
 - [ ] Task: Implement User Header Menu
