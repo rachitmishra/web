@@ -32,7 +32,7 @@
 - [~] Task: Conductor - User Manual Verification 'Phase 3: Homepage Assembly & Filtering' (Protocol in workflow.md)
 
 ## Phase 4: Routing to Product Detail Page (PDP)
-- [ ] Task: Setup React Router and Product Route
+- [x] Task: Setup React Router and Product Route 4218b42
     - Install `react-router-dom`.
     - Create a placeholder PDP at `src/pages/ProductDetail.tsx`.
     - Link `ProductCard` to the PDP route.
