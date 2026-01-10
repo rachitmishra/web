@@ -14,7 +14,7 @@
 - [~] Task: Conductor - User Manual Verification 'Phase 1: Auth Service & UI Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Profile & Firestore Integration
-- [ ] Task: Implement Profile Service
+- [x] Task: Implement Profile Service 2c7e8e6
     - Create `src/services/profileService.ts`.
     - Support `getUserProfile`, `updateUserProfile`, and `saveAddress`.
     - **Tests:** Verify Firestore operations for the `users` collection.
