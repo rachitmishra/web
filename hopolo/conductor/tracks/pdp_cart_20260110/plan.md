@@ -18,7 +18,7 @@
 - [x] Task: Integrate Add to Cart Logic 2c43c83
     - Connect the PDP "Add to Cart" button to the `cartService`.
     - **Tests:** Verify service call with correct product and quantity.
-- [ ] Task: Implement Related Products & Reviews Sections
+- [x] Task: Implement Related Products & Reviews Sections dfd43e6
     - Add UI sections for mock reviews and related product cards.
     - **Tests:** Verify display of these contextual areas.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Product Detail Page (PDP)' (Protocol in workflow.md)
