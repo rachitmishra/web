@@ -27,7 +27,7 @@
 - [x] Task: Implement User Header Menu e9ad7c8
     - Update `Header.tsx` to include Sign In / Profile dropdown.
     - **Tests:** Verify UI reflects auth state changes.
-- [ ] Task: Setup Protected Routes
+- [x] Task: Setup Protected Routes d7daf8c
     - Protect `/profile` so only authenticated users can access it.
     - **Tests:** Verify redirection to `/` or sign-in for unauthenticated users.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Header Integration & Navigation' (Protocol in workflow.md)
