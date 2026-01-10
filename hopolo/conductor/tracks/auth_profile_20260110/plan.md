@@ -1,6 +1,6 @@
 # Track Plan: User Authentication & Profile Management
 
-## Phase 1: Auth Service & UI Foundation
+## Phase 1: Auth Service & UI Foundation [checkpoint: 298c172]
 - [x] Task: Configure Firebase Auth 325a945
     - Update `src/lib/firebase.ts` to export `auth`.
     - **Tests:** Verify `auth` instance is initialized.
@@ -11,7 +11,7 @@
 - [x] Task: Create Auth UI Components 8689fff
     - Create `src/components/ui/Auth/PhoneSignIn.tsx` and `OtpVerification.tsx`.
     - **Tests:** Verify form submission and state transitions.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Auth Service & UI Foundation' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 1: Auth Service & UI Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Profile & Firestore Integration
 - [ ] Task: Implement Profile Service
