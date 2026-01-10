@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from './Header/Header';
 import styles from './MainLayout.module.css';
 
 interface MainLayoutProps {
@@ -8,16 +9,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        {/* Placeholder Logo */}
-        <div style={{ fontWeight: 'bold', fontSize: '1.5rem', color: 'var(--color-primary)' }}>
-          Hopolo
-        </div>
-        {/* Placeholder Navigation */}
-        <nav>
-          {/* Links would go here */}
-        </nav>
-      </header>
+      <Header />
       
       <main className={styles.main}>
         {children}
