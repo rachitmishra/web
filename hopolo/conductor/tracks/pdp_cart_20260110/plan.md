@@ -11,7 +11,7 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Session Management & Cart Service' (Protocol in workflow.md)
 
 ## Phase 2: Product Detail Page (PDP)
-- [ ] Task: Enhance PDP UI Component
+- [x] Task: Enhance PDP UI Component 85569d3
     - Update `src/pages/ProductDetail.tsx` with description, price, and gallery.
     - Implement a local `QuantitySelector` component.
     - **Tests:** Verify rendering of all product details and initial quantity state.
