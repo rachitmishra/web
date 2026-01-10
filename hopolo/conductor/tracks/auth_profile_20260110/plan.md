@@ -4,7 +4,7 @@
 - [x] Task: Configure Firebase Auth 325a945
     - Update `src/lib/firebase.ts` to export `auth`.
     - **Tests:** Verify `auth` instance is initialized.
-- [ ] Task: Implement AuthService
+- [x] Task: Implement AuthService 7cb2738
     - Create `src/services/authService.ts`.
     - Support `signInWithPhone`, `verifyOtp`, and `signOut`.
     - **Tests:** Mock Firebase Auth to verify sign-in/out logic.
