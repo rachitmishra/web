@@ -11,7 +11,7 @@
     - **Tests:** Verify tracking info renders when available.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Shipping Integration' (Protocol in workflow.md) a648964
 
-## Phase 2: Refund Integration
+## Phase 2: Refund Integration [checkpoint: dcdceba]
 - [x] Task: Connect Refund Button to Service 74dc253
     - Update `src/pages/Admin/OrderDetail.tsx` to call `refundOrder`.
     - Add confirmation dialog.
