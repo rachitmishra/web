@@ -9,7 +9,7 @@
 - [x] Task: Display Tracking Info 08dbc5d
     - Update `OrderDetail.tsx` to show tracking ID and label URL if present.
     - **Tests:** Verify tracking info renders when available.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Shipping Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Shipping Integration' (Protocol in workflow.md) a648964
 
 ## Phase 2: Refund Integration
 - [ ] Task: Connect Refund Button to Service
