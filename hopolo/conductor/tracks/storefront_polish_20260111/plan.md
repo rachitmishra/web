@@ -1,6 +1,6 @@
 # Track Plan: Storefront Polish & Variants
 
-## Phase 1: Product Variants
+## Phase 1: Product Variants [checkpoint: 64dfa50]
 - [x] Task: Update Product & Cart Data Model c94cea1
     - Update `Product` interface in `src/services/productService.ts`.
     - Update `CartItem` in `src/services/cartService.ts` to include `selectedSize` and `selectedColor`.
