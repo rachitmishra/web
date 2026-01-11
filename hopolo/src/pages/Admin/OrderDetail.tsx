@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchOrderById, updateOrderStatus } from '../../services/orderService';
 import { createShippingOrder } from '../../services/shippingService';
+import { refundOrder } from '../../services/paymentService';
 import Button from '../../components/ui/Button/Button';
 import styles from './OrderDetail.module.css';
 
@@ -11,6 +12,7 @@ const OrderDetail: React.FC = () => {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [shippingLoading, setShippingLoading] = useState(false);
+  const [refundLoading, setRefundLoading] = useState(false);
   const [shippingInfo, setShippingInfo] = useState<{ trackingId: string; labelUrl: string } | null>(null);
 
   useEffect(() => {
@@ -18,9 +20,6 @@ const OrderDetail: React.FC = () => {
       if (id) {
         const data = await fetchOrderById(id);
         setOrder(data);
-        // In a real app, we would fetch tracking info from the order or a separate collection
-        // For now, we only show it if locally available after action (or persisted in order later)
-        // Ideally, trackingId should be part of the order object in Firestore.
       }
       setLoading(false);
     };
@@ -33,8 +32,8 @@ const OrderDetail: React.FC = () => {
     try {
       const result = await createShippingOrder({
         orderId: order.id,
-        customerName: order.userId, // Using userId as name for now, should be real name
-        phone: order.phone || '9999999999', // Fallback or real phone
+        customerName: order.userId,
+        phone: order.phone || '9999999999',
         address: `${order.address?.street}, ${order.address?.city}`,
         items: order.items.map((item: any) => ({
           name: item.name,
@@ -52,6 +51,24 @@ const OrderDetail: React.FC = () => {
       alert('Failed to ship order.');
     } finally {
       setShippingLoading(false);
+    }
+  };
+
+  const handleRefund = async () => {
+    if (!order || !order.paymentId) return;
+    if (!window.confirm(`Are you sure you want to refund ₹${order.total}?`)) return;
+
+    setRefundLoading(true);
+    try {
+      await refundOrder(order.paymentId, order.total);
+      await updateOrderStatus(order.id, 'refunded');
+      setOrder((prev: any) => ({ ...prev, status: 'refunded' }));
+      alert('Refund processed successfully!');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to process refund.');
+    } finally {
+      setRefundLoading(false);
     }
   };
 
@@ -112,7 +129,14 @@ const OrderDetail: React.FC = () => {
         >
           {order.status === 'shipped' ? 'Shipped' : 'Ship with Shadowfax'}
         </Button>
-        <Button variant="secondary" onClick={() => alert('Refund not implemented in UI yet')}>Issue Refund</Button>
+        <Button 
+          variant="secondary" 
+          onClick={handleRefund}
+          loading={refundLoading}
+          disabled={order.status === 'refunded' || order.status === 'failed'}
+        >
+          {order.status === 'refunded' ? 'Refunded' : 'Issue Refund'}
+        </Button>
       </div>
     </div>
   );

@@ -4,9 +4,11 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import OrderDetail from './OrderDetail';
 import * as orderService from '../../services/orderService';
 import * as shippingService from '../../services/shippingService';
+import * as paymentService from '../../services/paymentService';
 
 vi.mock('../../services/orderService');
 vi.mock('../../services/shippingService');
+vi.mock('../../services/paymentService');
 
 const mockOrder = {
   id: 'o123',
@@ -83,8 +85,35 @@ describe('OrderDetail Page', () => {
         address: expect.stringContaining('123 Main St'),
       }));
       expect(orderService.updateOrderStatus).toHaveBeenCalledWith('o123', 'shipped');
-      // UI update check - wait for status to change locally or button to disable
-      // For now, we assume the component re-renders or updates local state
+    });
+  });
+
+  it('should handle refund process when Refund button is clicked', async () => {
+    (orderService.fetchOrderById as any).mockResolvedValue(mockOrder);
+    (paymentService.refundOrder as any).mockResolvedValue({
+      refundId: 'rfnd_123',
+      status: 'processed'
+    });
+    (orderService.updateOrderStatus as any).mockResolvedValue();
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    render(
+      <MemoryRouter initialEntries={['/admin/orders/o123']}>
+        <Routes>
+          <Route path="/admin/orders/:id" element={<OrderDetail />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => screen.getByText('Issue Refund'));
+
+    const refundBtn = screen.getByText('Issue Refund');
+    fireEvent.click(refundBtn);
+
+    await waitFor(() => {
+      expect(window.confirm).toHaveBeenCalled();
+      expect(paymentService.refundOrder).toHaveBeenCalledWith('pay_123', 1500);
+      expect(orderService.updateOrderStatus).toHaveBeenCalledWith('o123', 'refunded');
     });
   });
 
