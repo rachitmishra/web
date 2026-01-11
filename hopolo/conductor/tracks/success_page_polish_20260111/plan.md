@@ -5,4 +5,4 @@
     - Update `src/pages/Success.tsx` to fetch order details using `orderService`.
     - Render Items, Total, and Address.
     - **Tests:** Mock `fetchOrderById` and verify details are rendered on Success page.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Success Page Enhancement' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Success Page Enhancement' (Protocol in workflow.md) d7dc95f
