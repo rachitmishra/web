@@ -7,7 +7,7 @@
     - **Tests:** Mock Firestore `addDoc` and `getDocs` to verify logic.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Review Service' (Protocol in workflow.md) 9e9ecb9
 
-## Phase 2: Product Detail Integration
+## Phase 2: Product Detail Integration [checkpoint: 2ce6e7b]
 - [x] Task: Implement Review List UI aa26a2c
     - Update `src/pages/ProductDetail.tsx` to fetch and display reviews.
     - Replace hardcoded static reviews.
