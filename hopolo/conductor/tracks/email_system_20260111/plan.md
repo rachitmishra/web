@@ -10,7 +10,7 @@
     - Create `src/templates/orderConfirmation.ts` (HTML generator).
     - Update `orderService` (or `paymentService` webhook handler) to trigger this email on 'PAID'.
     - **Tests:** Verify email service is called with correct data when order is created/paid.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Service Setup & Confirmation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Service Setup & Confirmation' (Protocol in workflow.md) 6ebb1e9
 
 ## Phase 2: Delivery Feedback
 - [ ] Task: Implement Delivery Feedback Email
