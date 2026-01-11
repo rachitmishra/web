@@ -5,7 +5,7 @@
     - Update `src/services/emailService.ts` to save logs to Firestore `mail_logs`.
     - Handle both success and failure cases.
     - **Tests:** Update `emailService.test.ts` to verify Firestore writes.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Email Logging Service' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Email Logging Service' (Protocol in workflow.md) 726e7a0
 
 ## Phase 2: Admin Email Logs UI
 - [ ] Task: Create Email Logs Page
