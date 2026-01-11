@@ -12,7 +12,7 @@
     - **Tests:** Verify email service is called with correct data when order is created/paid.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Service Setup & Confirmation' (Protocol in workflow.md) 6ebb1e9
 
-## Phase 2: Delivery Feedback
+## Phase 2: Delivery Feedback [checkpoint: 7b19cfd]
 - [x] Task: Implement Delivery Feedback Email ac4de7e
     - Create `src/templates/deliveryFeedback.ts`.
     - Update `adminService` or `orderService` to trigger this email when status updates to 'delivered'.
