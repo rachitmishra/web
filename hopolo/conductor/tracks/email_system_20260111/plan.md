@@ -6,7 +6,7 @@
     - Create `src/services/emailService.ts`.
     - Implement `sendEmail` base function.
     - **Tests:** Mock Resend API to verify payload structure.
-- [ ] Task: Implement Order Confirmation Email
+- [x] Task: Implement Order Confirmation Email ccc9868
     - Create `src/templates/orderConfirmation.ts` (HTML generator).
     - Update `orderService` (or `paymentService` webhook handler) to trigger this email on 'PAID'.
     - **Tests:** Verify email service is called with correct data when order is created/paid.
