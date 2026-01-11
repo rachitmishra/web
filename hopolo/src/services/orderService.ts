@@ -1,11 +1,14 @@
-import { collection, addDoc, getDocs, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, getDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { CartItem } from './cartService';
 import { Address } from './profileService';
+import { sendEmail } from './emailService';
+import { generateOrderConfirmationHtml } from '../templates/orderConfirmation';
 
 export interface Order {
   id: string; // Include id
   userId: string;
+  userEmail?: string;
   items: CartItem[];
   total: number;
   paymentId: string;
@@ -19,6 +22,26 @@ export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt'>): P
     ...orderData,
     createdAt: serverTimestamp(),
   });
+
+  // Trigger Order Confirmation Email
+  if (orderData.userEmail && orderData.status === 'paid') {
+    try {
+      const html = generateOrderConfirmationHtml({
+        id: docRef.id,
+        items: orderData.items,
+        total: orderData.total,
+        address: orderData.address
+      });
+      await sendEmail({
+        to: orderData.userEmail,
+        subject: 'Order Confirmed - Hopolo',
+        html
+      });
+    } catch (error) {
+      console.error('Failed to send order confirmation email:', error);
+    }
+  }
+
   return docRef.id;
 };
 

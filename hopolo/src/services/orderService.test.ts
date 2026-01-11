@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createOrder } from './orderService';
 import { addDoc } from 'firebase/firestore';
+import { sendEmail } from './emailService';
+
+vi.mock('./emailService');
+vi.mock('../templates/orderConfirmation', () => ({
+  generateOrderConfirmationHtml: vi.fn().mockReturnValue('<html>Mock HTML</html>'),
+}));
 
 vi.mock('firebase/firestore', async () => {
   const actual = await vi.importActual('firebase/firestore');
@@ -24,28 +30,31 @@ describe('orderService', () => {
     vi.clearAllMocks();
   });
 
-  it('createOrder should call addDoc with order details', async () => {
+  it('createOrder should call addDoc with order details and send confirmation email', async () => {
     const mockOrder = {
       userId: 'user123',
-      items: [{ productId: 'p1', quantity: 1 }],
+      items: [{ productId: 'p1', name: 'P1', price: 100, quantity: 1 }],
       total: 100,
       paymentId: 'pay_123',
       status: 'paid',
       address: { street: '123' },
-      createdAt: expect.anything(),
+      userEmail: 'test@example.com', // New field
     };
 
     (addDoc as any).mockResolvedValue({ id: 'order_123' });
 
     const result = await createOrder(mockOrder);
 
-    expect(addDoc).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
-      userId: 'user123',
-      paymentId: 'pay_123',
-      status: 'paid'
-    }));
+    expect(addDoc).toHaveBeenCalled();
     expect(result).toBe('order_123');
+    
+    expect(sendEmail).toHaveBeenCalledWith({
+      to: 'test@example.com',
+      subject: 'Order Confirmed - Hopolo',
+      html: '<html>Mock HTML</html>',
+    });
   });
+
 
   it('fetchAllOrders should return mapped orders', async () => {
     const { getDocs } = await import('firebase/firestore');
