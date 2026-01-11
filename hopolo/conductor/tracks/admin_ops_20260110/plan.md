@@ -14,7 +14,7 @@
     - Create `src/services/shippingService.ts`.
     - Implement API call to Shadowfax for fulfillment.
     - **Tests:** Mock Shadowfax API to verify label retrieval.
-- [ ] Task: Implement Razorpay Refund Logic
+- [x] Task: Implement Razorpay Refund Logic e945ef4
     - Create `src/services/paymentService.ts` (Admin extensions).
     - Implement `refundOrder` using Razorpay API.
     - **Tests:** Verify order status updates after refund.
