@@ -12,7 +12,7 @@
     - Update `src/pages/ProductDetail.tsx` to fetch and display reviews.
     - Replace hardcoded static reviews.
     - **Tests:** Verify reviews are rendered correctly.
-- [ ] Task: Implement Add Review Form
+- [x] Task: Implement Add Review Form 407380c
     - Add a form to `ProductDetail.tsx` (or a sub-component).
     - Handle submission using `reviewService`.
     - Handle auth state (hide form if not logged in).
