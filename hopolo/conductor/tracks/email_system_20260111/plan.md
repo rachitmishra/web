@@ -17,4 +17,4 @@
     - Create `src/templates/deliveryFeedback.ts`.
     - Update `adminService` or `orderService` to trigger this email when status updates to 'delivered'.
     - **Tests:** Verify email trigger on status change.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Delivery Feedback' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Delivery Feedback' (Protocol in workflow.md) a0646d5
