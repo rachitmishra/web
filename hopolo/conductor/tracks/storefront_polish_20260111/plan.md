@@ -20,4 +20,4 @@
 - [x] Task: Add Homepage Reviews 981e220
     - Update `src/pages/Home.tsx` to include a "Featured Reviews" section.
     - **Tests:** Verify reviews section renders.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Footer & Homepage Polish' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Footer & Homepage Polish' (Protocol in workflow.md) 8d91050
