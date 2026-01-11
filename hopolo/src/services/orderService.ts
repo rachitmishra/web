@@ -1,9 +1,10 @@
-import { collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { CartItem } from './cartService';
 import { Address } from './profileService';
 import { sendEmail } from './emailService';
 import { generateOrderConfirmationHtml } from '../templates/orderConfirmation';
+import { generateDeliveryFeedbackHtml } from '../templates/deliveryFeedback';
 
 export interface Order {
   id: string; // Include id
@@ -52,6 +53,30 @@ export const fetchAllOrders = async (): Promise<Order[]> => {
     id: doc.id,
     ...doc.data()
   })) as Order[];
+};
+
+export const updateOrderStatus = async (orderId: string, status: Order['status']): Promise<void> => {
+  const docRef = doc(db, 'orders', orderId);
+  await updateDoc(docRef, { status });
+
+  if (status === 'delivered') {
+    try {
+      const orderSnap = await getDoc(docRef);
+      if (orderSnap.exists()) {
+        const orderData = orderSnap.data() as Order;
+        if (orderData.userEmail) {
+          const html = generateDeliveryFeedbackHtml(orderId);
+          await sendEmail({
+            to: orderData.userEmail,
+            subject: 'Your order has arrived! 📦',
+            html
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to send delivery feedback email:', error);
+    }
+  }
 };
 
 export async function fetchOrderById(orderId: string) {

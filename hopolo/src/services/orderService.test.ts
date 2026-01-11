@@ -5,7 +5,10 @@ import { sendEmail } from './emailService';
 
 vi.mock('./emailService');
 vi.mock('../templates/orderConfirmation', () => ({
-  generateOrderConfirmationHtml: vi.fn().mockReturnValue('<html>Mock HTML</html>'),
+  generateOrderConfirmationHtml: vi.fn().mockReturnValue('<html>Confirmation HTML</html>'),
+}));
+vi.mock('../templates/deliveryFeedback', () => ({
+  generateDeliveryFeedbackHtml: vi.fn().mockReturnValue('<html>Feedback HTML</html>'),
 }));
 
 vi.mock('firebase/firestore', async () => {
@@ -16,6 +19,9 @@ vi.mock('firebase/firestore', async () => {
     collection: vi.fn(() => ({ id: 'mock-collection' })),
     addDoc: vi.fn(),
     getDocs: vi.fn(),
+    getDoc: vi.fn(),
+    doc: vi.fn(),
+    updateDoc: vi.fn(),
     query: vi.fn(),
     orderBy: vi.fn(),
   };
@@ -51,10 +57,30 @@ describe('orderService', () => {
     expect(sendEmail).toHaveBeenCalledWith({
       to: 'test@example.com',
       subject: 'Order Confirmed - Hopolo',
-      html: '<html>Mock HTML</html>',
+      html: '<html>Confirmation HTML</html>',
     });
   });
 
+  it('updateOrderStatus should update firestore and send feedback email if delivered', async () => {
+    const { getDoc, updateDoc } = await import('firebase/firestore');
+    const { updateOrderStatus } = await import('./orderService');
+    
+    (getDoc as any).mockResolvedValue({
+      exists: () => true,
+      id: 'o123',
+      data: () => ({ userEmail: 'customer@example.com' })
+    });
+    (updateDoc as any).mockResolvedValue(undefined);
+
+    await updateOrderStatus('o123', 'delivered');
+
+    expect(updateDoc).toHaveBeenCalled();
+    expect(sendEmail).toHaveBeenCalledWith({
+      to: 'customer@example.com',
+      subject: 'Your order has arrived! 📦',
+      html: '<html>Feedback HTML</html>',
+    });
+  });
 
   it('fetchAllOrders should return mapped orders', async () => {
     const { getDocs } = await import('firebase/firestore');
