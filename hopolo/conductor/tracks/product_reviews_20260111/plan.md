@@ -8,7 +8,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Review Service' (Protocol in workflow.md) 9e9ecb9
 
 ## Phase 2: Product Detail Integration
-- [ ] Task: Implement Review List UI
+- [x] Task: Implement Review List UI aa26a2c
     - Update `src/pages/ProductDetail.tsx` to fetch and display reviews.
     - Replace hardcoded static reviews.
     - **Tests:** Verify reviews are rendered correctly.
