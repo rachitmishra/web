@@ -6,25 +6,41 @@ import ProductCard from '../components/ui/ProductCard/ProductCard';
 import styles from './ProductDetail.module.css';
 import { fetchProducts, Product } from '../services/productService';
 import { addToCart } from '../services/cartService';
+import { fetchReviews, Review } from '../services/reviewService';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
 
+  const getRatingEmoji = (rating: number) => {
+    switch (rating) {
+      case 3: return '😊';
+      case 2: return '😐';
+      case 1: return '😞';
+      default: return '❓';
+    }
+  };
+
   useEffect(() => {
-    const loadProductAndRelated = async () => {
+    const loadProductAndReviews = async () => {
+      if (!id) return;
       try {
-        const products = await fetchProducts();
+        const [products, reviewsData] = await Promise.all([
+          fetchProducts(),
+          fetchReviews(id)
+        ]);
+        
         const found = products.find(p => p.id === id);
         setProduct(found || null);
+        setReviews(reviewsData);
         
         if (found) {
-          // Mock related products: same category, different ID
           const related = products.filter(p => p.category === found.category && p.id !== id).slice(0, 4);
           setRelatedProducts(related);
         }
@@ -34,8 +50,8 @@ const ProductDetail: React.FC = () => {
         setLoading(false);
       }
     };
-    loadProductAndRelated();
-    setQuantity(1); // Reset quantity on ID change
+    loadProductAndReviews();
+    setQuantity(1);
   }, [id]);
 
   const handleAddToCart = async (p: Product = product!, q: number = quantity) => {
@@ -97,14 +113,18 @@ const ProductDetail: React.FC = () => {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Customer Reviews</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
-          <div style={{ padding: 'var(--spacing-4)', background: '#fff', borderRadius: 'var(--radius-md)', border: '1px solid #eee' }}>
-            <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Alex R. ⭐⭐⭐⭐⭐</div>
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>Absolutely love the minimalist aesthetic. Fast shipping too!</p>
-          </div>
-          <div style={{ padding: 'var(--spacing-4)', background: '#fff', borderRadius: 'var(--radius-md)', border: '1px solid #eee' }}>
-            <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Jordan M. ⭐⭐⭐⭐</div>
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>Great quality, exactly as pictured. Will buy again.</p>
-          </div>
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <div key={review.id} style={{ padding: 'var(--spacing-4)', background: '#fff', borderRadius: 'var(--radius-md)', border: '1px solid #eee' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+                  {review.userName} {getRatingEmoji(review.rating)}
+                </div>
+                <p style={{ margin: 0, fontSize: '0.875rem' }}>{review.comment}</p>
+              </div>
+            ))
+          ) : (
+            <p style={{ color: 'var(--color-text-muted)' }}>No reviews yet. Be the first to review!</p>
+          )}
         </div>
       </section>
 
