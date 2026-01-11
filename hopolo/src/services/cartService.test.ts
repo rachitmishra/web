@@ -46,6 +46,23 @@ describe('cartService', () => {
     });
   });
 
+  it('addToCart should support product variants (size/color)', async () => {
+    const mockProduct = { id: 'p1', name: 'Product 1', price: 10, category: 'test' };
+    
+    (getDoc as any).mockResolvedValue({ exists: () => false });
+
+    await addToCart(mockProduct, 1, { size: 'M', color: 'Blue' });
+
+    expect(setDoc).toHaveBeenCalledWith(expect.anything(), {
+      items: [{ 
+        product: mockProduct, 
+        quantity: 1, 
+        selectedSize: 'M', 
+        selectedColor: 'Blue' 
+      }]
+    });
+  });
+
   it('subscribeToCart should call onSnapshot and trigger callback', () => {
     const callback = vi.fn();
     const mockUnsubscribe = vi.fn();
