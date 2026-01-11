@@ -1,6 +1,6 @@
 # Track Plan: System Reliability & Logging
 
-## Phase 1: Email Logging Service
+## Phase 1: Email Logging Service [checkpoint: df2dcf6]
 - [x] Task: Implement Email Logging b69f2cb
     - Update `src/services/emailService.ts` to save logs to Firestore `mail_logs`.
     - Handle both success and failure cases.
