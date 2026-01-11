@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../lib/firebase';
 import { getUserProfile, updateUserProfile, UserProfile, saveAddress, deleteAddress, Address } from '../services/profileService';
+import { fetchOrdersByUserId, Order } from '../services/orderService';
 import Button from '../components/ui/Button/Button';
 import Card from '../components/ui/Card/Card';
 import Input from '../components/ui/Input/Input';
@@ -8,6 +9,7 @@ import styles from './Profile.module.css';
 
 const Profile: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [displayName, setDisplayName] = useState('');
   const [emoji, setEmoji] = useState('');
   const [loading, setLoading] = useState(true);
@@ -19,21 +21,26 @@ const Profile: React.FC = () => {
   const [newCity, setNewCity] = useState('');
   const [newZip, setNewZip] = useState('');
 
-  const loadProfile = async () => {
+  const loadData = async () => {
     const user = auth.currentUser;
     if (user) {
-      const data = await getUserProfile(user.uid);
-      if (data) {
-        setProfile(data);
-        setDisplayName(data.displayName || '');
-        setEmoji(data.emoji || '');
+      const [profileData, ordersData] = await Promise.all([
+        getUserProfile(user.uid),
+        fetchOrdersByUserId(user.uid)
+      ]);
+      
+      if (profileData) {
+        setProfile(profileData);
+        setDisplayName(profileData.displayName || '');
+        setEmoji(profileData.emoji || '');
       }
+      setOrders(ordersData);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    loadProfile();
+    loadData();
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {
@@ -59,7 +66,7 @@ const Profile: React.FC = () => {
       setSaving(true);
       try {
         await saveAddress(user.uid, { street: newStreet, city: newCity, zip: newZip });
-        await loadProfile();
+        await loadData();
         setShowAddressForm(false);
         setNewStreet('');
         setNewCity('');
@@ -77,7 +84,7 @@ const Profile: React.FC = () => {
     if (user) {
       try {
         await deleteAddress(user.uid, index);
-        await loadProfile();
+        await loadData();
       } catch (err) {
         console.error(err);
       }
@@ -144,7 +151,26 @@ const Profile: React.FC = () => {
 
       <section className={styles.section}>
         <h2>Order History</h2>
-        <p style={{ color: 'var(--color-text-muted)' }}>No orders found.</p>
+        {orders.length > 0 ? (
+          <div className={styles.orderList}>
+            {orders.map((order) => (
+              <div key={order.id} className={styles.orderCard}>
+                <div className={styles.orderDetails}>
+                  <strong>Order {order.id}</strong>
+                  <span>{order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : 'Date N/A'}</span>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontWeight: 'bold' }}>${order.total.toFixed(2)}</div>
+                  <span style={{ fontSize: '0.75rem', textTransform: 'capitalize', color: 'var(--color-text-muted)' }}>
+                    {order.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ color: 'var(--color-text-muted)' }}>No orders found.</p>
+        )}
       </section>
     </div>
   );

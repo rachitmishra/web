@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, getDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { CartItem } from './cartService';
 import { Address } from './profileService';
@@ -48,6 +48,19 @@ export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt'>): P
 
 export const fetchAllOrders = async (): Promise<Order[]> => {
   const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Order[];
+};
+
+export const fetchOrdersByUserId = async (userId: string): Promise<Order[]> => {
+  const q = query(
+    collection(db, 'orders'), 
+    where('userId', '==', userId),
+    orderBy('createdAt', 'desc')
+  );
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => ({
     id: doc.id,

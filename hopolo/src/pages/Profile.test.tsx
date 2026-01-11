@@ -3,9 +3,11 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Profile from './Profile';
 import * as profileService from '../services/profileService';
+import * as orderService from '../services/orderService';
 import * as firebase from '../lib/firebase';
 
 vi.mock('../services/profileService');
+vi.mock('../services/orderService');
 vi.mock('../lib/firebase', () => ({
   auth: { currentUser: { uid: 'user123' } },
   db: {},
@@ -20,6 +22,7 @@ describe('Profile Page', () => {
       emoji: '👋',
       addresses: [{ street: '123 Main St', city: 'City' }],
     });
+    (orderService.fetchOrdersByUserId as any).mockResolvedValue([]);
   });
 
   it('should render profile data on load', async () => {
@@ -94,5 +97,27 @@ describe('Profile Page', () => {
     fireEvent.click(deleteBtn);
 
     expect(profileService.deleteAddress).toHaveBeenCalledWith('user123', 0);
+  });
+
+  it('should fetch and display user orders', async () => {
+    const mockOrders = [
+      { id: 'o1', total: 100, status: 'paid', createdAt: { toDate: () => new Date() } },
+      { id: 'o2', total: 200, status: 'shipped', createdAt: { toDate: () => new Date() } },
+    ];
+    (orderService.fetchOrdersByUserId as any).mockResolvedValue(mockOrders);
+
+    render(
+      <MemoryRouter>
+        <Profile />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(orderService.fetchOrdersByUserId).toHaveBeenCalledWith('user123');
+      expect(screen.getByText(/o1/i)).toBeInTheDocument();
+      expect(screen.getByText(/o2/i)).toBeInTheDocument();
+      expect(screen.getByText('$100.00')).toBeInTheDocument();
+      expect(screen.getByText('$200.00')).toBeInTheDocument();
+    });
   });
 });
