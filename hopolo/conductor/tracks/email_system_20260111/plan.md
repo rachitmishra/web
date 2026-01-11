@@ -1,6 +1,6 @@
 # Track Plan: Email Notification System
 
-## Phase 1: Service Setup & Confirmation
+## Phase 1: Service Setup & Confirmation [checkpoint: a1586a7]
 - [x] Task: Integrate Resend & Create Email Service 854f78b
     - Install `resend` SDK.
     - Create `src/services/emailService.ts`.
