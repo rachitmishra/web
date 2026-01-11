@@ -13,4 +13,4 @@
     - Update `src/services/orderService.ts` to include `fetchOrdersByUserId`.
     - Update `src/pages/Profile.tsx` to fetch and display the user's orders.
     - **Tests:** Verify orders for the correct user are displayed.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Order History' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Order History' (Protocol in workflow.md) f6a72a5
