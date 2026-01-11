@@ -6,7 +6,8 @@ import ProductCard from '../components/ui/ProductCard/ProductCard';
 import styles from './ProductDetail.module.css';
 import { fetchProducts, Product } from '../services/productService';
 import { addToCart } from '../services/cartService';
-import { fetchReviews, Review } from '../services/reviewService';
+import { fetchReviews, Review, addReview } from '../services/reviewService';
+import { auth } from '../lib/firebase';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +19,11 @@ const ProductDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
 
+  // Review Form State
+  const [newRating, setNewRating] = useState<number>(3);
+  const [newComment, setNewComment] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+
   const getRatingEmoji = (rating: number) => {
     switch (rating) {
       case 3: return '😊';
@@ -27,29 +33,30 @@ const ProductDetail: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const loadProductAndReviews = async () => {
-      if (!id) return;
-      try {
-        const [products, reviewsData] = await Promise.all([
-          fetchProducts(),
-          fetchReviews(id)
-        ]);
-        
-        const found = products.find(p => p.id === id);
-        setProduct(found || null);
-        setReviews(reviewsData);
-        
-        if (found) {
-          const related = products.filter(p => p.category === found.category && p.id !== id).slice(0, 4);
-          setRelatedProducts(related);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+  const loadProductAndReviews = async () => {
+    if (!id) return;
+    try {
+      const [products, reviewsData] = await Promise.all([
+        fetchProducts(),
+        fetchReviews(id)
+      ]);
+      
+      const found = products.find(p => p.id === id);
+      setProduct(found || null);
+      setReviews(reviewsData);
+      
+      if (found) {
+        const related = products.filter(p => p.category === found.category && p.id !== id).slice(0, 4);
+        setRelatedProducts(related);
       }
-    };
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadProductAndReviews();
     setQuantity(1);
   }, [id]);
@@ -63,6 +70,29 @@ const ProductDetail: React.FC = () => {
       console.error('Failed to add to cart:', err);
     } finally {
       setAdding(false);
+    }
+  };
+
+  const handleAddReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!auth.currentUser || !id) return;
+    
+    setSubmittingReview(true);
+    try {
+      await addReview({
+        productId: id,
+        userId: auth.currentUser.uid,
+        userName: auth.currentUser.displayName || 'Friend',
+        rating: newRating,
+        comment: newComment
+      });
+      setNewComment('');
+      setNewRating(3);
+      await loadProductAndReviews();
+    } catch (err) {
+      console.error('Failed to add review:', err);
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
@@ -126,6 +156,38 @@ const ProductDetail: React.FC = () => {
             <p style={{ color: 'var(--color-text-muted)' }}>No reviews yet. Be the first to review!</p>
           )}
         </div>
+
+        {auth.currentUser ? (
+          <form className={styles.addReviewForm} onSubmit={handleAddReview}>
+            <h3>Write a Review</h3>
+            <div className={styles.emojiSelector}>
+              {[3, 2, 1].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  className={`${styles.ratingBtn} ${newRating === r ? styles.activeRating : ''}`}
+                  onClick={() => setNewRating(r)}
+                >
+                  {getRatingEmoji(r)}
+                </button>
+              ))}
+            </div>
+            <textarea
+              className={styles.reviewComment}
+              placeholder="Share your thoughts about this product..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              required
+            ></textarea>
+            <Button type="submit" loading={submittingReview} style={{ width: 'fit-content' }}>
+              Submit Review
+            </Button>
+          </form>
+        ) : (
+          <p style={{ marginTop: 'var(--spacing-8)', color: 'var(--color-text-muted)' }}>
+            Please <Button variant="link" onClick={() => navigate('/login')} style={{ padding: 0, height: 'auto' }}>sign in</Button> to leave a review.
+          </p>
+        )}
       </section>
 
       {relatedProducts.length > 0 && (

@@ -5,10 +5,15 @@ import ProductDetail from './ProductDetail';
 import * as productService from '../services/productService';
 import * as cartService from '../services/cartService';
 import * as reviewService from '../services/reviewService';
+import { auth } from '../lib/firebase';
 
 vi.mock('../services/productService');
 vi.mock('../services/cartService');
 vi.mock('../services/reviewService');
+vi.mock('../lib/firebase', () => ({
+  auth: { currentUser: { uid: 'u1', displayName: 'Alice' } },
+  db: {},
+}));
 
 const mockProduct: productService.Product = {
   id: '1',
@@ -23,6 +28,7 @@ describe('ProductDetail Page', () => {
     vi.clearAllMocks();
     (productService.fetchProducts as any).mockResolvedValue([mockProduct]);
     (reviewService.fetchReviews as any).mockResolvedValue([]);
+    (auth.currentUser as any) = { uid: 'u1', displayName: 'Alice' };
   });
 
   it('should render product details correctly', async () => {
@@ -82,5 +88,33 @@ describe('ProductDetail Page', () => {
       expect(screen.getByText(/Bob/i)).toBeInTheDocument();
       expect(screen.getByText(/Ok./i)).toBeInTheDocument();
     });
+  });
+
+  it('should allow a logged-in user to submit a review', async () => {
+    (reviewService.addReview as any).mockResolvedValue('new_r1');
+
+    render(
+      <MemoryRouter initialEntries={['/product/1']}>
+        <Routes>
+          <Route path="/product/:id" element={<ProductDetail />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => screen.getByText(/Write a Review/i));
+
+    fireEvent.click(screen.getByText('😊'));
+    fireEvent.change(screen.getByPlaceholderText(/share your thoughts/i), {
+      target: { value: 'Loved it!' }
+    });
+    
+    fireEvent.click(screen.getByRole('button', { name: /submit review/i }));
+
+    expect(reviewService.addReview).toHaveBeenCalledWith(expect.objectContaining({
+      productId: '1',
+      rating: 3,
+      comment: 'Loved it!',
+      userId: 'u1'
+    }));
   });
 });
