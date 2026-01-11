@@ -18,3 +18,39 @@
   padding: 4px 8px;
   border-radius: var(--radius-sm);
 }
+
+.orderSummary {
+  width: 100%;
+  max-width: 500px;
+  text-align: left;
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-2) 0;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-4);
+}
+
+.address {
+  margin-top: var(--spacing-4);
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
