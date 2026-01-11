@@ -25,8 +25,25 @@ describe('productService', () => {
 
   it('fetchProducts should return a list of products mapped correctly', async () => {
     const mockData = [
-      { id: '1', data: () => ({ name: 'Product 1', price: 100, category: 'test' }) },
-      { id: '2', data: () => ({ name: 'Product 2', price: 200, category: 'test' }) },
+      { 
+        id: '1', 
+        data: () => ({ 
+          name: 'Product 1', 
+          price: 100, 
+          category: 'test',
+          image: 'img1.jpg',
+          variants: [{ id: 'v1', size: 'S', color: 'Red', stock: 10 }]
+        }) 
+      },
+      { 
+        id: '2', 
+        data: () => ({ 
+          name: 'Product 2', 
+          price: 200, 
+          category: 'test',
+          // Missing images and variants
+        }) 
+      },
     ];
 
     (getDocs as any).mockResolvedValue({
@@ -38,7 +55,24 @@ describe('productService', () => {
     expect(collection).toHaveBeenCalledWith(expect.anything(), 'products');
     expect(getDocs).toHaveBeenCalled();
     expect(products).toHaveLength(2);
-    expect(products[0]).toEqual({ id: '1', name: 'Product 1', price: 100, category: 'test' });
+    
+    // Check first product with data
+    expect(products[0]).toEqual(expect.objectContaining({
+      id: '1', 
+      name: 'Product 1', 
+      price: 100, 
+      category: 'test',
+      images: ['img1.jpg'],
+      variants: [{ id: 'v1', size: 'S', color: 'Red', stock: 10 }]
+    }));
+
+    // Check second product with defaults
+    expect(products[1]).toEqual(expect.objectContaining({
+      id: '2',
+      name: 'Product 2',
+      images: [],
+      variants: []
+    }));
   });
 
   it('fetchProducts should handle errors gracefully', async () => {
