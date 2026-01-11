@@ -52,4 +52,17 @@ describe('Home Page', () => {
     expect(screen.getByText(/product 1/i)).toBeInTheDocument();
     expect(screen.queryByText(/product 2/i)).not.toBeInTheDocument();
   });
+
+  it('should render the featured reviews section', async () => {
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/loved by customers/i)).toBeInTheDocument();
+      expect(screen.getByText(/amazing quality/i)).toBeInTheDocument();
+    });
+  });
 });

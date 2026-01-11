@@ -83,6 +83,26 @@ const Home: React.FC = () => {
           </div>
         )}
       </section>
+
+      <section style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-12)' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: 'var(--spacing-8)' }}>Loved by Customers</h2>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+          gap: 'var(--spacing-6)' 
+        }}>
+          {[
+            { name: 'Sarah L.', emoji: '😊', text: 'Amazing quality and fast delivery. Highly recommended!' },
+            { name: 'Marcus T.', emoji: '😊', text: 'Minimalist design that fits perfectly in my home.' },
+            { name: 'Elena G.', emoji: '😊', text: 'The emoji-based review system is so fun and easy!' }
+          ].map((rev, i) => (
+            <div key={i} style={{ padding: 'var(--spacing-6)', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)' }}>
+              <div style={{ fontWeight: 'bold', marginBottom: 'var(--spacing-2)' }}>{rev.name} {rev.emoji}</div>
+              <p style={{ margin: 0, color: 'var(--color-text-muted)', lineHeight: '1.6' }}>"{rev.text}"</p>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
