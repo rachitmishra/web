@@ -12,7 +12,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Shipping Integration' (Protocol in workflow.md) a648964
 
 ## Phase 2: Refund Integration
-- [ ] Task: Connect Refund Button to Service
+- [x] Task: Connect Refund Button to Service 74dc253
     - Update `src/pages/Admin/OrderDetail.tsx` to call `refundOrder`.
     - Add confirmation dialog.
     - Handle success/loading/error states.
