@@ -18,7 +18,7 @@
     - Create `src/services/paymentService.ts` (Admin extensions).
     - Implement `refundOrder` using Razorpay API.
     - **Tests:** Verify order status updates after refund.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Shipping & Financial Operations' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Shipping & Financial Operations' (Protocol in workflow.md) a0e871b
 
 ## Phase 3: Analytics & Details
 - [ ] Task: Implement Order Detail View
