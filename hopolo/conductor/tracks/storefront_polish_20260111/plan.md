@@ -5,7 +5,7 @@
     - Update `Product` interface in `src/services/productService.ts`.
     - Update `CartItem` in `src/services/cartService.ts` to include `selectedSize` and `selectedColor`.
     - **Tests:** Update service tests to handle new fields.
-- [ ] Task: Update Product Detail UI
+- [x] Task: Update Product Detail UI 7de6389
     - Update `src/pages/ProductDetail.tsx` to render Size/Color selectors.
     - Validate selection before adding to cart.
     - **Tests:** Verify variant selectors appear and validation works.
