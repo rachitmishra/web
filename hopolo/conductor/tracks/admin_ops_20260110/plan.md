@@ -1,6 +1,6 @@
 # Track Plan: Admin Order Management & Shipping Integration
 
-## Phase 1: Admin Authorization & Core Dashboard
+## Phase 1: Admin Authorization & Core Dashboard [checkpoint: 098004e]
 - [x] Task: Implement Admin Route Guard a1bb450
     - Write tests for RBAC redirection.
     - Implement `src/components/ui/Auth/AdminRoute.tsx` checking for `role: 'admin'` in Firestore.
