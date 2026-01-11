@@ -12,7 +12,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Product Variants' (Protocol in workflow.md) 56a5035
 
 ## Phase 2: Footer & Homepage Polish
-- [ ] Task: Enhance Footer & Static Pages
+- [x] Task: Enhance Footer & Static Pages fca7f0b
     - Create `src/pages/Static/InfoPages.tsx` (generic component).
     - Update `src/components/layout/MainLayout.tsx` footer with links.
     - Add routes in `App.tsx`.
