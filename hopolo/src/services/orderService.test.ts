@@ -9,6 +9,9 @@ vi.mock('firebase/firestore', async () => {
     getFirestore: vi.fn(),
     collection: vi.fn(() => ({ id: 'mock-collection' })),
     addDoc: vi.fn(),
+    getDocs: vi.fn(),
+    query: vi.fn(),
+    orderBy: vi.fn(),
   };
 });
 
