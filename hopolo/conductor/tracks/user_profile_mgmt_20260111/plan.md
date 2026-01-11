@@ -6,7 +6,7 @@
     - Update `src/pages/Profile.tsx` to handle adding and deleting addresses.
     - Create a simple inline form for adding addresses.
     - **Tests:** Verify service calls and UI state updates for address CRUD.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Address Management' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Address Management' (Protocol in workflow.md) cec2d01
 
 ## Phase 2: Order History
 - [ ] Task: Implement Order History Fetching
