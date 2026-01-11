@@ -18,6 +18,8 @@ const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
 
   // Review Form State
   const [newRating, setNewRating] = useState<number>(3);
@@ -59,13 +61,25 @@ const ProductDetail: React.FC = () => {
   useEffect(() => {
     loadProductAndReviews();
     setQuantity(1);
+    setSelectedSize(undefined);
+    setSelectedColor(undefined);
   }, [id]);
 
   const handleAddToCart = async (p: Product = product!, q: number = quantity) => {
     if (!p) return;
+    
+    if (p.sizes && p.sizes.length > 0 && !selectedSize) {
+      alert('Please select a size.');
+      return;
+    }
+    if (p.colors && p.colors.length > 0 && !selectedColor) {
+      alert('Please select a color.');
+      return;
+    }
+
     setAdding(true);
     try {
-      await addToCart(p, q);
+      await addToCart(p, q, { size: selectedSize, color: selectedColor });
     } catch (err) {
       console.error('Failed to add to cart:', err);
     } finally {
@@ -124,6 +138,42 @@ const ProductDetail: React.FC = () => {
           <p className={styles.description}>
             This is a beautiful {product.name}. Minimalist design with playful accents, perfect for your collection. High quality materials and crafted with care.
           </p>
+
+          {product.sizes && product.sizes.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <strong>Size</strong>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {product.sizes.map(size => (
+                  <button
+                    key={size}
+                    className={`${styles.ratingBtn} ${selectedSize === size ? styles.activeRating : ''}`}
+                    onClick={() => setSelectedSize(size)}
+                    style={{ minWidth: '40px', textAlign: 'center' }}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.colors && product.colors.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <strong>Color</strong>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {product.colors.map(color => (
+                  <button
+                    key={color}
+                    className={`${styles.ratingBtn} ${selectedColor === color ? styles.activeRating : ''}`}
+                    onClick={() => setSelectedColor(color)}
+                    style={{ padding: '8px 16px' }}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className={styles.actions}>
             <div className={styles.addToCartRow}>

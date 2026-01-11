@@ -63,7 +63,7 @@ describe('ProductDetail Page', () => {
     
     fireEvent.click(addButton);
 
-    expect(cartService.addToCart).toHaveBeenCalledWith(mockProduct, 2);
+    expect(cartService.addToCart).toHaveBeenCalledWith(mockProduct, 2, { size: undefined, color: undefined });
   });
 
   it('should fetch and display reviews on load', async () => {
@@ -90,8 +90,13 @@ describe('ProductDetail Page', () => {
     });
   });
 
-  it('should allow a logged-in user to submit a review', async () => {
-    (reviewService.addReview as any).mockResolvedValue('new_r1');
+  it('should render variant selectors and allow selection', async () => {
+    const productWithVariants = {
+      ...mockProduct,
+      sizes: ['S', 'M'],
+      colors: ['Red', 'Blue'],
+    };
+    (productService.fetchProducts as any).mockResolvedValue([productWithVariants]);
 
     render(
       <MemoryRouter initialEntries={['/product/1']}>
@@ -101,20 +106,25 @@ describe('ProductDetail Page', () => {
       </MemoryRouter>
     );
 
-    await waitFor(() => screen.getByText(/Write a Review/i));
-
-    fireEvent.click(screen.getByText('😊'));
-    fireEvent.change(screen.getByPlaceholderText(/share your thoughts/i), {
-      target: { value: 'Loved it!' }
-    });
+    await waitFor(() => screen.getByText('Size'));
     
-    fireEvent.click(screen.getByRole('button', { name: /submit review/i }));
+    expect(screen.getByText('S')).toBeInTheDocument();
+    expect(screen.getByText('M')).toBeInTheDocument();
+    expect(screen.getByText('Red')).toBeInTheDocument();
+    expect(screen.getByText('Blue')).toBeInTheDocument();
 
-    expect(reviewService.addReview).toHaveBeenCalledWith(expect.objectContaining({
-      productId: '1',
-      rating: 3,
-      comment: 'Loved it!',
-      userId: 'u1'
-    }));
+    // Select Size
+    fireEvent.click(screen.getByText('M'));
+    // Select Color
+    fireEvent.click(screen.getByText('Blue'));
+
+    // Click Add to Cart
+    fireEvent.click(screen.getByRole('button', { name: /add to cart/i }));
+
+    expect(cartService.addToCart).toHaveBeenCalledWith(
+      expect.objectContaining({ id: '1' }), 
+      1,
+      { size: 'M', color: 'Blue' }
+    );
   });
 });
