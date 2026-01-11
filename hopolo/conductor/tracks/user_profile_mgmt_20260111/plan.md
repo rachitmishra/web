@@ -1,6 +1,6 @@
 # Track Plan: User Profile & Address Management
 
-## Phase 1: Address Management
+## Phase 1: Address Management [checkpoint: b5b51f5]
 - [x] Task: Implement Add/Delete Address logic 03d62d8
     - Update `src/services/profileService.ts` to include `deleteAddress`.
     - Update `src/pages/Profile.tsx` to handle adding and deleting addresses.
