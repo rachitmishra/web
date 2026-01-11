@@ -7,7 +7,7 @@
 - [x] Task: Create Orders Dashboard UI 4afa20f
     - Write tests for order table rendering.
     - Implement `src/pages/Admin/Orders.tsx` with sorting and filtering.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Admin Authorization & Core Dashboard' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Admin Authorization & Core Dashboard' (Protocol in workflow.md) 50578ef
 
 ## Phase 2: Shipping & Financial Operations
 - [ ] Task: Integrate Shadowfax Shipping Service
