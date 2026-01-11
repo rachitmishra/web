@@ -30,3 +30,13 @@ export const fetchAllOrders = async (): Promise<Order[]> => {
     ...doc.data()
   })) as Order[];
 };
+
+export async function fetchOrderById(orderId: string) {
+  const docRef = doc(db, 'orders', orderId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
+  }
+  return null;
+}
