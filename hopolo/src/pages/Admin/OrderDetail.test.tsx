@@ -1,10 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import OrderDetail from './OrderDetail';
 import * as orderService from '../../services/orderService';
+import * as shippingService from '../../services/shippingService';
 
 vi.mock('../../services/orderService');
+vi.mock('../../services/shippingService');
 
 const mockOrder = {
   id: 'o123',
@@ -21,7 +23,8 @@ const mockOrder = {
     city: 'Tech City',
     zip: '560001'
   },
-  createdAt: { toDate: () => new Date('2026-01-11') }
+  createdAt: { toDate: () => new Date('2026-01-11') },
+  phone: '1234567890' // Added phone for shipping
 };
 
 describe('OrderDetail Page', () => {
@@ -48,6 +51,40 @@ describe('OrderDetail Page', () => {
       expect(screen.getByText(/Product 1 x 2/i)).toBeInTheDocument();
       expect(screen.getByText(/123 Main St/i)).toBeInTheDocument();
       expect(screen.getByText(/Tech City/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle shipping process when Ship button is clicked', async () => {
+    (orderService.fetchOrderById as any).mockResolvedValue(mockOrder);
+    (shippingService.createShippingOrder as any).mockResolvedValue({
+      trackingId: 'SFX123',
+      labelUrl: 'http://label.url'
+    });
+    (orderService.updateOrderStatus as any).mockResolvedValue();
+
+    render(
+      <MemoryRouter initialEntries={['/admin/orders/o123']}>
+        <Routes>
+          <Route path="/admin/orders/:id" element={<OrderDetail />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => screen.getByText('Ship with Shadowfax'));
+
+    const shipBtn = screen.getByText('Ship with Shadowfax');
+    fireEvent.click(shipBtn);
+
+    await waitFor(() => {
+      expect(shippingService.createShippingOrder).toHaveBeenCalledWith(expect.objectContaining({
+        orderId: 'o123',
+        customerName: 'u456', // Simplified mapping for now
+        phone: '1234567890',
+        address: expect.stringContaining('123 Main St'),
+      }));
+      expect(orderService.updateOrderStatus).toHaveBeenCalledWith('o123', 'shipped');
+      // UI update check - wait for status to change locally or button to disable
+      // For now, we assume the component re-renders or updates local state
     });
   });
 
