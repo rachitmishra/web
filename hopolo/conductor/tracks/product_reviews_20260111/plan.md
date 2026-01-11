@@ -1,6 +1,6 @@
 # Track Plan: Product Reviews & Ratings
 
-## Phase 1: Review Service
+## Phase 1: Review Service [checkpoint: 19229e8]
 - [x] Task: Create Review Service 1924e68
     - Create `src/services/reviewService.ts`.
     - Implement `addReview` and `fetchReviews`.
