@@ -5,7 +5,7 @@
     - Create `src/services/reviewService.ts`.
     - Implement `addReview` and `fetchReviews`.
     - **Tests:** Mock Firestore `addDoc` and `getDocs` to verify logic.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Review Service' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Review Service' (Protocol in workflow.md) 9e9ecb9
 
 ## Phase 2: Product Detail Integration
 - [ ] Task: Implement Review List UI
