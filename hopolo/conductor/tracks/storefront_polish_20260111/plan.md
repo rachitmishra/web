@@ -17,7 +17,7 @@
     - Update `src/components/layout/MainLayout.tsx` footer with links.
     - Add routes in `App.tsx`.
     - **Tests:** Verify navigation to info pages.
-- [ ] Task: Add Homepage Reviews
+- [x] Task: Add Homepage Reviews 981e220
     - Update `src/pages/Home.tsx` to include a "Featured Reviews" section.
     - **Tests:** Verify reviews section renders.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Footer & Homepage Polish' (Protocol in workflow.md)
