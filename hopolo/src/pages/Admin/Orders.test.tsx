@@ -48,4 +48,27 @@ describe('Admin Orders Dashboard', () => {
       expect(screen.getByText('$200.00')).toBeInTheDocument();
     });
   });
+
+  it('should display analytics metrics correctly', async () => {
+    const customMockOrders = [
+      { id: 'o1', total: 100, status: 'paid', createdAt: { toDate: () => new Date() } },
+      { id: 'o2', total: 200, status: 'paid', createdAt: { toDate: () => new Date() } },
+      { id: 'o3', total: 300, status: 'refunded', createdAt: { toDate: () => new Date() } },
+    ];
+    (orderService.fetchAllOrders as any).mockResolvedValue(customMockOrders);
+
+    render(
+      <MemoryRouter>
+        <Orders />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      // Logic: Total Sales = 100 + 200 = 300 (excluding refunded)
+      // AOV = 300 / 2 = 150
+      expect(screen.getByTestId('total-sales')).toHaveTextContent('$300.00');
+      expect(screen.getByTestId('avg-order-value')).toHaveTextContent('$150.00');
+      expect(screen.getByTestId('total-orders')).toHaveTextContent('3');
+    });
+  });
 });

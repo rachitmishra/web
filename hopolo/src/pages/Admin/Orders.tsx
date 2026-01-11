@@ -23,9 +23,30 @@ const Orders: React.FC = () => {
 
   if (loading) return <div>Loading orders...</div>;
 
+  const totalOrders = orders.length;
+  const totalSales = orders
+    .filter(o => o.status !== 'refunded')
+    .reduce((sum, o) => sum + o.total, 0);
+  const aov = totalOrders > 0 ? totalSales / orders.filter(o => o.status !== 'refunded').length : 0;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-8)' }}>
       <h1>Admin Orders</h1>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-4)' }}>
+        <Card>
+          <div style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>Total Sales</div>
+          <div data-testid="total-sales" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>${totalSales.toFixed(2)}</div>
+        </Card>
+        <Card>
+          <div style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>Avg Order Value</div>
+          <div data-testid="avg-order-value" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>${aov.toFixed(2)}</div>
+        </Card>
+        <Card>
+          <div style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>Total Orders</div>
+          <div data-testid="total-orders" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{totalOrders}</div>
+        </Card>
+      </div>
 
       <Card>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
