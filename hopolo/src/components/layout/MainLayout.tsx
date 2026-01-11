@@ -3,6 +3,7 @@ import Header from './Header/Header';
 import MiniCart from '../ui/MiniCart/MiniCart';
 import styles from './MainLayout.module.css';
 import { subscribeToCart } from '../../services/cartService';
+import { Link } from 'react-router-dom';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -15,7 +16,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = subscribeToCart((items) => {
       const currentCount = items.reduce((acc, item) => acc + item.quantity, 0);
-      // Auto-open if items increased (conceptual, maybe annoying, but spec says 'Auto-open drawer when an item is added')
       if (currentCount > prevItemCount) {
         setIsCartOpen(true);
       }
@@ -35,7 +35,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <MiniCart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
       <footer className={styles.footer}>
-        &copy; {new Date().getFullYear()} Hopolo. All rights reserved.
+        <div className={styles.footerLinks}>
+          <Link to="/about">About Us</Link>
+          <Link to="/shipping">Shipping Policy</Link>
+          <Link to="/contact">Contact Us</Link>
+        </div>
+        <div className={styles.copyright}>
+          &copy; {new Date().getFullYear()} Hopolo. All rights reserved.
+        </div>
       </footer>
     </div>
   );
