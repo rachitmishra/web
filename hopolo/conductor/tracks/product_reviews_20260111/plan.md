@@ -17,4 +17,4 @@
     - Handle submission using `reviewService`.
     - Handle auth state (hide form if not logged in).
     - **Tests:** Verify form submission calls service.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Product Detail Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Product Detail Integration' (Protocol in workflow.md) c4441e6
