@@ -9,7 +9,7 @@
     - Update `src/pages/ProductDetail.tsx` to render Size/Color selectors.
     - Validate selection before adding to cart.
     - **Tests:** Verify variant selectors appear and validation works.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Product Variants' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Product Variants' (Protocol in workflow.md) 56a5035
 
 ## Phase 2: Footer & Homepage Polish
 - [ ] Task: Enhance Footer & Static Pages
