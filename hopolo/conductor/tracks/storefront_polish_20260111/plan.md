@@ -11,7 +11,7 @@
     - **Tests:** Verify variant selectors appear and validation works.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Product Variants' (Protocol in workflow.md) 56a5035
 
-## Phase 2: Footer & Homepage Polish
+## Phase 2: Footer & Homepage Polish [checkpoint: 55c5973]
 - [x] Task: Enhance Footer & Static Pages fca7f0b
     - Create `src/pages/Static/InfoPages.tsx` (generic component).
     - Update `src/components/layout/MainLayout.tsx` footer with links.
