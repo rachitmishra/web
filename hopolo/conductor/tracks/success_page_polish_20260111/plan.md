@@ -1,6 +1,6 @@
 # Track Plan: Success Page & Final Polish
 
-## Phase 1: Success Page Enhancement
+## Phase 1: Success Page Enhancement [checkpoint: 87767b0]
 - [x] Task: Enhance Success Page UI e1d30ea
     - Update `src/pages/Success.tsx` to fetch order details using `orderService`.
     - Render Items, Total, and Address.
