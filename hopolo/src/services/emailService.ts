@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export interface EmailParams {
@@ -7,6 +7,24 @@ export interface EmailParams {
   subject: string;
   html: string;
 }
+
+export interface EmailLog {
+  id: string;
+  to: string;
+  subject: string;
+  status: 'success' | 'failed';
+  error?: string;
+  createdAt: any;
+}
+
+export const fetchEmailLogs = async (): Promise<EmailLog[]> => {
+  const q = query(collection(db, 'mail_logs'), orderBy('createdAt', 'desc'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as EmailLog[];
+};
 
 export const sendEmail = async (params: EmailParams) => {
   const apiKey = import.meta.env.VITE_RESEND_API_KEY;

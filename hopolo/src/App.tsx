@@ -7,24 +7,43 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Checkout from './pages/Checkout';
 import Success from './pages/Success';
+import Orders from './pages/Admin/Orders';
+import OrderDetail from './pages/Admin/OrderDetail';
+import EmailLogs from './pages/Admin/EmailLogs';
 import ProtectedRoute from './components/ui/Auth/ProtectedRoute';
-import './App.css';
+import AdminRoute from './components/ui/Auth/AdminRoute';
 
-export const AppRoutes = () => (
-  <MainLayout>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/product/:id" element={<ProductDetail />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/checkout/success/:orderId" element={<Success />} />
+// ...
       <Route 
-        path="/profile" 
+        path="/admin" 
         element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
+          <AdminRoute>
+            <Orders />
+          </AdminRoute>
+        } 
+      />
+      <Route 
+        path="/admin/orders" 
+        element={
+          <AdminRoute>
+            <Orders />
+          </AdminRoute>
+        } 
+      />
+      <Route 
+        path="/admin/orders/:id" 
+        element={
+          <AdminRoute>
+            <OrderDetail />
+          </AdminRoute>
+        } 
+      />
+      <Route 
+        path="/admin/email-logs" 
+        element={
+          <AdminRoute>
+            <EmailLogs />
+          </AdminRoute>
         } 
       />
     </Routes>

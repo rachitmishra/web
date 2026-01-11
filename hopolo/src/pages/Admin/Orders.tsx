@@ -2,36 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { fetchAllOrders, Order } from '../../services/orderService';
 import Card from '../../components/ui/Card/Card';
 import Button from '../../components/ui/Button/Button';
+import { useNavigate } from 'react-router-dom';
 
 const Orders: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const data = await fetchAllOrders();
-        setOrders(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadOrders();
-  }, []);
-
-  if (loading) return <div>Loading orders...</div>;
-
-  const totalOrders = orders.length;
-  const totalSales = orders
-    .filter(o => o.status !== 'refunded')
-    .reduce((sum, o) => sum + o.total, 0);
+// ...
   const aov = totalOrders > 0 ? totalSales / orders.filter(o => o.status !== 'refunded').length : 0;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-8)' }}>
-      <h1>Admin Orders</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1>Admin Orders</h1>
+        <Button variant="outline" onClick={() => navigate('/admin/email-logs')}>View Email Logs</Button>
+      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-4)' }}>
         <Card>
@@ -81,7 +68,7 @@ const Orders: React.FC = () => {
                   </span>
                 </td>
                 <td style={{ padding: 'var(--spacing-4)' }}>
-                  <Button variant="outline" style={{ fontSize: '0.75rem', padding: '4px 8px' }}>
+                  <Button variant="outline" style={{ fontSize: '0.75rem', padding: '4px 8px' }} onClick={() => navigate(`/admin/orders/${order.id}`)}>
                     Details
                   </Button>
                 </td>
