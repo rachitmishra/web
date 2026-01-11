@@ -1,6 +1,6 @@
 # Track Plan: Admin UI Completion
 
-## Phase 1: Shipping Integration
+## Phase 1: Shipping Integration [checkpoint: 1707074]
 - [x] Task: Connect Ship Button to Service 08dbc5d
     - Update `src/pages/Admin/OrderDetail.tsx` to call `createShippingOrder`.
     - Handle success/loading/error states.
