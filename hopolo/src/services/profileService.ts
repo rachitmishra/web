@@ -47,3 +47,12 @@ export const saveAddress = async (uid: string, address: Address): Promise<void> 
     addresses: [...addresses, address]
   });
 };
+
+export const deleteAddress = async (uid: string, index: number): Promise<void> => {
+  const profile = await getUserProfile(uid);
+  if (profile?.addresses) {
+    const newAddresses = [...profile.addresses];
+    newAddresses.splice(index, 1);
+    await updateUserProfile(uid, { addresses: newAddresses });
+  }
+};

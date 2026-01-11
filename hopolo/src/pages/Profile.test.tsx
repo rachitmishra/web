@@ -55,4 +55,44 @@ describe('Profile Page', () => {
       displayName: 'Jane Doe'
     }));
   });
+
+  it('should call saveAddress when a new address is submitted', async () => {
+    render(
+      <MemoryRouter>
+        <Profile />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => screen.getByText(/add new address/i));
+    
+    // Open form
+    fireEvent.click(screen.getByText(/add new address/i));
+    
+    fireEvent.change(screen.getByLabelText(/street/i), { target: { value: '456 New St' } });
+    fireEvent.change(screen.getByLabelText(/city/i), { target: { value: 'New City' } });
+    fireEvent.change(screen.getByLabelText(/zip/i), { target: { value: '12345' } });
+    
+    fireEvent.click(screen.getByRole('button', { name: /save address/i }));
+
+    expect(profileService.saveAddress).toHaveBeenCalledWith('user123', {
+      street: '456 New St',
+      city: 'New City',
+      zip: '12345'
+    });
+  });
+
+  it('should call deleteAddress when delete button is clicked', async () => {
+    render(
+      <MemoryRouter>
+        <Profile />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => screen.getByText(/123 Main St/i));
+    
+    const deleteBtn = screen.getByRole('button', { name: /delete/i });
+    fireEvent.click(deleteBtn);
+
+    expect(profileService.deleteAddress).toHaveBeenCalledWith('user123', 0);
+  });
 });
