@@ -9,7 +9,7 @@
     - Implement `src/pages/Admin/Orders.tsx` with sorting and filtering.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Admin Authorization & Core Dashboard' (Protocol in workflow.md) 50578ef
 
-## Phase 2: Shipping & Financial Operations
+## Phase 2: Shipping & Financial Operations [checkpoint: 5a4a552]
 - [x] Task: Integrate Shadowfax Shipping Service d6111a8
     - Create `src/services/shippingService.ts`.
     - Implement API call to Shadowfax for fulfillment.
