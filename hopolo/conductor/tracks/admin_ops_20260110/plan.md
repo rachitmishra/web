@@ -20,7 +20,7 @@
     - **Tests:** Verify order status updates after refund.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Shipping & Financial Operations' (Protocol in workflow.md) a0e871b
 
-## Phase 3: Analytics & Details
+## Phase 3: Analytics & Details [checkpoint: 0c9d9cd]
 - [x] Task: Implement Order Detail View 920c152
     - Create `src/pages/Admin/OrderDetail.tsx`.
     - **Tests:** Verify rendering of customer and line item data.
