@@ -24,7 +24,7 @@
 - [x] Task: Implement Order Detail View 920c152
     - Create `src/pages/Admin/OrderDetail.tsx`.
     - **Tests:** Verify rendering of customer and line item data.
-- [ ] Task: Create Analytics Overview Section
+- [x] Task: Create Analytics Overview Section 8cc3c3f
     - Implement calculation logic for total sales and AOV.
     - Display metrics in the dashboard.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Analytics & Details' (Protocol in workflow.md)
