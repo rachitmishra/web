@@ -29,7 +29,7 @@
     - Add image dropzone/uploader using `storageService`.
     - Show upload progress and preview of uploaded images.
     - **Tests:** Verify image association with product document on save.
-- [ ] Task: Finalize Product Save/Update Logic
+- [x] Task: Finalize Product Save/Update Logic 57f0ea7
     - Update `productService` to include `saveProduct(productData)` and `updateProduct(id, productData)`.
     - **Tests:** Verify Firestore write operations for full product document including variants sub-collections if applicable.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Variants & Media Integration' (Protocol in workflow.md)
