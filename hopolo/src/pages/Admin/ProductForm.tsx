@@ -3,6 +3,7 @@ import Input from '../../components/ui/Input/Input';
 import Button from '../../components/ui/Button/Button';
 import styles from './ProductForm.module.css';
 import { Variant } from '../../services/productService';
+import { uploadProductImages } from '../../services/storageService';
 
 interface ProductFormProps {
   onCancel: () => void;
@@ -19,6 +20,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ onCancel, onSave }) => {
 
   const [variants, setVariants] = useState<Omit<Variant, 'id'>[]>([]);
   const [newVariant, setNewVariant] = useState({ size: '', color: '', stock: '' });
+  
+  const [images, setImages] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   const handleAddVariant = () => {
     if (newVariant.size && newVariant.color && newVariant.stock) {
@@ -31,9 +35,24 @@ const ProductForm: React.FC<ProductFormProps> = ({ onCancel, onSave }) => {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setUploading(true);
+      try {
+        const files = Array.from(e.target.files);
+        const urls = await uploadProductImages(files);
+        setImages([...images, ...urls]);
+      } catch (err) {
+        console.error('Upload failed:', err);
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...formData, variants });
+    onSave({ ...formData, variants, images });
   };
 
   return (
@@ -62,6 +81,27 @@ const ProductForm: React.FC<ProductFormProps> = ({ onCancel, onSave }) => {
               onChange={e => setFormData({...formData, category: e.target.value})}
               required 
             />
+          </div>
+        </div>
+
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>Media</div>
+          <div style={{ marginBottom: '1rem' }}>
+            <label htmlFor="image-upload" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Upload Images</label>
+            <input 
+              id="image-upload" 
+              type="file" 
+              multiple 
+              accept="image/*" 
+              onChange={handleImageUpload} 
+              disabled={uploading}
+            />
+            {uploading && <span style={{ marginLeft: '1rem' }}>Uploading...</span>}
+          </div>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            {images.map((url, i) => (
+              <img key={i} src={url} alt={`Product Image ${i + 1}`} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ddd' }} />
+            ))}
           </div>
         </div>
 
