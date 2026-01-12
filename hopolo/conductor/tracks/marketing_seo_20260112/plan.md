@@ -16,7 +16,7 @@
     - Update local state to show applied discount and new total.
     - Ensure discounted total is passed to Razorpay in `src/pages/Checkout.tsx`.
     - **Tests:** Verify the cart total updates correctly when a valid code is applied and clears on removal.
-- [ ] Task: Apply SEO to Product and Category Pages
+- [x] Task: Apply SEO to Product and Category Pages 8f89e74
     - Integrate `useSEO` hook into `src/pages/ProductDetail.tsx`.
     - Integrate `useSEO` hook into `src/pages/Home.tsx` based on active category.
     - **Tests:** Verify head tags change correctly when navigating between products.
