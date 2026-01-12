@@ -20,7 +20,7 @@
     - Integrate `useSEO` hook into `src/pages/ProductDetail.tsx`.
     - Integrate `useSEO` hook into `src/pages/Home.tsx` based on active category.
     - **Tests:** Verify head tags change correctly when navigating between products.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Storefront Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Storefront Integration' (Protocol in workflow.md) 0fb566b
 
 ## Phase 3: Admin Management & Assets
 - [ ] Task: Create Admin Marketing Dashboard
