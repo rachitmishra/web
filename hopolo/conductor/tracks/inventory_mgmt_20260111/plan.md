@@ -25,7 +25,7 @@
 - [x] Task: Implement Variant Management UI 19ef394
     - Add section to the product form to dynamically add/remove Size/Color/Stock combinations.
     - **Tests:** Verify variant data correctly updates local form state.
-- [ ] Task: Implement Media Upload UI
+- [x] Task: Implement Media Upload UI 084b40c
     - Add image dropzone/uploader using `storageService`.
     - Show upload progress and preview of uploaded images.
     - **Tests:** Verify image association with product document on save.
