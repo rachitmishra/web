@@ -23,7 +23,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Storefront Integration' (Protocol in workflow.md) 0fb566b
 
 ## Phase 3: Admin Management & Assets
-- [ ] Task: Create Admin Marketing Dashboard
+- [x] Task: Create Admin Marketing Dashboard bc773e7
     - Implement `src/pages/Admin/Marketing.tsx` for managing promo codes.
     - Add navigation link in the Admin Dashboard.
     - **Tests:** Verify CRUD operations for promo codes in the admin UI.
