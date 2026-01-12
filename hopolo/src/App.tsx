@@ -12,6 +12,7 @@ import Orders from './pages/Admin/Orders';
 import OrderDetail from './pages/Admin/OrderDetail';
 import EmailLogs from './pages/Admin/EmailLogs';
 import Inventory from './pages/Admin/Inventory';
+import Marketing from './pages/Admin/Marketing';
 import ProtectedRoute from './components/ui/Auth/ProtectedRoute';
 import AdminRoute from './components/ui/Auth/AdminRoute';
 import './App.css';
@@ -73,6 +74,14 @@ export const AppRoutes = () => (
         element={
           <AdminRoute>
             <Inventory />
+          </AdminRoute>
+        } 
+      />
+      <Route 
+        path="/admin/marketing" 
+        element={
+          <AdminRoute>
+            <Marketing />
           </AdminRoute>
         } 
       />
