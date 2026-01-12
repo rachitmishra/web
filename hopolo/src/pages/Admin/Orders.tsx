@@ -42,6 +42,7 @@ const Orders: React.FC = () => {
           <Button variant="outline" onClick={() => navigate('/admin/inventory')}>Manage Inventory</Button>
           <Button variant="outline" onClick={() => navigate('/admin/marketing')}>Marketing</Button>
           <Button variant="outline" onClick={() => navigate('/admin/email-logs')}>View Email Logs</Button>
+          <Button variant="outline" onClick={() => navigate('/admin/seed')}>Seed Data</Button>
         </div>
       </div>
 

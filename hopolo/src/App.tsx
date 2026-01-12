@@ -13,6 +13,7 @@ import OrderDetail from './pages/Admin/OrderDetail';
 import EmailLogs from './pages/Admin/EmailLogs';
 import Inventory from './pages/Admin/Inventory';
 import Marketing from './pages/Admin/Marketing';
+import SeedData from './pages/Admin/SeedData';
 import ProtectedRoute from './components/ui/Auth/ProtectedRoute';
 import AdminRoute from './components/ui/Auth/AdminRoute';
 import './App.css';
@@ -82,6 +83,14 @@ export const AppRoutes = () => (
         element={
           <AdminRoute>
             <Marketing />
+          </AdminRoute>
+        } 
+      />
+      <Route 
+        path="/admin/seed" 
+        element={
+          <AdminRoute>
+            <SeedData />
           </AdminRoute>
         } 
       />
