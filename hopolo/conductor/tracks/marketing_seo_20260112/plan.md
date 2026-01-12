@@ -30,4 +30,4 @@
 - [x] Task: Static Asset Generation 825c495
     - Create `public/robots.txt`.
     - Implement a simple script to generate `public/sitemap.xml` based on current products.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Admin & Final Polish' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Admin & Final Polish' (Protocol in workflow.md) 825c495
