@@ -19,7 +19,7 @@
     - Create multi-section form using CSS Modules.
     - Implement sections for: Core Details (Title, Price, Discount), Category Selection (with dynamic add).
     - **Tests:** Verify form validation and submission for core fields.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Core Admin Inventory UI' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Core Admin Inventory UI' (Protocol in workflow.md) 19ef394
 
 ## Phase 3: Variants & Media Integration
 - [x] Task: Implement Variant Management UI 19ef394
