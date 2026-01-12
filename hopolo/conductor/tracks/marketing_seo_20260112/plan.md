@@ -1,6 +1,6 @@
 # Track Plan: Marketing & SEO
 
-## Phase 1: Foundations & Services
+## Phase 1: Foundations & Services [checkpoint: 629f01a]
 - [x] Task: Implement Promo Code Service 44b2b47
     - Create `src/services/promoService.ts` for Firestore CRUD operations on `promo_codes`.
     - Implement `validatePromoCode(code, cartTotal)` returning discount amount or error.
