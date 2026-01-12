@@ -11,6 +11,7 @@ import InfoPages from './pages/Static/InfoPages';
 import Orders from './pages/Admin/Orders';
 import OrderDetail from './pages/Admin/OrderDetail';
 import EmailLogs from './pages/Admin/EmailLogs';
+import Inventory from './pages/Admin/Inventory';
 import ProtectedRoute from './components/ui/Auth/ProtectedRoute';
 import AdminRoute from './components/ui/Auth/AdminRoute';
 import './App.css';
@@ -64,6 +65,14 @@ export const AppRoutes = () => (
         element={
           <AdminRoute>
             <EmailLogs />
+          </AdminRoute>
+        } 
+      />
+      <Route 
+        path="/admin/inventory" 
+        element={
+          <AdminRoute>
+            <Inventory />
           </AdminRoute>
         } 
       />

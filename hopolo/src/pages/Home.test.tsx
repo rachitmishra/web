@@ -3,8 +3,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Home from './Home';
 import * as productService from '../services/productService';
+import { useSEO } from '../hooks/useSEO';
 
 vi.mock('../services/productService');
+vi.mock('../hooks/useSEO');
 
 const mockProducts: productService.Product[] = [
   { id: '1', name: 'Product 1', price: 10, category: 'cat1' },
@@ -64,5 +66,14 @@ describe('Home Page', () => {
       expect(screen.getByText(/loved by customers/i)).toBeInTheDocument();
       expect(screen.getByText(/amazing quality/i)).toBeInTheDocument();
     });
+  });
+
+  it('should call useSEO hook', () => {
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    );
+    expect(useSEO).toHaveBeenCalled();
   });
 });

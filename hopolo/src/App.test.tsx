@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { AppRoutes } from './App';
 import * as productService from './services/productService';
 import * as cartService from './services/cartService';
+import * as reviewService from './services/reviewService';
 import { auth } from './lib/firebase';
 
 vi.mock('./services/productService');
@@ -11,6 +12,7 @@ vi.mock('./services/cartService', () => ({
   subscribeToCart: vi.fn(() => vi.fn()),
   addToCart: vi.fn(),
 }));
+vi.mock('./services/reviewService');
 
 vi.mock('./lib/firebase', () => {
   const auth = {
@@ -36,6 +38,7 @@ describe('App Routing', () => {
     vi.clearAllMocks();
     (productService.fetchProducts as any).mockResolvedValue(mockProducts);
     (productService.fetchCategories as any).mockResolvedValue(mockCategories);
+    (reviewService.fetchReviews as any).mockResolvedValue([]);
     (auth.currentUser as any) = { uid: 'user123' }; // Default to logged in for basic routing tests
   });
 
