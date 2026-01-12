@@ -11,7 +11,7 @@
     - **Tests:** Mock Firebase Storage to verify upload flow and URL retrieval.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Data Model & Storage Foundations' (Protocol in workflow.md)
 
-## Phase 2: Core Admin Inventory UI
+## Phase 2: Core Admin Inventory UI [checkpoint: d38192c]
 - [x] Task: Create Inventory Dashboard 19ef394
     - Implement `src/pages/Admin/Inventory.tsx` showing a table of all products with edit/delete actions.
     - **Tests:** Verify product list rendering.
