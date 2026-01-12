@@ -6,7 +6,7 @@
     - Implement `seedCategories`, `seedProducts`, `seedPromoCodes`, `seedReviews`.
     - Use hardcoded data dictionaries.
     - **Tests:** Verify functions call `addDoc`/`setDoc` correctly (mocked).
-- [ ] Task: Create Admin Seed Page
+- [x] Task: Create Admin Seed Page 0bb252c
     - Create `src/pages/Admin/SeedData.tsx`.
     - Add a "Seed Database" button that calls the service functions.
     - Display progress/success logs.
