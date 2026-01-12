@@ -22,7 +22,7 @@
     - **Tests:** Verify head tags change correctly when navigating between products.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Storefront Integration' (Protocol in workflow.md) 0fb566b
 
-## Phase 3: Admin Management & Assets
+## Phase 3: Admin Management & Assets [checkpoint: 0c6d873]
 - [x] Task: Create Admin Marketing Dashboard bc773e7
     - Implement `src/pages/Admin/Marketing.tsx` for managing promo codes.
     - Add navigation link in the Admin Dashboard.
