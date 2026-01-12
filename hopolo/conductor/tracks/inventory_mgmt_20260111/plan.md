@@ -34,7 +34,7 @@
     - **Tests:** Verify Firestore write operations for full product document including variants sub-collections if applicable.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Variants & Media Integration' (Protocol in workflow.md) 4555a2c
 
-## Phase 4: Polish & Storefront Alignment
+## Phase 4: Polish & Storefront Alignment [checkpoint: 59e2bcc]
 - [~] Task: Update Storefront PDP for New Schema
     - Update `src/pages/ProductDetail.tsx` to utilize the rich new data (Delivery details, Art details, etc.).
     - **Tests:** Verify rendering of new detail sections.
