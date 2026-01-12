@@ -1,4 +1,4 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export interface Variant {
@@ -57,6 +57,23 @@ export const fetchProducts = async (): Promise<Product[]> => {
       images: data.images || (data.image ? [data.image] : []),
       variants: data.variants || [],
     } as Product;
+  });
+};
+
+export const saveProduct = async (productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+  const docRef = await addDoc(collection(db, 'products'), {
+    ...productData,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+  return docRef.id;
+};
+
+export const updateProduct = async (id: string, productData: Partial<Product>): Promise<void> => {
+  const docRef = doc(db, 'products', id);
+  await updateDoc(docRef, {
+    ...productData,
+    updatedAt: serverTimestamp(),
   });
 };
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchProducts, fetchCategories } from './productService';
-import { getDocs, collection } from 'firebase/firestore';
+import { fetchProducts, fetchCategories, saveProduct } from './productService';
+import { getDocs, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 // Mock firebase/firestore
 vi.mock('firebase/firestore', async () => {
@@ -10,6 +10,8 @@ vi.mock('firebase/firestore', async () => {
     getFirestore: vi.fn(),
     collection: vi.fn(),
     getDocs: vi.fn(),
+    addDoc: vi.fn(),
+    serverTimestamp: vi.fn(),
   };
 });
 
@@ -21,6 +23,30 @@ vi.mock('../lib/firebase', () => ({
 describe('productService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it('saveProduct should add a new product document', async () => {
+    const mockProductData = {
+      name: 'New Product',
+      price: 150,
+      category: 'New Cat',
+      variants: [{ size: 'M', color: 'Green', stock: 20 }]
+    };
+
+    (addDoc as any).mockResolvedValue({ id: 'new_id' });
+
+    const result = await saveProduct(mockProductData as any);
+
+    expect(collection).toHaveBeenCalledWith(expect.anything(), 'products');
+    expect(addDoc).toHaveBeenCalledWith(undefined, expect.objectContaining({
+      name: 'New Product',
+      price: 150,
+      category: 'New Cat',
+      variants: [{ size: 'M', color: 'Green', stock: 20 }],
+      createdAt: undefined,
+      updatedAt: undefined
+    }));
+    expect(result).toBe('new_id');
   });
 
   it('fetchProducts should return a list of products mapped correctly', async () => {
@@ -56,7 +82,6 @@ describe('productService', () => {
     expect(getDocs).toHaveBeenCalled();
     expect(products).toHaveLength(2);
     
-    // Check first product with data
     expect(products[0]).toEqual(expect.objectContaining({
       id: '1', 
       name: 'Product 1', 
@@ -66,7 +91,6 @@ describe('productService', () => {
       variants: [{ id: 'v1', size: 'S', color: 'Red', stock: 10 }]
     }));
 
-    // Check second product with defaults
     expect(products[1]).toEqual(expect.objectContaining({
       id: '2',
       name: 'Product 2',
