@@ -35,7 +35,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Variants & Media Integration' (Protocol in workflow.md) 4555a2c
 
 ## Phase 4: Polish & Storefront Alignment
-- [x] Task: Update Storefront PDP for New Schema 8654d3a
+- [~] Task: Update Storefront PDP for New Schema
     - Update `src/pages/ProductDetail.tsx` to utilize the rich new data (Delivery details, Art details, etc.).
     - **Tests:** Verify rendering of new detail sections.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Polish & Storefront Alignment' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Polish & Storefront Alignment' (Protocol in workflow.md) 8654d3a
