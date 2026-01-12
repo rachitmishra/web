@@ -5,24 +5,24 @@
     - Refactor `Product` interface in `src/services/productService.ts` to include new fields (variants, delivery, specs, etc.).
     - Implement `Variant` interface.
     - **Tests:** Write tests for new product fetching logic ensuring variants and rich details are handled.
-- [ ] Task: Setup Firebase Storage Service
+- [~] Task: Setup Firebase Storage Service
     - Create `src/services/storageService.ts` for handling image uploads.
     - Implement `uploadProductImages(files: File[])` returning URLs.
     - **Tests:** Mock Firebase Storage to verify upload flow and URL retrieval.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Data Model & Storage Foundations' (Protocol in workflow.md)
 
 ## Phase 2: Core Admin Inventory UI
-- [ ] Task: Create Inventory Dashboard
+- [x] Task: Create Inventory Dashboard 19ef394
     - Implement `src/pages/Admin/Inventory.tsx` showing a table of all products with edit/delete actions.
     - **Tests:** Verify product list rendering.
-- [ ] Task: Implement Add/Edit Product Form (Core Details)
+- [x] Task: Implement Add/Edit Product Form (Core Details) 19ef394
     - Create multi-section form using CSS Modules.
     - Implement sections for: Core Details (Title, Price, Discount), Category Selection (with dynamic add).
     - **Tests:** Verify form validation and submission for core fields.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Core Admin Inventory UI' (Protocol in workflow.md)
 
 ## Phase 3: Variants & Media Integration
-- [ ] Task: Implement Variant Management UI
+- [x] Task: Implement Variant Management UI 19ef394
     - Add section to the product form to dynamically add/remove Size/Color/Stock combinations.
     - **Tests:** Verify variant data correctly updates local form state.
 - [ ] Task: Implement Media Upload UI
