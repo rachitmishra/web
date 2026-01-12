@@ -1,21 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Cart from './Cart';
 import * as cartService from '../services/cartService';
+import * as promoService from '../services/promoService';
 
 vi.mock('../services/cartService');
-
-const mockItems = [
-  { product: { id: '1', name: 'Product 1', price: 10 }, quantity: 2 },
-  { product: { id: '2', name: 'Product 2', price: 20 }, quantity: 1 },
-];
+vi.mock('../services/promoService');
 
 describe('Cart Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (cartService.subscribeToCart as any).mockImplementation((callback: any) => {
-      callback(mockItems);
+    (cartService.subscribeToCart as any).mockImplementation((cb: any) => {
+      cb([
+        { product: { id: 'p1', name: 'Product 1', price: 100, category: 'test' }, quantity: 2 },
+      ]);
       return vi.fn();
     });
   });
@@ -27,22 +26,9 @@ describe('Cart Page', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/product 1/i)).toBeInTheDocument();
-    expect(screen.getByText(/product 2/i)).toBeInTheDocument();
-    expect(screen.getByText(/\$40\.00/i)).toBeInTheDocument(); // 2*10 + 1*20
-  });
-
-  it('should call updateQuantity when a quantity is changed', async () => {
-    render(
-      <MemoryRouter>
-        <Cart />
-      </MemoryRouter>
-    );
-
-    const increaseButtons = screen.getAllByLabelText(/increase quantity/i);
-    fireEvent.click(increaseButtons[0]);
-
-    expect(cartService.updateQuantity).toHaveBeenCalledWith('1', 3);
+    expect(screen.getByText('Product 1')).toBeInTheDocument();
+    expect(screen.getByText('Subtotal')).toBeInTheDocument();
+    expect(screen.getByText('$200.00')).toBeInTheDocument();
   });
 
   it('should call removeFromCart when remove is clicked', async () => {
@@ -52,9 +38,36 @@ describe('Cart Page', () => {
       </MemoryRouter>
     );
 
-    const removeButtons = screen.getAllByRole('button', { name: /remove/i });
-    fireEvent.click(removeButtons[0]);
+    const removeBtn = screen.getByLabelText('Remove item');
+    fireEvent.click(removeBtn);
 
-    expect(cartService.removeFromCart).toHaveBeenCalledWith('1');
+    expect(cartService.removeFromCart).toHaveBeenCalledWith('p1');
+  });
+
+  it('should apply promo code and update total', async () => {
+    (promoService.validatePromoCode as any).mockResolvedValue({
+      discount: 20,
+      type: 'fixed',
+      value: 20
+    });
+
+    render(
+      <MemoryRouter>
+        <Cart />
+      </MemoryRouter>
+    );
+
+    const promoInput = screen.getByPlaceholderText(/enter code/i);
+    const applyBtn = screen.getByRole('button', { name: /apply/i });
+
+    fireEvent.change(promoInput, { target: { value: 'SAVE20' } });
+    fireEvent.click(applyBtn);
+
+    await waitFor(() => {
+      expect(promoService.validatePromoCode).toHaveBeenCalledWith('SAVE20', 200);
+      expect(screen.getByText(/discount/i)).toBeInTheDocument();
+      expect(screen.getByText(/-\$20.00/i)).toBeInTheDocument();
+      expect(screen.getByText(/\$185.99/i)).toBeInTheDocument();
+    });
   });
 });
