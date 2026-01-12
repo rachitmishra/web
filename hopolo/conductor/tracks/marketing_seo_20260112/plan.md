@@ -10,7 +10,7 @@
     - **Tests:** Verify `document.title` and meta description update correctly in a browser-like environment.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundations & Services' (Protocol in workflow.md) f303196
 
-## Phase 2: Storefront Integration
+## Phase 2: Storefront Integration [checkpoint: c335b5e]
 - [x] Task: Integrate Promo Codes into Cart & Checkout 1b1b782
     - Add promo code input to `src/pages/Cart.tsx`.
     - Update local state to show applied discount and new total.
