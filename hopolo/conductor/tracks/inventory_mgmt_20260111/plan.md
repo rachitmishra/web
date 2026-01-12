@@ -21,7 +21,7 @@
     - **Tests:** Verify form validation and submission for core fields.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Core Admin Inventory UI' (Protocol in workflow.md) 19ef394
 
-## Phase 3: Variants & Media Integration
+## Phase 3: Variants & Media Integration [checkpoint: 4555a2c]
 - [x] Task: Implement Variant Management UI 19ef394
     - Add section to the product form to dynamically add/remove Size/Color/Stock combinations.
     - **Tests:** Verify variant data correctly updates local form state.
@@ -32,7 +32,7 @@
 - [x] Task: Finalize Product Save/Update Logic 57f0ea7
     - Update `productService` to include `saveProduct(productData)` and `updateProduct(id, productData)`.
     - **Tests:** Verify Firestore write operations for full product document including variants sub-collections if applicable.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Variants & Media Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Variants & Media Integration' (Protocol in workflow.md) 4555a2c
 
 ## Phase 4: Polish & Storefront Alignment
 - [ ] Task: Update Storefront PDP for New Schema
