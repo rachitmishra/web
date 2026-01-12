@@ -5,7 +5,7 @@
     - Create `src/services/promoService.ts` for Firestore CRUD operations on `promo_codes`.
     - Implement `validatePromoCode(code, cartTotal)` returning discount amount or error.
     - **Tests:** Verify discount calculations (percentage vs fixed) and minimum purchase rules.
-- [ ] Task: Create SEO Management Hook
+- [x] Task: Create SEO Management Hook f303196
     - Implement `src/hooks/useSEO.ts` to dynamically update document title and meta tags.
     - **Tests:** Verify `document.title` and meta description update correctly in a browser-like environment.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundations & Services' (Protocol in workflow.md)
