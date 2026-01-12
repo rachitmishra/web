@@ -4,9 +4,9 @@ import Button from '../components/ui/Button/Button';
 import QuantitySelector from '../components/ui/QuantitySelector/QuantitySelector';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
 import styles from './ProductDetail.module.css';
-import { fetchProducts, Product } from '../services/productService';
+import { fetchProducts, type Product } from '../services/productService';
 import { addToCart } from '../services/cartService';
-import { fetchReviews, Review, addReview } from '../services/reviewService';
+import { fetchReviews, type Review, addReview } from '../services/reviewService';
 import { auth } from '../lib/firebase';
 
 const ProductDetail: React.FC = () => {
@@ -132,12 +132,49 @@ const ProductDetail: React.FC = () => {
 
         <div className={styles.details}>
           <h1 className={styles.name}>{product.name}</h1>
-          <div className={styles.price}>${product.price.toFixed(2)}</div>
+          <div className={styles.price}>
+            ${product.price.toFixed(2)}
+            {product.priceDisclaimer && <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginLeft: '8px' }}>{product.priceDisclaimer}</span>}
+          </div>
           {product.rating && <div className={styles.rating}>⭐ {product.rating} / 5.0</div>}
           
+          {product.deliveryTime && (
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-primary)', fontWeight: 500 }}>
+              Estimated Delivery: {product.deliveryTime}
+            </div>
+          )}
+
           <p className={styles.description}>
-            This is a beautiful {product.name}. Minimalist design with playful accents, perfect for your collection. High quality materials and crafted with care.
+            {product.description || `This is a beautiful ${product.name}. Minimalist design with playful accents, perfect for your collection. High quality materials and crafted with care.`}
           </p>
+
+          {product.specifications && Object.keys(product.specifications).length > 0 && (
+            <div className={styles.infoSection}>
+              <strong>Specifications</strong>
+              <div className={styles.infoGrid}>
+                {Object.entries(product.specifications).map(([key, value]) => (
+                  <React.Fragment key={key}>
+                    <span className={styles.infoKey}>{key}</span>
+                    <span className={styles.infoValue}>{value}</span>
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.artDetails && Object.keys(product.artDetails).length > 0 && (
+            <div className={styles.infoSection}>
+              <strong>Art Details</strong>
+              <div className={styles.infoGrid}>
+                {Object.entries(product.artDetails).map(([key, value]) => (
+                  <React.Fragment key={key}>
+                    <span className={styles.infoKey}>{key}</span>
+                    <span className={styles.infoValue}>{value}</span>
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          )}
 
           {product.sizes && product.sizes.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

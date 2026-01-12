@@ -66,6 +66,31 @@ describe('ProductDetail Page', () => {
     expect(cartService.addToCart).toHaveBeenCalledWith(mockProduct, 2, { size: undefined, color: undefined });
   });
 
+  it('should render rich product details like delivery and art info', async () => {
+    const richProduct = {
+      ...mockProduct,
+      deliveryTime: '3-5 days',
+      priceDisclaimer: 'Taxes included',
+      artDetails: { Artist: 'Jane Doe', Technique: 'Oil on Canvas' }
+    };
+    (productService.fetchProducts as any).mockResolvedValue([richProduct]);
+
+    render(
+      <MemoryRouter initialEntries={['/product/1']}>
+        <Routes>
+          <Route path="/product/:id" element={<ProductDetail />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/3-5 days/i)).toBeInTheDocument();
+      expect(screen.getByText(/Taxes included/i)).toBeInTheDocument();
+      expect(screen.getByText(/Jane Doe/i)).toBeInTheDocument();
+      expect(screen.getByText(/Oil on Canvas/i)).toBeInTheDocument();
+    });
+  });
+
   it('should fetch and display reviews on load', async () => {
     const mockReviews = [
       { id: 'r1', rating: 3, comment: 'Amazing!', userName: 'Alice' },
