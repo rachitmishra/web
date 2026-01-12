@@ -11,7 +11,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundations & Services' (Protocol in workflow.md) f303196
 
 ## Phase 2: Storefront Integration
-- [ ] Task: Integrate Promo Codes into Cart & Checkout
+- [x] Task: Integrate Promo Codes into Cart & Checkout 1b1b782
     - Add promo code input to `src/pages/Cart.tsx`.
     - Update local state to show applied discount and new total.
     - Ensure discounted total is passed to Razorpay in `src/pages/Checkout.tsx`.
