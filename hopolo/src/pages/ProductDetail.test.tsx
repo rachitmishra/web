@@ -6,10 +6,12 @@ import * as productService from '../services/productService';
 import * as cartService from '../services/cartService';
 import * as reviewService from '../services/reviewService';
 import { auth } from '../lib/firebase';
+import { useSEO } from '../hooks/useSEO';
 
 vi.mock('../services/productService');
 vi.mock('../services/cartService');
 vi.mock('../services/reviewService');
+vi.mock('../hooks/useSEO');
 vi.mock('../lib/firebase', () => ({
   auth: { currentUser: { uid: 'u1', displayName: 'Alice' } },
   db: {},
@@ -21,6 +23,8 @@ const mockProduct: productService.Product = {
   price: 49.99,
   category: 'Test',
   rating: 4.5,
+  description: 'A great product',
+  image: 'img.jpg'
 };
 
 describe('ProductDetail Page', () => {
@@ -112,6 +116,26 @@ describe('ProductDetail Page', () => {
       expect(screen.getByText(/Amazing!/i)).toBeInTheDocument();
       expect(screen.getByText(/Bob/i)).toBeInTheDocument();
       expect(screen.getByText(/Ok./i)).toBeInTheDocument();
+    });
+  });
+
+  it('should call useSEO with product details', async () => {
+    (productService.fetchProducts as any).mockResolvedValue([mockProduct]);
+    
+    render(
+      <MemoryRouter initialEntries={['/product/1']}>
+        <Routes>
+          <Route path="/product/:id" element={<ProductDetail />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(useSEO).toHaveBeenCalledWith(expect.objectContaining({
+        title: 'Cool Product',
+        description: 'A great product',
+        image: 'img.jpg'
+      }));
     });
   });
 

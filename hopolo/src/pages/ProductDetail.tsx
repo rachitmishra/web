@@ -4,10 +4,11 @@ import Button from '../components/ui/Button/Button';
 import QuantitySelector from '../components/ui/QuantitySelector/QuantitySelector';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
 import styles from './ProductDetail.module.css';
-import { fetchProducts, type Product } from '../services/productService';
+import { fetchProducts, Product } from '../services/productService';
 import { addToCart } from '../services/cartService';
-import { fetchReviews, type Review, addReview } from '../services/reviewService';
+import { fetchReviews, Review, addReview } from '../services/reviewService';
 import { auth } from '../lib/firebase';
+import { useSEO } from '../hooks/useSEO';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,6 +26,13 @@ const ProductDetail: React.FC = () => {
   const [newRating, setNewRating] = useState<number>(3);
   const [newComment, setNewComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
+
+  useSEO({
+    title: product ? product.name : 'Product Details',
+    description: product?.description,
+    image: product?.image,
+    ogType: 'product'
+  });
 
   const getRatingEmoji = (rating: number) => {
     switch (rating) {
