@@ -27,7 +27,7 @@
     - Implement `src/pages/Admin/Marketing.tsx` for managing promo codes.
     - Add navigation link in the Admin Dashboard.
     - **Tests:** Verify CRUD operations for promo codes in the admin UI.
-- [ ] Task: Static Asset Generation
+- [x] Task: Static Asset Generation 825c495
     - Create `public/robots.txt`.
     - Implement a simple script to generate `public/sitemap.xml` based on current products.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Admin & Final Polish' (Protocol in workflow.md)
