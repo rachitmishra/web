@@ -11,7 +11,7 @@
     - **Tests:** Simulate a user signup and verify Firestore document creation.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Automatic Onboarding' (Protocol in workflow.md)
 
-## Phase 2: Secure Data Layer (Server-Side Encryption)
+## Phase 2: Secure Data Layer (Server-Side Encryption) [checkpoint: 55468e4]
 - [x] Task: Implement Encryption Utilities 3f1f387
     - Create utility functions in Cloud Functions for AES-256 encryption/decryption.
     - **Tests:** Unit test encryption/decryption with the secret key.
