@@ -14,7 +14,7 @@
 - [x] Task: Implement Server-Side Encryption Utilities 792035d
     - Use Node.js `crypto` or `crypto-js` within the server context.
     - **Tests:** Verify encryption/decryption with server environment variables.
-- [ ] Task: Implement Profile Loader (Server-Side)
+- [x] Task: Implement Profile Loader (Server-Side) 032fa82
     - Create a loader for the Profile page that fetches and decrypts data from Firestore using `firebase-admin`.
     - **Tests:** Verify the browser receives decrypted data without the key.
 - [ ] Task: Implement Profile Action (Server-Side)
