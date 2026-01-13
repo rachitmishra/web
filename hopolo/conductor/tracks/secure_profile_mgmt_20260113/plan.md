@@ -33,6 +33,6 @@
 ## Phase 4: Granular RBAC & Polish
 - [x] Task: Integrate RBAC in Loaders c4b9506
     - Protect routes by checking user role in the server-side loader.
-- [~] Task: Final Polish & Cleanup
+- [x] Task: Final Polish & Cleanup 02efdc1
     - Remove redundant Cloud Functions if applicable.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md)
