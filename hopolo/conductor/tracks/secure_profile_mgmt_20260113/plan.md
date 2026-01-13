@@ -23,7 +23,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Secure SSR Data Layer' (Protocol in workflow.md) 0a71b1a
 
 ## Phase 3: Role Management & Invitations
-- [ ] Task: Implement Admin Invitation Flow
+- [x] Task: Implement Admin Invitation Flow bea7421
     - Server-side action to create tokens in `invitations` collection.
     - Admin UI view for generating invites.
 - [ ] Task: Handle Invitation Consumption
