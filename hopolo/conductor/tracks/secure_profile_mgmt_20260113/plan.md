@@ -30,9 +30,9 @@
     - Check for pending invites in the onboarding/profile loader.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Invitations' (Protocol in workflow.md) 28145b5
 
-## Phase 4: Granular RBAC & Polish
+## Phase 4: Granular RBAC & Polish [checkpoint: b71cb47]
 - [x] Task: Integrate RBAC in Loaders c4b9506
     - Protect routes by checking user role in the server-side loader.
 - [x] Task: Final Polish & Cleanup 02efdc1
     - Remove redundant Cloud Functions if applicable.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md) b71cb47
