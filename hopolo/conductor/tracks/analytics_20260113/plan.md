@@ -8,7 +8,7 @@
     - **Tests:** Write unit tests for data transformation logic using mock order datasets.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Data Processing & Foundations' (Protocol in workflow.md) b800e4b
 
-## Phase 2: Visual Components
+## Phase 2: Visual Components [checkpoint: 5fffcc4]
 - [x] Task: Create Reusable Chart Components b3725d6
     - Implement `RevenueAreaChart.tsx` for revenue trends.
     - Implement `TopProductsBarChart.tsx` for performance ranking.
