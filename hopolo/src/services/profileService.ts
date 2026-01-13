@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { db, functions } from '../lib/firebase';
+import { httpsCallable } from 'firebase/functions';
 
 export interface Address {
   street: string;
@@ -13,10 +14,16 @@ export interface UserProfile {
   displayName?: string;
   emoji?: string;
   addresses?: Address[];
-  role?: 'user' | 'admin';
+  role?: 'user' | 'editor' | 'manager' | 'admin';
 }
 
-const getUserRef = (uid: string) => doc(db, 'users', uid);
+export const createInvitation = async (phoneNumber: string, role: string) => {
+  const createInvite = httpsCallable(functions, 'createInvite');
+  const result = await createInvite({ phoneNumber, role });
+  return result.data as { inviteCode: string };
+};
+
+const getUserRef = (uid: string) => doc(db, 'profiles', uid);
 
 export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
   const userDoc = await getDoc(getUserRef(uid));
@@ -41,8 +48,6 @@ export const saveAddress = async (uid: string, address: Address): Promise<void> 
   const profile = await getUserProfile(uid);
   const addresses = profile?.addresses || [];
   
-  // For MVP, we just add or replace primary. 
-  // Here we'll append.
   await updateUserProfile(uid, {
     addresses: [...addresses, address]
   });

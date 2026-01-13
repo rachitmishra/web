@@ -15,6 +15,7 @@ import Inventory from './pages/Admin/Inventory';
 import Marketing from './pages/Admin/Marketing';
 import SeedData from './pages/Admin/SeedData';
 import Analytics from './pages/Admin/Analytics';
+import Invitations from './pages/Admin/Invitations';
 import ProtectedRoute from './components/ui/Auth/ProtectedRoute';
 import AdminRoute from './components/ui/Auth/AdminRoute';
 import './App.css';
@@ -100,6 +101,14 @@ export const AppRoutes = () => (
         element={
           <AdminRoute>
             <Analytics />
+          </AdminRoute>
+        } 
+      />
+      <Route 
+        path="/admin/invitations" 
+        element={
+          <AdminRoute>
+            <Invitations />
           </AdminRoute>
         } 
       />
