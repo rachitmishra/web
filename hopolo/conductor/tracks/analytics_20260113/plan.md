@@ -17,11 +17,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Visual Components' (Protocol in workflow.md) b3725d6
 
 ## Phase 3: Dashboard Integration
-- [ ] Task: Implement Analytics Dashboard Page
+- [x] Task: Implement Analytics Dashboard Page 063291f
     - Create `src/pages/Admin/Analytics.tsx`.
     - Integrate range selection toggle (Today, 7D, 30D).
     - Connect real Firestore data from `orderService` to charts.
     - **Tests:** Verify data updates correctly when switching time ranges.
-- [ ] Task: Update Admin Navigation
+- [x] Task: Update Admin Navigation 063291f
     - Add "Analytics" link to the Admin layout or dashboard header.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Dashboard Integration' (Protocol in workflow.md)
