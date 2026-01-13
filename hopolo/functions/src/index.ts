@@ -3,6 +3,7 @@ import * as functions from 'firebase-functions';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { encrypt, decrypt } from './encryption';
 import { getConfig } from './config';
+import { v4 as uuidv4 } from 'uuid';
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
@@ -11,15 +12,32 @@ if (admin.apps.length === 0) {
 const db = admin.firestore();
 
 export const onUserCreated = async (user: admin.auth.UserRecord) => {
-  const { uid, email } = user;
+  const { uid, email, phoneNumber } = user;
+  const key = getConfig().encryptionKey;
+
+  // Check for invitations
+  let role = 'user';
+  if (phoneNumber) {
+    const inviteQuery = await db.collection('invitations')
+      .where('phoneNumber', '==', phoneNumber)
+      .where('status', '==', 'pending')
+      .get();
+    
+    if (!inviteQuery.empty) {
+      const inviteDoc = inviteQuery.docs[0];
+      role = inviteDoc.data().role;
+      await inviteDoc.ref.update({ status: 'consumed', usedBy: uid, updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+    }
+  }
   
   await db.collection('profiles').doc(uid).set({
     uid,
     email: email || '',
-    role: 'user',
-    addresses: encrypt(JSON.stringify([]), getConfig().encryptionKey),
-    displayName: encrypt('', getConfig().encryptionKey),
-    emoji: encrypt('', getConfig().encryptionKey),
+    phoneNumber: phoneNumber || '',
+    role,
+    addresses: encrypt(JSON.stringify([]), key),
+    displayName: encrypt('', key),
+    emoji: encrypt('', key),
     createdAt: admin.firestore.FieldValue.serverTimestamp()
   });
 };
@@ -78,6 +96,41 @@ export const updateSecureProfileHandler = async (request: any) => {
   return { success: true };
 };
 
+/**
+ * Handler for creating an admin invitation.
+ */
+export const createInviteHandler = async (request: any) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+
+  const callerUid = request.auth.uid;
+  const callerProfile = await db.collection('profiles').doc(callerUid).get();
+
+  if (!callerProfile.exists || callerProfile.data()?.role !== 'admin') {
+    throw new HttpsError('permission-denied', 'Only admins can create invitations.');
+  }
+
+  const { phoneNumber, role } = request.data;
+  if (!phoneNumber || !role) {
+    throw new HttpsError('invalid-argument', 'Phone number and role are required.');
+  }
+
+  const inviteCode = uuidv4().substring(0, 8).toUpperCase();
+  
+  await db.collection('invitations').add({
+    phoneNumber,
+    role,
+    inviteCode,
+    status: 'pending',
+    createdBy: callerUid,
+    createdAt: admin.firestore.FieldValue.serverTimestamp()
+  });
+
+  return { inviteCode };
+};
+
 // Export the Cloud Function callables (v2 style)
 export const getSecureProfile = onCall(getSecureProfileHandler);
 export const updateSecureProfile = onCall(updateSecureProfileHandler);
+export const createInvite = onCall(createInviteHandler);
