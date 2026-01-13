@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { fetchEmailLogs, EmailLog } from '../../services/emailService';
-import Card from '../../components/ui/Card/Card';
-import Button from '../../components/ui/Button/Button';
-import { useNavigate } from 'react-router-dom';
-import styles from './EmailLogs.module.css';
+import React, { useEffect, useState } from "react";
+import { fetchEmailLogs, type EmailLog } from "../../services/emailService";
+import Card from "../../components/ui/Card/Card";
+import Button from "../../components/ui/Button/Button";
+import { useNavigate } from "react-router-dom";
+import styles from "./EmailLogs.module.css";
 
 const EmailLogs: React.FC = () => {
   const [logs, setLogs] = useState<EmailLog[]>([]);
@@ -28,9 +28,17 @@ const EmailLogs: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <h1>Email Logs</h1>
-        <Button variant="secondary" onClick={() => navigate('/admin')}>Back to Dashboard</Button>
+        <Button variant="secondary" onClick={() => navigate("/admin")}>
+          Back to Dashboard
+        </Button>
       </div>
 
       <Card>
@@ -47,12 +55,18 @@ const EmailLogs: React.FC = () => {
             {logs.map((log) => (
               <tr key={log.id}>
                 <td className={styles.td}>
-                  {log.createdAt?.toDate ? log.createdAt.toDate().toLocaleString() : 'N/A'}
+                  {log.createdAt?.toDate
+                    ? log.createdAt.toDate().toLocaleString()
+                    : "N/A"}
                 </td>
                 <td className={styles.td}>{log.to}</td>
                 <td className={styles.td}>{log.subject}</td>
                 <td className={styles.td}>
-                  <span className={`${styles.status} ${styles[`status_${log.status}`]}`}>
+                  <span
+                    className={`${styles.status} ${
+                      styles[`status_${log.status}`]
+                    }`}
+                  >
                     {log.status}
                   </span>
                   {log.error && <div className={styles.error}>{log.error}</div>}
@@ -62,7 +76,13 @@ const EmailLogs: React.FC = () => {
           </tbody>
         </table>
         {logs.length === 0 && (
-          <div style={{ textAlign: 'center', padding: 'var(--spacing-8)', color: 'var(--color-text-muted)' }}>
+          <div
+            style={{
+              textAlign: "center",
+              padding: "var(--spacing-8)",
+              color: "var(--color-text-muted)",
+            }}
+          >
             No logs found.
           </div>
         )}

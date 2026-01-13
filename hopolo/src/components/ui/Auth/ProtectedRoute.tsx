@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { auth } from '../../../lib/firebase';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import React, { useState, useEffect } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { auth } from "../../../lib/firebase";
+import { onAuthStateChanged, type User } from "firebase/auth";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

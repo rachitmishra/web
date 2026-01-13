@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Card from '../components/ui/Card/Card';
-import Button from '../components/ui/Button/Button';
-import Input from '../components/ui/Input/Input';
-import styles from './Checkout.module.css';
-import { subscribeToCart, CartItem } from '../services/cartService';
-import { getUserProfile, Address } from '../services/profileService';
-import { auth } from '../lib/firebase';
-import { loadRazorpayScript } from '../services/paymentService';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Card from "../components/ui/Card/Card";
+import Button from "../components/ui/Button/Button";
+import Input from "../components/ui/Input/Input";
+import styles from "./Checkout.module.css";
+import { subscribeToCart, type CartItem } from "../services/cartService";
+import { getUserProfile, type Address } from "../services/profileService";
+import { auth } from "../lib/firebase";
+import { loadRazorpayScript } from "../services/paymentService";
 
 declare global {
   interface Window {
@@ -19,14 +19,19 @@ const Checkout: React.FC = () => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressIndex, setSelectedAddressIndex] = useState<number>(-1);
-  const [newAddress, setNewAddress] = useState<Address>({ street: '', city: '', state: '', zip: '' });
+  const [newAddress, setNewAddress] = useState<Address>({
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+  });
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = subscribeToCart(setItems);
-    
+
     const fetchAddresses = async () => {
       const user = auth.currentUser;
       if (user) {
@@ -48,7 +53,10 @@ const Checkout: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const subtotal = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+  const subtotal = items.reduce(
+    (acc, item) => acc + item.product.price * item.quantity,
+    0
+  );
   const shipping = 5.99;
   const total = subtotal + shipping;
 
@@ -57,30 +65,30 @@ const Checkout: React.FC = () => {
     const res = await loadRazorpayScript();
 
     if (!res) {
-      alert('Razorpay SDK failed to load. Are you online?');
+      alert("Razorpay SDK failed to load. Are you online?");
       setLoading(false);
       return;
     }
 
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_placeholder",
       amount: Math.round(total * 100), // amount in the smallest currency unit
-      currency: 'USD',
-      name: 'Hopolo',
-      description: 'Order Payment',
+      currency: "USD",
+      name: "Hopolo",
+      description: "Order Payment",
       handler: function (response: any) {
-        console.log('Payment Success:', response);
+        console.log("Payment Success:", response);
         // Next task: create order in Firestore
-        alert('Payment Success! ID: ' + response.razorpay_payment_id);
+        alert("Payment Success! ID: " + response.razorpay_payment_id);
       },
       prefill: {
-        name: auth.currentUser?.displayName || '',
-        email: '',
-        contact: ''
+        name: auth.currentUser?.displayName || "",
+        email: "",
+        contact: "",
       },
       theme: {
-        color: '#5D3FD3'
-      }
+        color: "#5D3FD3",
+      },
     };
 
     const paymentObject = new window.Razorpay(options);
@@ -98,16 +106,23 @@ const Checkout: React.FC = () => {
             <h2>Shipping Address</h2>
             <div className={styles.addressList}>
               {addresses.map((addr, index) => (
-                <div 
+                <div
                   key={index}
-                  className={`${styles.addressCard} ${selectedAddressIndex === index ? styles.selectedAddress : ''}`}
-                  onClick={() => { setSelectedAddressIndex(index); setIsAddingNew(false); }}
+                  className={`${styles.addressCard} ${
+                    selectedAddressIndex === index ? styles.selectedAddress : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedAddressIndex(index);
+                    setIsAddingNew(false);
+                  }}
                 >
                   <div>{addr.street}</div>
-                  <div>{addr.city}, {addr.state} {addr.zip}</div>
+                  <div>
+                    {addr.city}, {addr.state} {addr.zip}
+                  </div>
                 </div>
               ))}
-              
+
               <Button variant="outline" onClick={() => setIsAddingNew(true)}>
                 + Add New Address
               </Button>
@@ -116,27 +131,41 @@ const Checkout: React.FC = () => {
             {isAddingNew && (
               <div className={styles.newAddressForm}>
                 <h3>New Address</h3>
-                <Input 
-                  label="Street Address" 
-                  value={newAddress.street} 
-                  onChange={(e) => setNewAddress({...newAddress, street: e.target.value})} 
+                <Input
+                  label="Street Address"
+                  value={newAddress.street}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, street: e.target.value })
+                  }
                 />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-4)' }}>
-                  <Input 
-                    label="City" 
-                    value={newAddress.city} 
-                    onChange={(e) => setNewAddress({...newAddress, city: e.target.value})} 
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "var(--spacing-4)",
+                  }}
+                >
+                  <Input
+                    label="City"
+                    value={newAddress.city}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, city: e.target.value })
+                    }
                   />
-                  <Input 
-                    label="State" 
-                    value={newAddress.state || ''} 
-                    onChange={(e) => setNewAddress({...newAddress, state: e.target.value})} 
+                  <Input
+                    label="State"
+                    value={newAddress.state || ""}
+                    onChange={(e) =>
+                      setNewAddress({ ...newAddress, state: e.target.value })
+                    }
                   />
                 </div>
-                <Input 
-                  label="ZIP Code" 
-                  value={newAddress.zip || ''} 
-                  onChange={(e) => setNewAddress({...newAddress, zip: e.target.value})} 
+                <Input
+                  label="ZIP Code"
+                  value={newAddress.zip || ""}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, zip: e.target.value })
+                  }
                 />
               </div>
             )}
@@ -152,7 +181,15 @@ const Checkout: React.FC = () => {
                   {item.product.image ? (
                     <img src={item.product.image} alt={item.product.name} />
                   ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', background: '#eee' }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "100%",
+                        background: "#eee",
+                      }}
+                    >
                       🛍️
                     </div>
                   )}
@@ -182,9 +219,9 @@ const Checkout: React.FC = () => {
             </div>
           </div>
 
-          <Button 
-            variant="primary" 
-            style={{ marginTop: 'var(--spacing-4)' }}
+          <Button
+            variant="primary"
+            style={{ marginTop: "var(--spacing-4)" }}
             onClick={handlePayment}
             loading={loading}
             disabled={items.length === 0}

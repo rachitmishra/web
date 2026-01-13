@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Hero from '../components/ui/Hero/Hero';
 import CategoryTabs from '../components/ui/CategoryTabs/CategoryTabs';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
-import { fetchProducts, fetchCategories, Product, Category } from '../services/productService';
+import { fetchProducts, fetchCategories, type Product, type Category } from '../services/productService';
 import { useSEO } from '../hooks/useSEO';
 
 const Home: React.FC = () => {

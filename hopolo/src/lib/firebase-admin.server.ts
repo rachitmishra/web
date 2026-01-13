@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
     // When running in Firebase environment or with GOOGLE_APPLICATION_CREDENTIALS,
     // it will automatically find the credentials.
   });

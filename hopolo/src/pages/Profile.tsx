@@ -106,7 +106,8 @@ const Profile: React.FC = () => {
         });
         // In full RR SSR, we'd use an action for this too.
         // For now, reload via client service.
-        const updatedProfile = await getSecureProfile(user.uid); // This is server-only! 
+        // const updatedProfile = await getSecureProfile(user.uid); // REMOVED to fix build
+        
         // Wait, I can't call server service from client. 
         // I should stick to the pattern or migrate addresses too.
         // For now, I'll let the user refresh or implement address action later.

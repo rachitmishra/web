@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import PhoneSignIn from '../components/ui/Auth/PhoneSignIn';
 import OtpVerification from '../components/ui/Auth/OtpVerification';
 import { signInWithPhone, verifyOtp } from '../services/authService';
-import { ConfirmationResult } from 'firebase/auth';
+import type { ConfirmationResult } from 'firebase/auth';
 import Card from '../components/ui/Card/Card';
 
 const Login: React.FC = () => {

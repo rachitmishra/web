@@ -1,15 +1,27 @@
-import { signInWithPhoneNumber, RecaptchaVerifier, ConfirmationResult, UserCredential, signOut } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import {
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
+  type ConfirmationResult,
+  type UserCredential,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../lib/firebase";
 
-export const signInWithPhone = async (phoneNumber: string, recaptchaContainerId: string): Promise<ConfirmationResult> => {
+export const signInWithPhone = async (
+  phoneNumber: string,
+  recaptchaContainerId: string
+): Promise<ConfirmationResult> => {
   const recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainerId, {
-    'size': 'invisible',
+    size: "invisible",
   });
-  
+
   return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
 };
 
-export const verifyOtp = async (confirmationResult: ConfirmationResult, otp: string): Promise<UserCredential> => {
+export const verifyOtp = async (
+  confirmationResult: ConfirmationResult,
+  otp: string
+): Promise<UserCredential> => {
   return confirmationResult.confirm(otp);
 };
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Input from '../../components/ui/Input/Input';
 import Button from '../../components/ui/Button/Button';
 import styles from './ProductForm.module.css';
-import { Variant } from '../../services/productService';
+import type { Variant } from '../../services/productService';
 import { uploadProductImages } from '../../services/storageService';
 
 interface ProductFormProps {

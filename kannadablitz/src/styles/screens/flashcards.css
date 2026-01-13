@@ -125,7 +125,7 @@
     color: var(--text-title);
   }
   .card-back .card-main-text {
-    color: white;
+    color: var(--neutral-50);
   }
   .card-sub-text {
     font-size: 1.25rem;

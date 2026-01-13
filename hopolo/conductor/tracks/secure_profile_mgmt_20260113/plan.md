@@ -20,7 +20,7 @@
 - [x] Task: Implement Profile Action (Server-Side) 13ca1bd
     - Create an action to encrypt and update profile data.
     - **Tests:** Verify Firestore contains only encrypted strings after update.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Secure SSR Data Layer' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Secure SSR Data Layer' (Protocol in workflow.md)
 
 ## Phase 3: Role Management & Invitations
 - [ ] Task: Implement Admin Invitation Flow

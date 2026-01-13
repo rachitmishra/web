@@ -1,7 +1,7 @@
-import { doc, getDoc, setDoc, onSnapshot, Unsubscribe } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, type Unsubscribe } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { getSessionId } from '../lib/session';
-import { Product } from './productService';
+import type { Product } from './productService';
 
 export interface CartItem {
   product: Product;

@@ -1,10 +1,21 @@
-import { collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, getDoc, updateDoc, where } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import { CartItem } from './cartService';
-import { Address } from './profileService';
-import { sendEmail } from './emailService';
-import { generateOrderConfirmationHtml } from '../templates/orderConfirmation';
-import { generateDeliveryFeedbackHtml } from '../templates/deliveryFeedback';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  serverTimestamp,
+  query,
+  orderBy,
+  doc,
+  getDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../lib/firebase";
+import type { CartItem } from "./cartService";
+import type { Address } from "./profileService";
+import { sendEmail } from "./emailService";
+import { generateOrderConfirmationHtml } from "../templates/orderConfirmation";
+import { generateDeliveryFeedbackHtml } from "../templates/deliveryFeedback";
 
 export interface Order {
   id: string; // Include id
@@ -13,33 +24,35 @@ export interface Order {
   items: CartItem[];
   total: number;
   paymentId: string;
-  status: 'paid' | 'pending' | 'failed' | 'shipped' | 'delivered' | 'refunded'; // Updated status
+  status: "paid" | "pending" | "failed" | "shipped" | "delivered" | "refunded"; // Updated status
   address: Address;
   createdAt: any;
 }
 
-export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt'>): Promise<string> => {
-  const docRef = await addDoc(collection(db, 'orders'), {
+export const createOrder = async (
+  orderData: Omit<Order, "id" | "createdAt">
+): Promise<string> => {
+  const docRef = await addDoc(collection(db, "orders"), {
     ...orderData,
     createdAt: serverTimestamp(),
   });
 
   // Trigger Order Confirmation Email
-  if (orderData.userEmail && orderData.status === 'paid') {
+  if (orderData.userEmail && orderData.status === "paid") {
     try {
       const html = generateOrderConfirmationHtml({
         id: docRef.id,
         items: orderData.items,
         total: orderData.total,
-        address: orderData.address
+        address: orderData.address,
       });
       await sendEmail({
         to: orderData.userEmail,
-        subject: 'Order Confirmed - Hopolo',
-        html
+        subject: "Order Confirmed - Hopolo",
+        html,
       });
     } catch (error) {
-      console.error('Failed to send order confirmation email:', error);
+      console.error("Failed to send order confirmation email:", error);
     }
   }
 
@@ -47,32 +60,35 @@ export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt'>): P
 };
 
 export const fetchAllOrders = async (): Promise<Order[]> => {
-  const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+  const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({
+  return querySnapshot.docs.map((doc) => ({
     id: doc.id,
-    ...doc.data()
+    ...doc.data(),
   })) as Order[];
 };
 
 export const fetchOrdersByUserId = async (userId: string): Promise<Order[]> => {
   const q = query(
-    collection(db, 'orders'), 
-    where('userId', '==', userId),
-    orderBy('createdAt', 'desc')
+    collection(db, "orders"),
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc")
   );
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({
+  return querySnapshot.docs.map((doc) => ({
     id: doc.id,
-    ...doc.data()
+    ...doc.data(),
   })) as Order[];
 };
 
-export const updateOrderStatus = async (orderId: string, status: Order['status']): Promise<void> => {
-  const docRef = doc(db, 'orders', orderId);
+export const updateOrderStatus = async (
+  orderId: string,
+  status: Order["status"]
+): Promise<void> => {
+  const docRef = doc(db, "orders", orderId);
   await updateDoc(docRef, { status });
 
-  if (status === 'delivered') {
+  if (status === "delivered") {
     try {
       const orderSnap = await getDoc(docRef);
       if (orderSnap.exists()) {
@@ -81,19 +97,19 @@ export const updateOrderStatus = async (orderId: string, status: Order['status']
           const html = generateDeliveryFeedbackHtml(orderId);
           await sendEmail({
             to: orderData.userEmail,
-            subject: 'Your order has arrived! 📦',
-            html
+            subject: "Your order has arrived! 📦",
+            html,
           });
         }
       }
     } catch (error) {
-      console.error('Failed to send delivery feedback email:', error);
+      console.error("Failed to send delivery feedback email:", error);
     }
   }
 };
 
 export async function fetchOrderById(orderId: string) {
-  const docRef = doc(db, 'orders', orderId);
+  const docRef = doc(db, "orders", orderId);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {

@@ -4,9 +4,9 @@ import Button from '../components/ui/Button/Button';
 import QuantitySelector from '../components/ui/QuantitySelector/QuantitySelector';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
 import styles from './ProductDetail.module.css';
-import { fetchProducts, Product } from '../services/productService';
+import { fetchProducts, type Product } from '../services/productService';
 import { addToCart } from '../services/cartService';
-import { fetchReviews, Review, addReview } from '../services/reviewService';
+import { fetchReviews, type Review, addReview } from '../services/reviewService';
 import { auth } from '../lib/firebase';
 import { useSEO } from '../hooks/useSEO';
 

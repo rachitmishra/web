@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProducts, Product } from '../../services/productService';
+import { fetchProducts, type Product } from '../../services/productService';
 import Card from '../../components/ui/Card/Card';
 import Button from '../../components/ui/Button/Button';
 import ProductForm from './ProductForm';
