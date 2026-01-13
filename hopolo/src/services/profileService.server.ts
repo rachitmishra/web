@@ -1,4 +1,4 @@
-import { adminDb } from '../lib/firebase-admin.server';
+import { adminDb, adminAuth } from '../lib/firebase-admin.server';
 import { encrypt, decrypt } from '../lib/encryption.server';
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,16 +17,53 @@ export interface SecureProfile {
 
 /**
  * Fetches and decrypts a user profile from Firestore.
+ * Creates one Just-In-Time if it doesn't exist (e.g. if Auth trigger failed).
  */
 export async function getSecureProfile(uid: string): Promise<SecureProfile | null> {
-  const doc = await adminDb.collection('profiles').doc(uid).get();
+  const docRef = adminDb.collection('profiles').doc(uid);
+  let doc = await docRef.get();
+  const key = ENCRYPTION_KEY;
   
   if (!doc.exists) {
-    return null;
+    // JIT Profile Creation
+    try {
+      const userRecord = await adminAuth.getUser(uid);
+      const { email, phoneNumber } = userRecord;
+      
+      let role = 'user';
+      if (phoneNumber) {
+        const inviteQuery = await adminDb.collection('invitations')
+          .where('phoneNumber', '==', phoneNumber)
+          .where('status', '==', 'pending')
+          .get();
+        
+        if (!inviteQuery.empty) {
+          const inviteDoc = inviteQuery.docs[0];
+          role = inviteDoc.data().role;
+          await inviteDoc.ref.update({ status: 'consumed', usedBy: uid, updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+        }
+      }
+
+      const newProfile = {
+        uid,
+        email: email || '',
+        phoneNumber: phoneNumber || '',
+        role,
+        addresses: encrypt(JSON.stringify([]), key),
+        displayName: encrypt('', key),
+        emoji: encrypt('', key),
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+
+      await docRef.set(newProfile);
+      doc = await docRef.get(); // Refresh doc
+    } catch (error) {
+      console.error(`Failed to create JIT profile for ${uid}:`, error);
+      return null;
+    }
   }
 
   const data = doc.data()!;
-  const key = ENCRYPTION_KEY;
 
   try {
     return {
