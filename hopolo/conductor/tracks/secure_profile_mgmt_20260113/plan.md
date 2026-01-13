@@ -12,7 +12,7 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Automatic Onboarding' (Protocol in workflow.md)
 
 ## Phase 2: Secure Data Layer (Server-Side Encryption)
-- [ ] Task: Implement Encryption Utilities
+- [x] Task: Implement Encryption Utilities 3f1f387
     - Create utility functions in Cloud Functions for AES-256 encryption/decryption.
     - **Tests:** Unit test encryption/decryption with the secret key.
 - [ ] Task: Implement Secure Profile Access (Callable Functions)
