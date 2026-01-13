@@ -15,7 +15,7 @@
 - [x] Task: Implement Encryption Utilities 3f1f387
     - Create utility functions in Cloud Functions for AES-256 encryption/decryption.
     - **Tests:** Unit test encryption/decryption with the secret key.
-- [ ] Task: Implement Secure Profile Access (Callable Functions)
+- [x] Task: Implement Secure Profile Access (Callable Functions) 3363019
     - Create `getSecureProfile` and `updateSecureProfile` callable functions.
     - These functions handle encryption/decryption before sending/receiving data.
     - **Tests:** Verify data is stored encrypted in Firestore but returned decrypted via the callable.
