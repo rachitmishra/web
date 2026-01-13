@@ -5,7 +5,7 @@
     - Initialize the `functions` directory.
     - Set up dependencies (`firebase-admin`, `crypto-js` or native `crypto`).
     - **Tests:** Verify function environment variables load correctly.
-- [ ] Task: Implement Automatic Profile Creation
+- [x] Task: Implement Automatic Profile Creation db3c684
     - Create an `onCreate` Auth trigger function.
     - Initialize a Firestore document in `profiles` with default `user` role.
     - **Tests:** Simulate a user signup and verify Firestore document creation.
