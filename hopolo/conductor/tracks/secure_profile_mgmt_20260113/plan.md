@@ -31,7 +31,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Invitations' (Protocol in workflow.md) 28145b5
 
 ## Phase 4: Granular RBAC & Polish
-- [ ] Task: Integrate RBAC in Loaders
+- [x] Task: Integrate RBAC in Loaders c4b9506
     - Protect routes by checking user role in the server-side loader.
 - [ ] Task: Final Polish & Cleanup
     - Remove redundant Cloud Functions if applicable.
