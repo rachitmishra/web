@@ -1,43 +1,38 @@
 # Track Plan: Secure Profile Management & Admin Invitations
 
-## Phase 1: Infrastructure & Automatic Onboarding [checkpoint: 5bf46a9]
-- [x] Task: Scaffold Firebase Cloud Functions 08835e8
-    - Initialize the `functions` directory.
-    - Set up dependencies (`firebase-admin`, `crypto-js` or native `crypto`).
-    - **Tests:** Verify function environment variables load correctly.
-- [x] Task: Implement Automatic Profile Creation db3c684
-    - Create an `onCreate` Auth trigger function.
-    - Initialize a Firestore document in `profiles` with default `user` role.
-    - **Tests:** Simulate a user signup and verify Firestore document creation.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Automatic Onboarding' (Protocol in workflow.md)
+## Phase 1: React Router SSR Migration
+- [x] Task: Configure React Router v7 Framework Mode 5ae5d7e
+    - Update `vite.config.ts` to include the React Router plugin.
+    - Set up `app/routes.ts` or the file-based routing structure.
+    - **Tests:** Verify the dev server starts in SSR mode.
+- [x] Task: Implement Server Entry Points 5ae5d7e
+    - Create `entry.server.tsx` and `entry.client.tsx`.
+    - **Tests:** Confirm basic page rendering via server.
+- [ ] Task: Conductor - User Manual Verification 'Phase 1: SSR Migration' (Protocol in workflow.md)
 
-## Phase 2: Secure Data Layer (Server-Side Encryption) [checkpoint: 55468e4]
-- [x] Task: Implement Encryption Utilities 3f1f387
-    - Create utility functions in Cloud Functions for AES-256 encryption/decryption.
-    - **Tests:** Unit test encryption/decryption with the secret key.
-- [x] Task: Implement Secure Profile Access (Callable Functions) 3363019
-    - Create `getSecureProfile` and `updateSecureProfile` callable functions.
-    - These functions handle encryption/decryption before sending/receiving data.
-    - **Tests:** Verify data is stored encrypted in Firestore but returned decrypted via the callable.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Secure Data Layer (Server-Side Encryption)' (Protocol in workflow.md)
+## Phase 2: Secure Data Layer (SSR Loaders & Actions)
+- [ ] Task: Implement Server-Side Encryption Utilities
+    - Use Node.js `crypto` or `crypto-js` within the server context.
+    - **Tests:** Verify encryption/decryption with server environment variables.
+- [ ] Task: Implement Profile Loader (Server-Side)
+    - Create a loader for the Profile page that fetches and decrypts data from Firestore using `firebase-admin`.
+    - **Tests:** Verify the browser receives decrypted data without the key.
+- [ ] Task: Implement Profile Action (Server-Side)
+    - Create an action to encrypt and update profile data.
+    - **Tests:** Verify Firestore contains only encrypted strings after update.
+- [ ] Task: Conductor - User Manual Verification 'Phase 2: Secure SSR Data Layer' (Protocol in workflow.md)
 
 ## Phase 3: Role Management & Invitations
-- [x] Task: Implement Invitation Logic acd3d7e
-    - Create `invitations` collection schema.
-    - Implement `createInvite` Cloud Function (restricting use to `admin` role).
-    - **Tests:** Verify token generation and phone number binding.
-- [x] Task: Create Admin Invitation UI 936034b
-    - Implement a new view in the Admin dashboard to enter a phone number and select a role.
-    - Display the generated invitation link/code.
-    - **Tests:** Verify UI validation for phone numbers.
-- [x] Task: Handle Invitation Consumption f58c85a
-    - Update the `onCreate` profile logic to check for active invitations by phone number.
-    - **Tests:** Verify a user with a pending invite gets the correct role (`editor`/`manager`/`admin`) instead of `user`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Role Management & Invitations' (Protocol in workflow.md)
+- [ ] Task: Implement Admin Invitation Flow
+    - Server-side action to create tokens in `invitations` collection.
+    - Admin UI view for generating invites.
+- [ ] Task: Handle Invitation Consumption
+    - Check for pending invites in the onboarding/profile loader.
+- [ ] Task: Conductor - User Manual Verification 'Phase 3: Invitations' (Protocol in workflow.md)
 
-## Phase 4: Granular RBAC Integration
-- [ ] Task: Update Frontend Permissions
-    - Refactor `AdminRoute` to handle specific role checks (e.g., `isManager`, `isEditor`).
-    - Update `src/pages/Admin/Orders.tsx` and others to hide/show features based on granular roles.
-    - **Tests:** Verify an 'Editor' is blocked from the Refunds action.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Granular RBAC Integration' (Protocol in workflow.md)
+## Phase 4: Granular RBAC & Polish
+- [ ] Task: Integrate RBAC in Loaders
+    - Protect routes by checking user role in the server-side loader.
+- [ ] Task: Final Polish & Cleanup
+    - Remove redundant Cloud Functions if applicable.
+- [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md)
