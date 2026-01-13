@@ -1,6 +1,6 @@
 # Track Plan: Advanced Analytics & Reporting
 
-## Phase 1: Data Processing & Foundations
+## Phase 1: Data Processing & Foundations [checkpoint: b6d0273]
 - [x] Task: Setup Recharts & Analytics Utilities b800e4b
     - Install `recharts` library.
     - Create `src/lib/analyticsUtils.ts`.
