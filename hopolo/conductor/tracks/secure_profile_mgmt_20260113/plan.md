@@ -22,7 +22,7 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Secure Data Layer (Server-Side Encryption)' (Protocol in workflow.md)
 
 ## Phase 3: Role Management & Invitations
-- [ ] Task: Implement Invitation Logic
+- [x] Task: Implement Invitation Logic acd3d7e
     - Create `invitations` collection schema.
     - Implement `createInvite` Cloud Function (restricting use to `admin` role).
     - **Tests:** Verify token generation and phone number binding.
