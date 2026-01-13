@@ -1,6 +1,6 @@
 # Track Plan: Secure Profile Management & Admin Invitations
 
-## Phase 1: Infrastructure & Automatic Onboarding
+## Phase 1: Infrastructure & Automatic Onboarding [checkpoint: 5bf46a9]
 - [x] Task: Scaffold Firebase Cloud Functions 08835e8
     - Initialize the `functions` directory.
     - Set up dependencies (`firebase-admin`, `crypto-js` or native `crypto`).
