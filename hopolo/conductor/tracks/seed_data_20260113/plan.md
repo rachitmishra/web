@@ -11,4 +11,4 @@
     - Add a "Seed Database" button that calls the service functions.
     - Display progress/success logs.
     - Add route `/admin/seed` in `App.tsx`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Seeder Logic' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Seeder Logic' (Protocol in workflow.md) 0bb252c
