@@ -22,13 +22,13 @@
     - **Tests:** Verify Firestore contains only encrypted strings after update.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Secure SSR Data Layer' (Protocol in workflow.md) 0a71b1a
 
-## Phase 3: Role Management & Invitations
+## Phase 3: Role Management & Invitations [checkpoint: 28145b5]
 - [x] Task: Implement Admin Invitation Flow bea7421
     - Server-side action to create tokens in `invitations` collection.
     - Admin UI view for generating invites.
 - [x] Task: Handle Invitation Consumption c07ca93
     - Check for pending invites in the onboarding/profile loader.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Invitations' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Invitations' (Protocol in workflow.md) 28145b5
 
 ## Phase 4: Granular RBAC & Polish
 - [ ] Task: Integrate RBAC in Loaders
