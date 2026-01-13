@@ -1,6 +1,6 @@
 # Track Plan: Secure Profile Management & Admin Invitations
 
-## Phase 1: React Router SSR Migration
+## Phase 1: React Router SSR Migration [checkpoint: 1eb3ed7]
 - [x] Task: Configure React Router v7 Framework Mode 5ae5d7e
     - Update `vite.config.ts` to include the React Router plugin.
     - Set up `app/routes.ts` or the file-based routing structure.
@@ -8,7 +8,7 @@
 - [x] Task: Implement Server Entry Points 5ae5d7e
     - Create `entry.server.tsx` and `entry.client.tsx`.
     - **Tests:** Confirm basic page rendering via server.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: SSR Migration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: SSR Migration' (Protocol in workflow.md) 1eb3ed7
 
 ## Phase 2: Secure Data Layer (SSR Loaders & Actions)
 - [ ] Task: Implement Server-Side Encryption Utilities
