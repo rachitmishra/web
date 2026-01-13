@@ -1,6 +1,6 @@
 # Track Plan: Seed Data & Test Accounts
 
-## Phase 1: Seeder Logic
+## Phase 1: Seeder Logic [checkpoint: 4448e12]
 - [x] Task: Create Seeder Service 62370aa
     - Create `src/services/seederService.ts`.
     - Implement `seedCategories`, `seedProducts`, `seedPromoCodes`, `seedReviews`.
