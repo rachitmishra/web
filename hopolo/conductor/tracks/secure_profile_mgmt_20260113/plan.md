@@ -26,7 +26,7 @@
 - [x] Task: Implement Admin Invitation Flow bea7421
     - Server-side action to create tokens in `invitations` collection.
     - Admin UI view for generating invites.
-- [ ] Task: Handle Invitation Consumption
+- [x] Task: Handle Invitation Consumption c07ca93
     - Check for pending invites in the onboarding/profile loader.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Invitations' (Protocol in workflow.md)
 
