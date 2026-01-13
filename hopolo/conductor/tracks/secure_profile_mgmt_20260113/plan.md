@@ -30,7 +30,7 @@
     - Implement a new view in the Admin dashboard to enter a phone number and select a role.
     - Display the generated invitation link/code.
     - **Tests:** Verify UI validation for phone numbers.
-- [ ] Task: Handle Invitation Consumption
+- [x] Task: Handle Invitation Consumption f58c85a
     - Update the `onCreate` profile logic to check for active invitations by phone number.
     - **Tests:** Verify a user with a pending invite gets the correct role (`editor`/`manager`/`admin`) instead of `user`.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Role Management & Invitations' (Protocol in workflow.md)
