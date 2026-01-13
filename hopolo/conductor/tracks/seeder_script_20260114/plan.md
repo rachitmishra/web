@@ -1,6 +1,6 @@
 # Track Plan: Standalone Seeder Script
 
-## Phase 1: Script Implementation
+## Phase 1: Script Implementation [checkpoint: 4aa7546]
 - [x] Task: Setup Script Dependencies 062e268
     - Install `firebase-admin`.
     - Create `scripts/seed-admin.cjs`.
