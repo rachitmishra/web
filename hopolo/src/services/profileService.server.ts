@@ -1,5 +1,6 @@
 import { adminDb } from '../lib/firebase-admin.server';
-import { decrypt } from '../lib/encryption.server';
+import { encrypt, decrypt } from '../lib/encryption.server';
+import * as admin from 'firebase-admin';
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'test_secret_key_32_chars_long_!!'; // fallback for dev
 
@@ -38,8 +39,28 @@ export async function getSecureProfile(uid: string): Promise<SecureProfile | nul
     };
   } catch (error) {
     console.error(`Failed to decrypt profile for ${uid}:`, error);
-    // If decryption fails (e.g. invalid key), return raw or partial?
-    // For security, we probably should return null or throw.
     return null;
   }
+}
+
+/**
+ * Encrypts and updates a user profile in Firestore.
+ */
+export async function updateSecureProfile(uid: string, updates: Partial<SecureProfile>): Promise<void> {
+  const key = ENCRYPTION_KEY;
+  const updateData: any = {
+    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+  };
+
+  if (updates.displayName !== undefined) {
+    updateData.displayName = encrypt(updates.displayName, key);
+  }
+  if (updates.emoji !== undefined) {
+    updateData.emoji = encrypt(updates.emoji, key);
+  }
+  if (updates.addresses !== undefined) {
+    updateData.addresses = encrypt(JSON.stringify(updates.addresses), key);
+  }
+
+  await adminDb.collection('profiles').doc(uid).update(updateData);
 }
