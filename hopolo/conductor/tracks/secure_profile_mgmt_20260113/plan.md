@@ -26,7 +26,7 @@
     - Create `invitations` collection schema.
     - Implement `createInvite` Cloud Function (restricting use to `admin` role).
     - **Tests:** Verify token generation and phone number binding.
-- [ ] Task: Create Admin Invitation UI
+- [x] Task: Create Admin Invitation UI 936034b
     - Implement a new view in the Admin dashboard to enter a phone number and select a role.
     - Display the generated invitation link/code.
     - **Tests:** Verify UI validation for phone numbers.
