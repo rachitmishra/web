@@ -1,38 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useLoaderData } from 'react-router';
 import { auth } from '../lib/firebase';
-import { getUserProfile, updateUserProfile, UserProfile, saveAddress, deleteAddress, Address } from '../services/profileService';
-import { fetchOrdersByUserId, Order } from '../services/orderService';
+import { onAuthStateChanged } from 'firebase/auth';
+import { 
+  getUserProfile, 
+  updateUserProfile, 
+  saveAddress, 
+  deleteAddress,
+  type UserProfile,
+  type Address
+} from '../services/profileService';
+import { getSecureProfile } from '../services/profileService.server';
+import { getAuthenticatedUser } from '../lib/auth.server';
 import Button from '../components/ui/Button/Button';
 import Card from '../components/ui/Card/Card';
 import Input from '../components/ui/Input/Input';
 import styles from './Profile.module.css';
 
+export async function loader({ request }: { request: Request }) {
+  // In a real app, we'd get the UID from a session cookie
+  const user = await getAuthenticatedUser(request);
+  if (!user) return { profile: null };
+  
+  const profile = await getSecureProfile(user.uid);
+  return { profile };
+}
+
 const Profile: React.FC = () => {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [displayName, setDisplayName] = useState('');
-  const [emoji, setEmoji] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const { profile: serverProfile } = useLoaderData() as { profile: any };
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(serverProfile);
+  const [loading, setLoading] = useState(!serverProfile);
+  const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'orders'>('profile');
+// ...
 
   // Address form state
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const [newStreet, setNewStreet] = useState('');
-  const [newCity, setNewCity] = useState('');
-  const [newZip, setNewZip] = useState('');
+  const [newStreet, setNewStreet] = useState("");
+  const [newCity, setNewCity] = useState("");
+  const [newZip, setNewZip] = useState("");
 
   const loadData = async () => {
     const user = auth.currentUser;
     if (user) {
       const [profileData, ordersData] = await Promise.all([
         getUserProfile(user.uid),
-        fetchOrdersByUserId(user.uid)
+        fetchOrdersByUserId(user.uid),
       ]);
-      
+
       if (profileData) {
         setProfile(profileData);
-        setDisplayName(profileData.displayName || '');
-        setEmoji(profileData.emoji || '');
+        setDisplayName(profileData.displayName || "");
+        setEmoji(profileData.emoji || "");
       }
       setOrders(ordersData);
     }
@@ -50,7 +70,7 @@ const Profile: React.FC = () => {
       setSaving(true);
       try {
         await updateUserProfile(user.uid, { displayName, emoji });
-        setProfile(prev => prev ? { ...prev, displayName, emoji } : null);
+        setProfile((prev) => (prev ? { ...prev, displayName, emoji } : null));
       } catch (err) {
         console.error(err);
       } finally {
@@ -65,12 +85,16 @@ const Profile: React.FC = () => {
     if (user) {
       setSaving(true);
       try {
-        await saveAddress(user.uid, { street: newStreet, city: newCity, zip: newZip });
+        await saveAddress(user.uid, {
+          street: newStreet,
+          city: newCity,
+          zip: newZip,
+        });
         await loadData();
         setShowAddressForm(false);
-        setNewStreet('');
-        setNewCity('');
-        setNewZip('');
+        setNewStreet("");
+        setNewCity("");
+        setNewZip("");
       } catch (err) {
         console.error(err);
       } finally {
@@ -99,18 +123,20 @@ const Profile: React.FC = () => {
 
       <Card>
         <form className={styles.form} onSubmit={handleSave}>
-          <Input 
-            label="Display Name" 
-            value={displayName} 
-            onChange={(e) => setDisplayName(e.target.value)} 
+          <Input
+            label="Display Name"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
           />
-          <Input 
-            label="Profile Emoji" 
-            value={emoji} 
-            onChange={(e) => setEmoji(e.target.value)} 
+          <Input
+            label="Profile Emoji"
+            value={emoji}
+            onChange={(e) => setEmoji(e.target.value)}
             placeholder="e.g. 👋"
           />
-          <Button type="submit" loading={saving}>Save Changes</Button>
+          <Button type="submit" loading={saving}>
+            Save Changes
+          </Button>
         </form>
       </Card>
 
@@ -122,27 +148,65 @@ const Profile: React.FC = () => {
               <div key={i} className={styles.addressCard}>
                 <div className={styles.addressDetails}>
                   <strong>{addr.street}</strong>
-                  <span>{addr.city}, {addr.zip}</span>
+                  <span>
+                    {addr.city}, {addr.zip}
+                  </span>
                 </div>
                 <div className={styles.addressActions}>
-                  <Button variant="outline" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleDeleteAddress(i)}>Delete</Button>
+                  <Button
+                    variant="outline"
+                    style={{ padding: "4px 8px", fontSize: "0.75rem" }}
+                    onClick={() => handleDeleteAddress(i)}
+                  >
+                    Delete
+                  </Button>
                 </div>
               </div>
             ))
           ) : (
-            <p style={{ color: 'var(--color-text-muted)' }}>No addresses saved yet.</p>
+            <p style={{ color: "var(--color-text-muted)" }}>
+              No addresses saved yet.
+            </p>
           )}
-          
+
           {!showAddressForm ? (
-            <Button variant="outline" style={{ width: 'fit-content' }} onClick={() => setShowAddressForm(true)}>Add New Address</Button>
+            <Button
+              variant="outline"
+              style={{ width: "fit-content" }}
+              onClick={() => setShowAddressForm(true)}
+            >
+              Add New Address
+            </Button>
           ) : (
             <form className={styles.addressForm} onSubmit={handleAddAddress}>
-              <Input label="Street" value={newStreet} onChange={(e) => setNewStreet(e.target.value)} required />
-              <Input label="City" value={newCity} onChange={(e) => setNewCity(e.target.value)} required />
-              <Input label="Zip" value={newZip} onChange={(e) => setNewZip(e.target.value)} required />
-              <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
-                <Button type="submit" loading={saving}>Save Address</Button>
-                <Button variant="secondary" onClick={() => setShowAddressForm(false)}>Cancel</Button>
+              <Input
+                label="Street"
+                value={newStreet}
+                onChange={(e) => setNewStreet(e.target.value)}
+                required
+              />
+              <Input
+                label="City"
+                value={newCity}
+                onChange={(e) => setNewCity(e.target.value)}
+                required
+              />
+              <Input
+                label="Zip"
+                value={newZip}
+                onChange={(e) => setNewZip(e.target.value)}
+                required
+              />
+              <div style={{ display: "flex", gap: "var(--spacing-2)" }}>
+                <Button type="submit" loading={saving}>
+                  Save Address
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => setShowAddressForm(false)}
+                >
+                  Cancel
+                </Button>
               </div>
             </form>
           )}
@@ -157,11 +221,23 @@ const Profile: React.FC = () => {
               <div key={order.id} className={styles.orderCard}>
                 <div className={styles.orderDetails}>
                   <strong>Order {order.id}</strong>
-                  <span>{order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : 'Date N/A'}</span>
+                  <span>
+                    {order.createdAt?.toDate
+                      ? order.createdAt.toDate().toLocaleDateString()
+                      : "Date N/A"}
+                  </span>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontWeight: 'bold' }}>${order.total.toFixed(2)}</div>
-                  <span style={{ fontSize: '0.75rem', textTransform: 'capitalize', color: 'var(--color-text-muted)' }}>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontWeight: "bold" }}>
+                    ${order.total.toFixed(2)}
+                  </div>
+                  <span
+                    style={{
+                      fontSize: "0.75rem",
+                      textTransform: "capitalize",
+                      color: "var(--color-text-muted)",
+                    }}
+                  >
                     {order.status}
                   </span>
                 </div>
@@ -169,7 +245,7 @@ const Profile: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p style={{ color: 'var(--color-text-muted)' }}>No orders found.</p>
+          <p style={{ color: "var(--color-text-muted)" }}>No orders found.</p>
         )}
       </section>
     </div>
