@@ -16,7 +16,7 @@
     - **Tests:** Verify each component renders correctly with sample data.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Visual Components' (Protocol in workflow.md) b3725d6
 
-## Phase 3: Dashboard Integration
+## Phase 3: Dashboard Integration [checkpoint: 865ce02]
 - [x] Task: Implement Analytics Dashboard Page 063291f
     - Create `src/pages/Admin/Analytics.tsx`.
     - Integrate range selection toggle (Today, 7D, 30D).
