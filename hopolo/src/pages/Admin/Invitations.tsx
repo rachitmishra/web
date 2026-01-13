@@ -1,27 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useActionData, useSubmit, Form } from 'react-router';
-import { getAuthenticatedUser } from '../../../lib/auth.server';
-import { createInvitation } from '../../../services/profileService.server';
-import Button from '../../../components/ui/Button/Button';
-import Input from '../../../components/ui/Input/Input';
-import Card from '../../../components/ui/Card/Card';
+import { getAuthenticatedUser, requireRole } from '../../lib/auth.server';
+import { createInvitation } from '../../services/profileService.server';
+import Button from '../../components/ui/Button/Button';
+import Input from '../../components/ui/Input/Input';
+import Card from '../../components/ui/Card/Card';
 import styles from './Invitations.module.css';
 
-export async function action({ request }: { request: Request }) {
-  const user = await getAuthenticatedUser(request);
-  if (!user) throw new Response("Unauthorized", { status: 401 });
-
-  const formData = await request.formData();
-  const phoneNumber = formData.get("phoneNumber") as string;
-  const role = formData.get("role") as string;
-
-  try {
-    const { inviteCode } = await createInvitation(user.uid, phoneNumber, role);
-    return { success: true, inviteCode, phoneNumber, role };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
+export async function loader({ request }: { request: Request }) {
+  await requireRole(request, ['admin']);
+  return null;
 }
+
+export async function action({ request }: { request: Request }) {
+// ...
 
 const Invitations: React.FC = () => {
   const actionData = useActionData() as { success?: boolean; inviteCode?: string; phoneNumber?: string; role?: string; error?: string };
