@@ -17,7 +17,7 @@
 - [x] Task: Implement Profile Loader (Server-Side) 032fa82
     - Create a loader for the Profile page that fetches and decrypts data from Firestore using `firebase-admin`.
     - **Tests:** Verify the browser receives decrypted data without the key.
-- [ ] Task: Implement Profile Action (Server-Side)
+- [x] Task: Implement Profile Action (Server-Side) 13ca1bd
     - Create an action to encrypt and update profile data.
     - **Tests:** Verify Firestore contains only encrypted strings after update.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Secure SSR Data Layer' (Protocol in workflow.md)
