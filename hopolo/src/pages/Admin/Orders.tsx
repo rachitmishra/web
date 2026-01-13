@@ -41,6 +41,7 @@ const Orders: React.FC = () => {
         <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
           <Button variant="outline" onClick={() => navigate('/admin/inventory')}>Manage Inventory</Button>
           <Button variant="outline" onClick={() => navigate('/admin/marketing')}>Marketing</Button>
+          <Button variant="outline" onClick={() => navigate('/admin/analytics')}>Analytics</Button>
           <Button variant="outline" onClick={() => navigate('/admin/email-logs')}>View Email Logs</Button>
           <Button variant="outline" onClick={() => navigate('/admin/seed')}>Seed Data</Button>
         </div>
