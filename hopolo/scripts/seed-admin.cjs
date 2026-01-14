@@ -1,6 +1,12 @@
 const admin = require("firebase-admin");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
+
+// Configuration
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'test_secret_key_32_chars_long_!!';
+const ADMIN_PHONE = process.env.ADMIN_PHONE || '+1234567890';
+const ADMIN_UID = 'admin_test_user';
 
 // Path to service account key (assumed to be in project root or specified via env)
 const serviceAccountPath =
@@ -26,6 +32,18 @@ admin.initializeApp({
 const db = admin.firestore();
 
 console.log("Firebase Admin SDK initialized.");
+
+// Encryption Helper (matches src/lib/encryption.server.ts)
+const encrypt = (text) => {
+  if (ENCRYPTION_KEY.length !== 32) {
+    throw new Error('Encryption key must be exactly 32 characters.');
+  }
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return `${iv.toString('hex')}:${encrypted}`;
+};
 
 const DUMMY_PRODUCTS = [
   {
@@ -89,23 +107,39 @@ const seedProducts = async () => {
 
 const seedUsers = async () => {
   console.log("Seeding user profiles...");
-  // Since we can't easily create Auth users, we'll just create profile docs for hypothetical UIDs
-  // You would manually map these to real UIDs if testing login.
+
+  // 1. Ensure Auth User Exists
+  try {
+    await admin.auth().createUser({
+      uid: ADMIN_UID,
+      phoneNumber: ADMIN_PHONE,
+      displayName: 'Admin User'
+    });
+    console.log(`Auth user created: ${ADMIN_PHONE} (UID: ${ADMIN_UID})`);
+  } catch (error) {
+    if (error.code === 'auth/uid-already-exists') {
+      console.log(`Auth user already exists: ${ADMIN_UID}`);
+    } else {
+      console.error('Error creating auth user:', error);
+    }
+  }
+
+  // 2. Create Encrypted Profile
   const profiles = [
     {
-      uid: "admin_test_user",
-      displayName: "Admin User",
-      email: "admin@hopolo.com",
+      uid: ADMIN_UID,
+      phoneNumber: ADMIN_PHONE,
+      email: "admin@hopolo.com", // Optional
       role: "admin",
-      emoji: "🛠️",
-    },
-    {
-      uid: "regular_test_user",
-      displayName: "Customer User",
-      email: "customer@hopolo.com",
-      role: "user",
-      emoji: "👤",
-    },
+      // Encrypt sensitive fields
+      displayName: encrypt("Admin User"),
+      emoji: encrypt("🛠️"),
+      addresses: encrypt(JSON.stringify([{
+        street: "123 Admin St",
+        city: "Headquarters",
+        zip: "00000"
+      }]))
+    }
   ];
 
   const batch = db.batch();
@@ -115,16 +149,14 @@ const seedUsers = async () => {
       userRef,
       {
         ...profile,
-        addresses: [],
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true }
     );
   }
   await batch.commit();
-  console.log(
-    "User profiles seeded. (Note: Auth users must be created separately)"
-  );
+  console.log("Encrypted user profiles seeded.");
 };
 
 const run = async () => {
