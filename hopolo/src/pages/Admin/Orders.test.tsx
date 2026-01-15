@@ -71,4 +71,18 @@ describe('Admin Orders Dashboard', () => {
       expect(screen.getByTestId('total-orders')).toHaveTextContent('3');
     });
   });
+
+  it('should render navigation buttons including Storefront', async () => {
+    render(
+      <MemoryRouter>
+        <Orders />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /inventory/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /marketing/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /storefront/i })).toBeInTheDocument();
+    });
+  });
 });
