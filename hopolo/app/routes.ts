@@ -14,6 +14,7 @@ export default [
   route("contact", "../src/pages/Static/InfoPages.tsx", { id: "contact" }),
   
   route("profile", "../src/pages/Profile.tsx"),
+  route("maintenance", "../src/pages/Static/Maintenance.tsx"),
   
   // Admin Routes
   route("admin", "../src/pages/Admin/Orders.tsx", { id: "admin-home" }),
