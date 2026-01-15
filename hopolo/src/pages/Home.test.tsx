@@ -82,8 +82,10 @@ describe('Home Page', () => {
     
     fireEvent.click(screen.getByText(/electronics/i));
     
-    expect(screen.getByText(/product 1/i)).toBeInTheDocument();
-    expect(screen.queryByText(/product 2/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/product 1/i)).toBeInTheDocument();
+      expect(screen.queryByText(/product 2/i)).not.toBeInTheDocument();
+    });
   });
 
   it('should render the featured reviews section', async () => {

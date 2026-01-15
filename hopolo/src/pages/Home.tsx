@@ -6,6 +6,7 @@ import ProductCard from '../components/ui/ProductCard/ProductCard';
 import BestSellers from '../components/ui/BestSellers/BestSellers';
 import { fetchProducts, fetchCategories, fetchBestSellers, type Product, type Category } from '../services/productService';
 import { useSEO } from '../hooks/useSEO';
+import styles from './Home.module.css';
 
 const HERO_IMAGE = "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=2000&q=80";
 
@@ -15,6 +16,7 @@ const Home: React.FC = () => {
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [activeCategoryId, setActiveCategoryId] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [isGridChanging, setIsGridChanging] = useState(false);
   const navigate = useNavigate();
   const productSectionRef = useRef<HTMLElement>(null);
 
@@ -57,6 +59,16 @@ const Home: React.FC = () => {
     loadData();
   }, []);
 
+  const handleCategoryChange = (id: string) => {
+    if (id === activeCategoryId) return;
+    
+    setIsGridChanging(true);
+    setTimeout(() => {
+      setActiveCategoryId(id);
+      setIsGridChanging(false);
+    }, 300);
+  };
+
   const filteredProducts = useMemo(() => {
     if (activeCategoryId === "all") return products;
     return products.filter((p) => p.category === activeCategoryId);
@@ -75,13 +87,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--spacing-8)",
-      }}
-    >
+    <div className={styles.container}>
       <CinematicHero
         title="Hopolo Boutique"
         subtitle="Discover unique products curated just for you. Minimalist design, playful details."
@@ -90,29 +96,24 @@ const Home: React.FC = () => {
         onCtaClick={scrollToProducts}
       />
 
-      <section ref={productSectionRef} style={{ padding: "0 var(--spacing-4)" }}>
+      <section ref={productSectionRef} className={styles.productSection}>
         <BestSellers products={bestSellers} />
 
         <CategoryTabs
           categories={categories}
           activeCategoryId={activeCategoryId}
-          onSelectCategory={setActiveCategoryId}
+          onSelectCategory={handleCategoryChange}
         />
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: "var(--spacing-6)",
-          }}
-        >
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={(p) => console.log("Add to cart:", p)}
-              onClick={(id) => navigate(`/product/${id}`)}
-            />
+        <div className={`${styles.grid} ${isGridChanging ? styles.gridChanging : ''}`}>
+          {filteredProducts.map((product, index) => (
+            <div key={product.id} className={styles.productCardEntry} style={{ animationDelay: `${index * 0.05}s` }}>
+              <ProductCard
+                product={product}
+                onAddToCart={(p) => console.log("Add to cart:", p)}
+                onClick={(id) => navigate(`/product/${id}`)}
+              />
+            </div>
           ))}
         </div>
 
@@ -129,25 +130,11 @@ const Home: React.FC = () => {
         )}
       </section>
 
-      <section
-        style={{
-          borderTop: "1px solid var(--color-border)",
-          paddingTop: "var(--spacing-12)",
-          paddingLeft: "var(--spacing-4)",
-          paddingRight: "var(--spacing-4)",
-          paddingBottom: "var(--spacing-12)",
-        }}
-      >
+      <section className={styles.reviewSection}>
         <h2 style={{ textAlign: "center", marginBottom: "var(--spacing-8)" }}>
           Loved by Customers
         </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "var(--spacing-6)",
-          }}
-        >
+        <div className={styles.reviewGrid}>
           {[
             {
               name: "Sarah L.",
@@ -165,27 +152,11 @@ const Home: React.FC = () => {
               text: "The emoji-based review system is so fun and easy!",
             },
           ].map((rev, i) => (
-            <div
-              key={i}
-              style={{
-                padding: "var(--spacing-6)",
-                background: "var(--color-surface)",
-                borderRadius: "var(--radius-lg)",
-                border: "1px solid var(--color-border)",
-              }}
-            >
-              <div
-                style={{ fontWeight: "bold", marginBottom: "var(--spacing-2)" }}
-              >
+            <div key={i} className={styles.reviewCard}>
+              <div className={styles.reviewerName}>
                 {rev.name} {rev.emoji}
               </div>
-              <p
-                style={{
-                  margin: 0,
-                  color: "var(--color-text-muted)",
-                  lineHeight: "1.6",
-                }}
-              >
+              <p className={styles.reviewText}>
                 "{rev.text}"
               </p>
             </div>
