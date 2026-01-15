@@ -8,7 +8,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: Fix Login Submit Button State
+## [x] Track: Fix Login Submit Button State
 *Link: [./conductor/tracks/login_button_fix_20260113/](./conductor/tracks/login_button_fix_20260113/)*
 
 ---
