@@ -29,7 +29,7 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Maintenance Mode' (Protocol in workflow.md)
 
 ## Phase 4: Final Polish & Security
-- [ ] Task: Firestore Security Rules
+- [x] Task: Firestore Security Rules (Documented in Git Note)
     - Ensure only admins can modify the `settings/` collection.
 - [ ] Task: Final Build & Linting
     - Rerun all tests and ensure production build passes.
