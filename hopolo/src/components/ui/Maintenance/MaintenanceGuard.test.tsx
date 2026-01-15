@@ -4,7 +4,6 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import MaintenanceGuard from './MaintenanceGuard';
 import * as storefrontService from '../../../services/storefrontService';
 import * as profileService from '../../../services/profileService';
-import { auth } from '../../../lib/firebase';
 
 vi.mock('../../../services/storefrontService');
 vi.mock('../../../services/profileService');

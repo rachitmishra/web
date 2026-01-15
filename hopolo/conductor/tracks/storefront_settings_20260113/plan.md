@@ -31,6 +31,6 @@
 ## Phase 4: Final Polish & Security
 - [x] Task: Firestore Security Rules (Documented in Git Note)
     - Ensure only admins can modify the `settings/` collection.
-- [ ] Task: Final Build & Linting
+- [x] Task: Final Build & Linting abd6528
     - Rerun all tests and ensure production build passes.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Polish' (Protocol in workflow.md)
