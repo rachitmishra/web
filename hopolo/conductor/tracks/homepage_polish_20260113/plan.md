@@ -39,7 +39,7 @@
 - [x] Task: Performance and Image Optimization 309c5c0
     - Ensure hero images are properly sized and use modern formats (WebP).
     - **Tests:** Run a basic lighthouse or performance check (simulated).
-- [~] Task: Final Build & Linting
+- [x] Task: Final Build & Linting 6115184
     - Run `npm run build` and `npm run lint` to ensure production readiness.
     - **Tests:** Verify zero linting errors and successful build.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Polish' (Protocol in workflow.md)
