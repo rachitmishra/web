@@ -28,7 +28,7 @@
     - **Tests:** Verify standard users are redirected while admins are not.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Maintenance Mode' (Protocol in workflow.md) 4b9d753
 
-## Phase 4: Final Polish & Security
+## Phase 4: Final Polish & Security [checkpoint: 556bb43]
 - [x] Task: Firestore Security Rules (Documented in Git Note)
     - Ensure only admins can modify the `settings/` collection.
 - [x] Task: Final Build & Linting 7b4cb31
