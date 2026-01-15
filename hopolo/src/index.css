@@ -20,6 +20,9 @@
   --spacing-4: 1rem;    /* 16px */
   --spacing-6: 1.5rem;  /* 24px */
   --spacing-8: 2rem;    /* 32px */
+  --spacing-12: 3rem;   /* 48px */
+
+  --header-height: 64px;
 
   /* Borders */
   --radius-sm: 0.25rem;

@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import Hero from '../components/ui/Hero/Hero';
+import CinematicHero from '../components/ui/Hero/CinematicHero';
 import CategoryTabs from '../components/ui/CategoryTabs/CategoryTabs';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
 import { fetchProducts, fetchCategories, type Product, type Category } from '../services/productService';
 import { useSEO } from '../hooks/useSEO';
+
+const HERO_IMAGE = "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=2000&q=80";
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,6 +14,7 @@ const Home: React.FC = () => {
   const [activeCategoryId, setActiveCategoryId] = useState('all');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const productSectionRef = useRef<HTMLElement>(null);
 
   const seoTitle = activeCategoryId === 'all' 
     ? 'Hopolo Boutique' 
@@ -55,6 +58,10 @@ const Home: React.FC = () => {
     return products.filter((p) => p.category === activeCategoryId);
   }, [products, activeCategoryId]);
 
+  const scrollToProducts = () => {
+    productSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   if (loading) {
     return (
       <div style={{ padding: "var(--spacing-8)", textAlign: "center" }}>
@@ -71,12 +78,15 @@ const Home: React.FC = () => {
         gap: "var(--spacing-8)",
       }}
     >
-      <Hero
+      <CinematicHero
         title="Hopolo Boutique"
         subtitle="Discover unique products curated just for you. Minimalist design, playful details."
+        backgroundImage={HERO_IMAGE}
+        ctaText="Shop the Collection"
+        onCtaClick={scrollToProducts}
       />
 
-      <section>
+      <section ref={productSectionRef} style={{ padding: "0 var(--spacing-4)" }}>
         <CategoryTabs
           categories={categories}
           activeCategoryId={activeCategoryId}
@@ -117,6 +127,9 @@ const Home: React.FC = () => {
         style={{
           borderTop: "1px solid var(--color-border)",
           paddingTop: "var(--spacing-12)",
+          paddingLeft: "var(--spacing-4)",
+          paddingRight: "var(--spacing-4)",
+          paddingBottom: "var(--spacing-12)",
         }}
       >
         <h2 style={{ textAlign: "center", marginBottom: "var(--spacing-8)" }}>

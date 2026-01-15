@@ -40,6 +40,19 @@ describe('Home Page', () => {
     });
   });
 
+  it('should render the cinematic hero', async () => {
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    );
+    
+    await waitFor(() => {
+      expect(screen.getByText(/hopolo boutique/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /shop the collection/i })).toBeInTheDocument();
+    });
+  });
+
   it('should filter products when a category tab is clicked', async () => {
     render(
       <MemoryRouter>
