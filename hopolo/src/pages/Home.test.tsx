@@ -19,11 +19,16 @@ const mockCategories: productService.Category[] = [
   { id: 'cat2', name: 'Clothing' },
 ];
 
+const mockBestSellers: productService.Product[] = [
+  { id: 'bs1', name: 'Best Seller Product', price: 50, category: 'cat1' },
+];
+
 describe('Home Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (productService.fetchProducts as any).mockResolvedValue(mockProducts);
     (productService.fetchCategories as any).mockResolvedValue(mockCategories);
+    (productService.fetchBestSellers as any).mockResolvedValue(mockBestSellers);
   });
 
   it('should render products and categories on load', async () => {
@@ -50,6 +55,19 @@ describe('Home Page', () => {
     await waitFor(() => {
       expect(screen.getByText(/hopolo boutique/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /shop the collection/i })).toBeInTheDocument();
+    });
+  });
+
+  it('should render the best sellers section', async () => {
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/best sellers/i)).toBeInTheDocument();
+      expect(screen.getByText(/best seller product/i)).toBeInTheDocument();
     });
   });
 

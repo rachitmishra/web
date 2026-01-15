@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import CinematicHero from '../components/ui/Hero/CinematicHero';
 import CategoryTabs from '../components/ui/CategoryTabs/CategoryTabs';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
-import { fetchProducts, fetchCategories, type Product, type Category } from '../services/productService';
+import BestSellers from '../components/ui/BestSellers/BestSellers';
+import { fetchProducts, fetchCategories, fetchBestSellers, type Product, type Category } from '../services/productService';
 import { useSEO } from '../hooks/useSEO';
 
 const HERO_IMAGE = "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=2000&q=80";
@@ -11,6 +12,7 @@ const HERO_IMAGE = "https://images.unsplash.com/photo-1524758631624-e2822e304c36
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [activeCategoryId, setActiveCategoryId] = useState('all');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -29,12 +31,14 @@ const Home: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [fetchedProducts, fetchedCategories] = await Promise.all([
+        const [fetchedProducts, fetchedCategories, fetchedBestSellers] = await Promise.all([
           fetchProducts(),
           fetchCategories(),
+          fetchBestSellers(),
         ]);
 
         setProducts(fetchedProducts);
+        setBestSellers(fetchedBestSellers);
 
         // Ensure "All" is always present if not already in Firestore
         const hasAll = fetchedCategories.find((c) => c.id === "all");
@@ -87,6 +91,8 @@ const Home: React.FC = () => {
       />
 
       <section ref={productSectionRef} style={{ padding: "0 var(--spacing-4)" }}>
+        <BestSellers products={bestSellers} />
+
         <CategoryTabs
           categories={categories}
           activeCategoryId={activeCategoryId}
