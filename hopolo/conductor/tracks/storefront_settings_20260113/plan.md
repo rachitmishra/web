@@ -19,7 +19,7 @@
     - **Tests:** Verify banner visibility and styles change based on mocked Firestore state.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Promo Banner' (Protocol in workflow.md)
 
-## Phase 3: Maintenance Mode
+## Phase 3: Maintenance Mode [checkpoint: 46f3515]
 - [x] Task: Create Maintenance Landing Page 20c5464
     - Implement a simple, clean `/maintenance` route with a "We'll be back" message.
     - **Tests:** Verify the page renders correctly.
