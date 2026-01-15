@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header/Header';
 import PromoBanner from '../ui/PromoBanner/PromoBanner';
+import MaintenanceGuard from '../ui/Maintenance/MaintenanceGuard';
 import MiniCart from '../ui/MiniCart/MiniCart';
 import styles from './MainLayout.module.css';
 import { subscribeToCart } from '../../services/cartService';
@@ -27,25 +28,27 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div className={styles.container}>
-      <PromoBanner />
-      <Header onOpenCart={() => setIsCartOpen(true)} />
-      
-      <main className={styles.main}>
-        {children}
-      </main>
+      <MaintenanceGuard>
+        <PromoBanner />
+        <Header onOpenCart={() => setIsCartOpen(true)} />
+        
+        <main className={styles.main}>
+          {children}
+        </main>
 
-      <MiniCart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+        <MiniCart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-      <footer className={styles.footer}>
-        <div className={styles.footerLinks}>
-          <Link to="/about">About Us</Link>
-          <Link to="/shipping">Shipping Policy</Link>
-          <Link to="/contact">Contact Us</Link>
-        </div>
-        <div className={styles.copyright}>
-          &copy; {new Date().getFullYear()} Hopolo. All rights reserved.
-        </div>
-      </footer>
+        <footer className={styles.footer}>
+          <div className={styles.footerLinks}>
+            <Link to="/about">About Us</Link>
+            <Link to="/shipping">Shipping Policy</Link>
+            <Link to="/contact">Contact Us</Link>
+          </div>
+          <div className={styles.copyright}>
+            &copy; {new Date().getFullYear()} Hopolo. All rights reserved.
+          </div>
+        </footer>
+      </MaintenanceGuard>
     </div>
   );
 };
