@@ -36,10 +36,10 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Interactive Filtering & Social Proof' (Protocol in workflow.md) f6bd3c2
 
 ## Phase 4: Final Polish & Optimization
-- [ ] Task: Performance and Image Optimization
+- [x] Task: Performance and Image Optimization 309c5c0
     - Ensure hero images are properly sized and use modern formats (WebP).
     - **Tests:** Run a basic lighthouse or performance check (simulated).
-- [ ] Task: Final Build & Linting
+- [~] Task: Final Build & Linting
     - Run `npm run build` and `npm run lint` to ensure production readiness.
     - **Tests:** Verify zero linting errors and successful build.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Polish' (Protocol in workflow.md)

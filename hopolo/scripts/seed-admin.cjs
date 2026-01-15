@@ -4,9 +4,10 @@ const fs = require("fs");
 const crypto = require("crypto");
 
 // Configuration
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'test_secret_key_32_chars_long_!!';
-const ADMIN_PHONE = process.env.ADMIN_PHONE || '+1234567890';
-const ADMIN_UID = 'admin_test_user';
+const ENCRYPTION_KEY =
+  process.env.VITE_ENCRYPTION_KEY || "OneRingToRuleThemAllMyPrecious!!"; // Must be 32 chars
+const ADMIN_PHONE = process.env.VITE_ADMIN_PHONE || "+919967457062";
+const ADMIN_UID = "d9934223-dcfa-41ce-af64-90e68dd2f7ae";
 
 // Path to service account key (assumed to be in project root or specified via env)
 const serviceAccountPath =
@@ -36,13 +37,17 @@ console.log("Firebase Admin SDK initialized.");
 // Encryption Helper (matches src/lib/encryption.server.ts)
 const encrypt = (text) => {
   if (ENCRYPTION_KEY.length !== 32) {
-    throw new Error('Encryption key must be exactly 32 characters.');
+    throw new Error("Encryption key must be exactly 32 characters.");
   }
   const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
-  let encrypted = cipher.update(text, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  return `${iv.toString('hex')}:${encrypted}`;
+  const cipher = crypto.createCipheriv(
+    "aes-256-cbc",
+    Buffer.from(ENCRYPTION_KEY),
+    iv
+  );
+  let encrypted = cipher.update(text, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  return `${iv.toString("hex")}:${encrypted}`;
 };
 
 const DUMMY_PRODUCTS = [
@@ -113,14 +118,14 @@ const seedUsers = async () => {
     await admin.auth().createUser({
       uid: ADMIN_UID,
       phoneNumber: ADMIN_PHONE,
-      displayName: 'Admin User'
+      displayName: "Admin User",
     });
     console.log(`Auth user created: ${ADMIN_PHONE} (UID: ${ADMIN_UID})`);
   } catch (error) {
-    if (error.code === 'auth/uid-already-exists') {
+    if (error.code === "auth/uid-already-exists") {
       console.log(`Auth user already exists: ${ADMIN_UID}`);
     } else {
-      console.error('Error creating auth user:', error);
+      console.error("Error creating auth user:", error);
     }
   }
 
@@ -134,12 +139,16 @@ const seedUsers = async () => {
       // Encrypt sensitive fields
       displayName: encrypt("Admin User"),
       emoji: encrypt("🛠️"),
-      addresses: encrypt(JSON.stringify([{
-        street: "123 Admin St",
-        city: "Headquarters",
-        zip: "00000"
-      }]))
-    }
+      addresses: encrypt(
+        JSON.stringify([
+          {
+            street: "123 Admin St",
+            city: "Headquarters",
+            zip: "00000",
+          },
+        ])
+      ),
+    },
   ];
 
   const batch = db.batch();
@@ -161,8 +170,8 @@ const seedUsers = async () => {
 
 const run = async () => {
   try {
-    await seedCategories();
-    await seedProducts();
+    // await seedCategories();
+    // await seedProducts();
     await seedUsers();
     console.log("Database seeding complete!");
     process.exit(0);

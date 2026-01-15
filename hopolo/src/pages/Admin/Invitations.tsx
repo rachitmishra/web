@@ -13,7 +13,20 @@ export async function loader({ request }: { request: Request }) {
 }
 
 export async function action({ request }: { request: Request }) {
-// ...
+  const user = await getAuthenticatedUser(request);
+  if (!user) throw new Response("Unauthorized", { status: 401 });
+
+  const formData = await request.formData();
+  const phoneNumber = formData.get("phoneNumber") as string;
+  const role = formData.get("role") as string;
+
+  try {
+    const { inviteCode } = await createInvitation(user.uid, phoneNumber, role);
+    return { success: true, inviteCode, phoneNumber, role };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
 
 const Invitations: React.FC = () => {
   const actionData = useActionData() as { success?: boolean; inviteCode?: string; phoneNumber?: string; role?: string; error?: string };
