@@ -5,6 +5,8 @@ import { AppRoutes } from './App';
 import * as productService from './services/productService';
 import * as cartService from './services/cartService';
 import * as reviewService from './services/reviewService';
+import * as storefrontService from './services/storefrontService';
+import * as profileService from './services/profileService';
 import { auth } from './lib/firebase';
 
 vi.mock('./services/productService');
@@ -13,6 +15,8 @@ vi.mock('./services/cartService', () => ({
   addToCart: vi.fn(),
 }));
 vi.mock('./services/reviewService');
+vi.mock('./services/storefrontService');
+vi.mock('./services/profileService');
 
 vi.mock('./lib/firebase', () => {
   const auth = {
@@ -39,7 +43,11 @@ describe('App Routing', () => {
     (productService.fetchProducts as any).mockResolvedValue(mockProducts);
     (productService.fetchCategories as any).mockResolvedValue(mockCategories);
     (reviewService.fetchReviews as any).mockResolvedValue([]);
-    (auth.currentUser as any) = { uid: 'user123' }; // Default to logged in for basic routing tests
+    (storefrontService.subscribeToStorefrontSettings as any).mockImplementation((cb: any) => {
+      cb({ isMaintenanceMode: false });
+      return () => {};
+    });
+    (auth.currentUser as any) = { uid: 'user123' }; 
   });
 
   it('should navigate from Home to Product Detail when a card is clicked', async () => {

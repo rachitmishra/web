@@ -1,9 +1,32 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MainLayout from './MainLayout';
+import * as storefrontService from '../../services/storefrontService';
+import * as profileService from '../../services/profileService';
+
+vi.mock('../../services/storefrontService');
+vi.mock('../../services/profileService');
+vi.mock('../../lib/firebase', () => ({
+  auth: {},
+  db: {}
+}));
+vi.mock('firebase/auth', () => ({
+  onAuthStateChanged: vi.fn((auth, cb) => {
+    cb(null); 
+    return () => {};
+  })
+}));
 
 describe('MainLayout', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    (storefrontService.subscribeToStorefrontSettings as any).mockImplementation((cb: any) => {
+      cb({ isMaintenanceMode: false });
+      return () => {};
+    });
+  });
+
   it('should render children content', () => {
     render(
       <MemoryRouter>
