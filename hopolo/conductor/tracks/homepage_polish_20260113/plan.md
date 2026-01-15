@@ -5,7 +5,7 @@
     - Define props for background image, title, and CTA.
     - Implement full-screen layout using CSS Modules.
     - **Tests:** Verify component renders with correct overlay and CTA text.
-- [ ] Task: Integrate Hero into Homepage
+- [x] Task: Integrate Hero into Homepage f6dcf07
     - Replace existing hero with the new `CinematicHero` component.
     - Update homepage styling to support full-screen layout.
     - **Tests:** Verify homepage renders hero correctly across viewports.
