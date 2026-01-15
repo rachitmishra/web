@@ -18,7 +18,7 @@
 - [x] Task: Create Best Sellers Section Component b068a39
     - Implement a horizontally scrollable or specialized grid for featured products.
     - **Tests:** Verify component renders the correct number of product cards.
-- [ ] Task: Integrate Best Sellers row into Homepage
+- [x] Task: Integrate Best Sellers row into Homepage 5c05310
     - Place the new section above the main product grid.
     - **Tests:** Verify section visibility and dynamic data loading.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Best Sellers' (Protocol in workflow.md)
