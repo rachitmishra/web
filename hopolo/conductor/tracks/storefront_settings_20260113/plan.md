@@ -12,8 +12,9 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Admin UI' (Protocol in workflow.md)
 
 ## Phase 2: Dynamic Promo Banner
-- [ ] Task: Update PromoBanner Component
-    - Modify the existing banner to use real-time data from the `storefrontService`.
+- [x] Task: Create PromoBanner Component 506e80c
+    - Implement a new `PromoBanner` component that uses real-time data from `storefrontService`.
+    - Component should listen to Firestore updates for immediate feedback.
     - Apply dynamic background color and text.
     - **Tests:** Verify banner visibility and styles change based on mocked Firestore state.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Promo Banner' (Protocol in workflow.md)
