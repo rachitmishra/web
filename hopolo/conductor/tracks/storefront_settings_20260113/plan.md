@@ -1,7 +1,7 @@
 # Track Plan: Configurable Storefront & Maintenance Mode
 
 ## Phase 1: Infrastructure & Admin UI
-- [ ] Task: Create Storefront Settings Service
+- [x] Task: Create Storefront Settings Service 13d889e
     - Implement `storefrontService.ts` with functions to fetch and update global settings in Firestore.
     - **Tests:** Verify service correctly reads/writes to the `settings/storefront` document.
 - [ ] Task: Create Admin Storefront Page
