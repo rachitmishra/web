@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../Button/Button';
 import styles from './Auth.module.css';
 
@@ -12,10 +12,14 @@ const PhoneSignIn: React.FC<PhoneSignInProps> = ({ onSubmit, loading = false }) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (phoneNumber) {
-      onSubmit(phoneNumber);
+    const trimmedPhone = phoneNumber.trim();
+    if (trimmedPhone) {
+      onSubmit(trimmedPhone);
     }
   };
+
+  // Improved disabled logic: check for trimmed length
+  const isButtonDisabled = loading || phoneNumber.trim().length === 0;
 
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
@@ -27,9 +31,14 @@ const PhoneSignIn: React.FC<PhoneSignInProps> = ({ onSubmit, loading = false }) 
         onChange={(e) => setPhoneNumber(e.target.value)}
         disabled={loading}
         required
+        autoFocus
       />
       <div id="recaptcha-container"></div>
-      <Button type="submit" loading={loading} disabled={loading || !phoneNumber}>
+      <Button 
+        type="submit" 
+        loading={loading} 
+        disabled={isButtonDisabled}
+      >
         {loading ? 'Sending...' : 'Send Code'}
       </Button>
     </form>

@@ -17,13 +17,16 @@ const Login: React.FC = () => {
   const from = (location.state as any)?.from?.pathname || '/';
 
   const handlePhoneSubmit = async (phoneNumber: string) => {
+    console.log('handlePhoneSubmit triggered with:', phoneNumber);
     setLoading(true);
     setError('');
     try {
       const result = await signInWithPhone(phoneNumber, 'recaptcha-container');
+      console.log('signInWithPhone result:', result);
       setConfirmationResult(result);
       setStep('otp');
     } catch (err: any) {
+      console.error('signInWithPhone error:', err);
       setError(err.message || 'Failed to send code');
     } finally {
       setLoading(false);
