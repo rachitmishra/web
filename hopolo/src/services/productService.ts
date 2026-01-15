@@ -1,4 +1,4 @@
-import { collection, getDocs, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc, serverTimestamp, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export interface Variant {
@@ -14,6 +14,7 @@ export interface Product {
   title: string; // Often same as name, but spec mentioned Title
   price: number;
   category: string;
+  isBestSeller?: boolean;
   description?: string;
   images?: string[]; // Multiple images
   image?: string; // Primary image (backward compat)
@@ -83,4 +84,18 @@ export const fetchCategories = async (): Promise<Category[]> => {
     id: doc.id,
     ...doc.data()
   })) as Category[];
+};
+
+export const fetchBestSellers = async (): Promise<Product[]> => {
+  const q = query(collection(db, 'products'), where('isBestSeller', '==', true));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      images: data.images || (data.image ? [data.image] : []),
+      variants: data.variants || [],
+    } as Product;
+  });
 };

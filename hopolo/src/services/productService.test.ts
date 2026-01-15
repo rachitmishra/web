@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchProducts, fetchCategories, saveProduct } from './productService';
-import { getDocs, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { fetchProducts, fetchCategories, saveProduct, fetchBestSellers } from './productService';
+import { getDocs, collection, addDoc, serverTimestamp, query, where } from 'firebase/firestore';
 
 // Mock firebase/firestore
 vi.mock('firebase/firestore', async () => {
@@ -8,10 +8,12 @@ vi.mock('firebase/firestore', async () => {
   return {
     ...actual,
     getFirestore: vi.fn(),
-    collection: vi.fn(),
+    collection: vi.fn().mockReturnValue('mock-collection'),
     getDocs: vi.fn(),
     addDoc: vi.fn(),
     serverTimestamp: vi.fn(),
+    query: vi.fn(),
+    where: vi.fn().mockReturnValue('mock-where'),
   };
 });
 
@@ -38,7 +40,7 @@ describe('productService', () => {
     const result = await saveProduct(mockProductData as any);
 
     expect(collection).toHaveBeenCalledWith(expect.anything(), 'products');
-    expect(addDoc).toHaveBeenCalledWith(undefined, expect.objectContaining({
+    expect(addDoc).toHaveBeenCalledWith('mock-collection', expect.objectContaining({
       name: 'New Product',
       price: 150,
       category: 'New Cat',
@@ -120,5 +122,30 @@ describe('productService', () => {
     expect(collection).toHaveBeenCalledWith(expect.anything(), 'categories');
     expect(categories).toHaveLength(2);
     expect(categories[0]).toEqual({ id: 'cat1', name: 'Electronics' });
+  });
+
+  it('fetchBestSellers should return only best selling products', async () => {
+    const mockData = [
+      {
+        id: '1',
+        data: () => ({ name: 'Best Seller 1', price: 100, isBestSeller: true })
+      }
+    ];
+
+    (getDocs as any).mockResolvedValue({
+      docs: mockData,
+    });
+
+    // Mock query to verify it's called
+    (query as any).mockReturnValue('mock-query');
+
+    const products = await fetchBestSellers();
+
+    expect(collection).toHaveBeenCalledWith(expect.anything(), 'products');
+    expect(where).toHaveBeenCalledWith('isBestSeller', '==', true);
+    expect(query).toHaveBeenCalledWith(expect.anything(), expect.anything());
+    expect(getDocs).toHaveBeenCalledWith('mock-query');
+    expect(products).toHaveLength(1);
+    expect(products[0].name).toBe('Best Seller 1');
   });
 });
