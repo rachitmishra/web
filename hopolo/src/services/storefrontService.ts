@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export interface StorefrontSettings {
@@ -25,4 +25,15 @@ export const getStorefrontSettings = async (): Promise<StorefrontSettings | null
 export const updateStorefrontSettings = async (settings: Partial<StorefrontSettings>): Promise<void> => {
   const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
   await setDoc(docRef, settings, { merge: true });
+};
+
+export const subscribeToStorefrontSettings = (callback: (settings: StorefrontSettings | null) => void) => {
+  const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
+  return onSnapshot(docRef, (docSnap) => {
+    if (docSnap.exists()) {
+      callback(docSnap.data() as StorefrontSettings);
+    } else {
+      callback(null);
+    }
+  });
 };

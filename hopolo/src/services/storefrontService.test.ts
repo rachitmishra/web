@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getStorefrontSettings, updateStorefrontSettings } from './storefrontService';
-import { getDoc, doc, setDoc } from 'firebase/firestore';
+import { getStorefrontSettings, updateStorefrontSettings, subscribeToStorefrontSettings } from './storefrontService';
+import { getDoc, doc, setDoc, onSnapshot } from 'firebase/firestore';
 
 // Mock firebase/firestore
 vi.mock('firebase/firestore', async () => {
@@ -11,12 +11,13 @@ vi.mock('firebase/firestore', async () => {
     doc: vi.fn().mockReturnValue('mock-doc-ref'),
     getDoc: vi.fn(),
     setDoc: vi.fn(),
+    onSnapshot: vi.fn(),
   };
 });
 
 // Mock the firebase app initialization in lib/firebase
 vi.mock('../lib/firebase', () => ({
-  db: {},
+  db: { type: 'db' }, // Give it some value so it's not undefined
 }));
 
 describe('storefrontService', () => {
@@ -67,5 +68,24 @@ describe('storefrontService', () => {
 
     expect(doc).toHaveBeenCalledWith(expect.anything(), 'settings', 'storefront');
     expect(setDoc).toHaveBeenCalledWith('mock-doc-ref', expect.objectContaining(newSettings), { merge: true });
+  });
+
+  it('subscribeToStorefrontSettings should call onSnapshot and callback', async () => {
+    const mockSettings = { bannerText: 'Live Update' };
+    const callback = vi.fn();
+
+    (onSnapshot as any).mockImplementation((ref: any, cb: any) => {
+      cb({
+        exists: () => true,
+        data: () => mockSettings,
+      });
+      return () => {}; // Unsubscribe
+    });
+
+    subscribeToStorefrontSettings(callback);
+
+    expect(doc).toHaveBeenCalledWith(expect.anything(), 'settings', 'storefront');
+    expect(onSnapshot).toHaveBeenCalledWith('mock-doc-ref', expect.any(Function));
+    expect(callback).toHaveBeenCalledWith(mockSettings);
   });
 });

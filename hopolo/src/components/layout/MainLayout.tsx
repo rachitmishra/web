@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header/Header';
+import PromoBanner from '../ui/PromoBanner/PromoBanner';
 import MiniCart from '../ui/MiniCart/MiniCart';
 import styles from './MainLayout.module.css';
 import { subscribeToCart } from '../../services/cartService';
@@ -26,6 +27,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div className={styles.container}>
+      <PromoBanner />
       <Header onOpenCart={() => setIsCartOpen(true)} />
       
       <main className={styles.main}>
