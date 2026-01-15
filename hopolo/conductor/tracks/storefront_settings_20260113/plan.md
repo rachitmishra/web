@@ -4,7 +4,7 @@
 - [x] Task: Create Storefront Settings Service 13d889e
     - Implement `storefrontService.ts` with functions to fetch and update global settings in Firestore.
     - **Tests:** Verify service correctly reads/writes to the `settings/storefront` document.
-- [ ] Task: Create Admin Storefront Page
+- [x] Task: Create Admin Storefront Page a7f6203
     - Implement a new view in the Admin dashboard with inputs for banner text, color, link, and maintenance toggle.
     - **Tests:** Verify UI state updates correctly and calls the service on save.
 - [ ] Task: Update Admin Sidebar/Navigation
