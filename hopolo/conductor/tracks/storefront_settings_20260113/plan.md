@@ -11,7 +11,7 @@
     - Add a link to the new "Storefront" settings page.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Admin UI' (Protocol in workflow.md)
 
-## Phase 2: Dynamic Promo Banner
+## Phase 2: Dynamic Promo Banner [checkpoint: 48df03c]
 - [x] Task: Create PromoBanner Component 506e80c
     - Implement a new `PromoBanner` component that uses real-time data from `storefrontService`.
     - Component should listen to Firestore updates for immediate feedback.
