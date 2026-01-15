@@ -25,4 +25,5 @@ export default [
   route("admin/seed", "../src/pages/Admin/SeedData.tsx"),
   route("admin/analytics", "../src/pages/Admin/Analytics.tsx"),
   route("admin/invitations", "../src/pages/Admin/Invitations.tsx"),
+  route("admin/storefront", "../src/pages/Admin/Storefront.tsx"),
 ] satisfies RouteConfig;
