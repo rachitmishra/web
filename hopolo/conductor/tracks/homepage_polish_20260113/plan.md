@@ -11,7 +11,7 @@
     - **Tests:** Verify homepage renders hero correctly across viewports.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Visual Foundation' (Protocol in workflow.md) 1972eae
 
-## Phase 2: Dynamic Best Sellers
+## Phase 2: Dynamic Best Sellers [checkpoint: c15484d]
 - [x] Task: Implement Best Sellers Logic e044bef
     - Create a utility or update `productService` to filter products by `isBestSeller` flag.
     - **Tests:** Verify utility returns only products marked as best sellers.
@@ -21,7 +21,7 @@
 - [x] Task: Integrate Best Sellers row into Homepage 5c05310
     - Place the new section above the main product grid.
     - **Tests:** Verify section visibility and dynamic data loading.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Best Sellers' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Best Sellers' (Protocol in workflow.md) c15484d
 
 ## Phase 3: Interactive Filtering & Social Proof
 - [ ] Task: Implement Smooth Grid Transitions
