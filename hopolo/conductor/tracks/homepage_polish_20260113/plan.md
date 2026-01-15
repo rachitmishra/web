@@ -15,7 +15,7 @@
 - [x] Task: Implement Best Sellers Logic e044bef
     - Create a utility or update `productService` to filter products by `isBestSeller` flag.
     - **Tests:** Verify utility returns only products marked as best sellers.
-- [ ] Task: Create Best Sellers Section Component
+- [x] Task: Create Best Sellers Section Component b068a39
     - Implement a horizontally scrollable or specialized grid for featured products.
     - **Tests:** Verify component renders the correct number of product cards.
 - [ ] Task: Integrate Best Sellers row into Homepage
