@@ -7,7 +7,7 @@
 - [x] Task: Create Admin Storefront Page a7f6203
     - Implement a new view in the Admin dashboard with inputs for banner text, color, link, and maintenance toggle.
     - **Tests:** Verify UI state updates correctly and calls the service on save.
-- [ ] Task: Update Admin Sidebar/Navigation
+- [x] Task: Update Admin Sidebar/Navigation 34f3ead
     - Add a link to the new "Storefront" settings page.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Admin UI' (Protocol in workflow.md)
 
