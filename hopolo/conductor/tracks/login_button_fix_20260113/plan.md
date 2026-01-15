@@ -18,6 +18,6 @@
 - [x] Task: Verify/Fix Client-Side Auth in SSR 22023d3
     - Ensure `signInWithPhone` waits for hydration or is called only in client-side handlers (it is, via `onSubmit`).
     - Verify `recaptcha-container` presence in the DOM.
-- [~] Task: Final Build & Linting
+- [x] Task: Final Build & Linting 2920aa6
     - Run `npm run build` and `npm run lint` to ensure no regressions.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Implementation & Fix' (Protocol in workflow.md)
