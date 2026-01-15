@@ -10,7 +10,7 @@
     - **Tests:** Manual verification or unit test mocking the auth import.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Investigation' (Protocol in workflow.md) c044011
 
-## Phase 2: Implementation & Fix
+## Phase 2: Implementation & Fix [checkpoint: 0e7ee56]
 - [x] Task: Fix State Update Logic 22023d3
     - Audit `src/components/ui/Auth/PhoneSignIn.tsx` for issues in `onChange` or `value` props.
     - Ensure `loading` state is correctly handled in the parent `Login.tsx`.
@@ -20,4 +20,4 @@
     - Verify `recaptcha-container` presence in the DOM.
 - [x] Task: Final Build & Linting 2920aa6
     - Run `npm run build` and `npm run lint` to ensure no regressions.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Implementation & Fix' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Implementation & Fix' (Protocol in workflow.md) 0e7ee56
