@@ -1,6 +1,6 @@
 # Track Plan: Homepage Polish & Brand-First Enhancements
 
-## Phase 1: Visual Foundation & Hero Section
+## Phase 1: Visual Foundation & Hero Section [checkpoint: 1972eae]
 - [x] Task: Create Cinematic Hero Component e52906a
     - Define props for background image, title, and CTA.
     - Implement full-screen layout using CSS Modules.
@@ -9,7 +9,7 @@
     - Replace existing hero with the new `CinematicHero` component.
     - Update homepage styling to support full-screen layout.
     - **Tests:** Verify homepage renders hero correctly across viewports.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Visual Foundation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Visual Foundation' (Protocol in workflow.md) 1972eae
 
 ## Phase 2: Dynamic Best Sellers
 - [ ] Task: Implement Best Sellers Logic
