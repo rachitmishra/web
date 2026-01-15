@@ -23,7 +23,7 @@
 - [x] Task: Create Maintenance Landing Page 20c5464
     - Implement a simple, clean `/maintenance` route with a "We'll be back" message.
     - **Tests:** Verify the page renders correctly.
-- [ ] Task: Implement Maintenance Redirect Logic
+- [x] Task: Implement Maintenance Redirect Logic 4345dad
     - Create a wrapper component or update `App.tsx` to check the maintenance flag and user role.
     - **Tests:** Verify standard users are redirected while admins are not.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Maintenance Mode' (Protocol in workflow.md)
