@@ -11,6 +11,10 @@ export const signInWithPhone = async (
   phoneNumber: string,
   recaptchaContainerId: string
 ): Promise<ConfirmationResult> => {
+  if (typeof window === 'undefined') {
+    throw new Error('signInWithPhone must be called from the client side.');
+  }
+
   const recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaContainerId, {
     size: "invisible",
   });

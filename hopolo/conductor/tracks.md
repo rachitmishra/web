@@ -8,11 +8,6 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [x] Track: Homepage Polish & Brand-First Enhancements
-*Link: [./conductor/tracks/homepage_polish_20260113/](./conductor/tracks/homepage_polish_20260113/)*
-
----
-
 ## [~] Track: Fix Login Submit Button State
 *Link: [./conductor/tracks/login_button_fix_20260113/](./conductor/tracks/login_button_fix_20260113/)*
 

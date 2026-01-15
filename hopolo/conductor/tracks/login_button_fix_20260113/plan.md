@@ -11,13 +11,13 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Investigation' (Protocol in workflow.md) c044011
 
 ## Phase 2: Implementation & Fix
-- [~] Task: Fix State Update Logic
+- [x] Task: Fix State Update Logic 22023d3
     - Audit `src/components/ui/Auth/PhoneSignIn.tsx` for issues in `onChange` or `value` props.
     - Ensure `loading` state is correctly handled in the parent `Login.tsx`.
     - **Tests:** Run the reproduction test and confirm it now passes.
-- [ ] Task: Verify/Fix Client-Side Auth in SSR
+- [x] Task: Verify/Fix Client-Side Auth in SSR 22023d3
     - Ensure `signInWithPhone` waits for hydration or is called only in client-side handlers (it is, via `onSubmit`).
     - Verify `recaptcha-container` presence in the DOM.
-- [ ] Task: Final Build & Linting
+- [~] Task: Final Build & Linting
     - Run `npm run build` and `npm run lint` to ensure no regressions.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Implementation & Fix' (Protocol in workflow.md)
