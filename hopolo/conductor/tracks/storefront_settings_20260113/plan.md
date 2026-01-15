@@ -20,7 +20,7 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Promo Banner' (Protocol in workflow.md)
 
 ## Phase 3: Maintenance Mode
-- [ ] Task: Create Maintenance Landing Page
+- [x] Task: Create Maintenance Landing Page 20c5464
     - Implement a simple, clean `/maintenance` route with a "We'll be back" message.
     - **Tests:** Verify the page renders correctly.
 - [ ] Task: Implement Maintenance Redirect Logic
