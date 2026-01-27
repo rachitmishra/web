@@ -16,9 +16,12 @@ describe('SocialPanel', () => {
     const mockSocial = {
         friends: [],
         nudges: {},
-        getInviteLink: vi.fn().mockReturnValue('http://invite.link'),
-        nudgeFriend: vi.fn(),
+        addFriend: vi.fn(),
         removeFriend: vi.fn(),
+        nudgeFriend: vi.fn(),
+        removeNudge: vi.fn(),
+        getInviteLink: vi.fn().mockReturnValue('http://invite.link'),
+        loading: false,
         checkUsernameAvailability: vi.fn(),
         updateProfile: vi.fn(),
         login: vi.fn(),
@@ -30,12 +33,13 @@ describe('SocialPanel', () => {
             passcode: '1234'
         },
         deleteProfile: vi.fn(),
-        removeNudge: vi.fn(),
     };
 
     const mockAuth = {
-        setRecoveredUid: vi.fn(),
+        user: null,
         effectiveUid: 'uid123',
+        loading: false,
+        setRecoveredUid: vi.fn(),
     };
 
     const mockToast = {

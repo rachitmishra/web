@@ -1,22 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { useOnlineStatus } from './useOnlineStatus';
 
 describe('useOnlineStatus', () => {
-  const originalOnLine = window.navigator.onLine;
-
-  beforeEach(() => {
-    vi.stubGlobal('navigator', {
-      ...window.navigator,
-      onLine: true,
-    });
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  it('should return true when online', () => {
+  it('returns true when online', () => {
     const { result } = renderHook(() => useOnlineStatus());
     expect(result.current).toBe(true);
   });

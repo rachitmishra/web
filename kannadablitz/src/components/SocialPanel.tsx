@@ -331,7 +331,7 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
         onClick={() => setIsCommunityOpen(!isCommunityOpen)}
       >
         <div className="social-title" style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Users size={18} /> Friends {isOffline && <CloudOff size={16} title="Offline Mode" style={{ opacity: 0.6 }} />}
+            <Users size={18} /> Friends {isOffline && <span title="Offline Mode" style={{ display: 'flex' }}><CloudOff size={16} style={{ opacity: 0.6 }} /></span>}
         </div>
         <div className="badge-toggle">
             {isCommunityOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}

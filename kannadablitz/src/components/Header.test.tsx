@@ -11,6 +11,7 @@ vi.mock('../hooks/useNotifications');
 describe('Header', () => {
   beforeEach(() => {
     vi.mocked(useNotifications).mockReturnValue({
+      notificationPermission: 'default',
       requestPermission: vi.fn(),
       deactivateNotifications: vi.fn(),
       isEnabled: false,
@@ -23,7 +24,7 @@ describe('Header', () => {
       <Header 
         theme="light" 
         toggleTheme={() => {}} 
-        currentLanguage="en" 
+        currentLanguage="english" 
         setCurrentLanguage={() => {}} 
         resetGame={() => {}} 
       />
@@ -37,7 +38,7 @@ describe('Header', () => {
       <Header 
         theme="light" 
         toggleTheme={() => {}} 
-        currentLanguage="en" 
+        currentLanguage="english" 
         setCurrentLanguage={() => {}} 
         resetGame={() => {}} 
       />
