@@ -8,6 +8,11 @@ export default defineConfig({
     allowedHosts: [
       'worker1.sparrow-duck.ts.net'
     ]
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
   }
 })
 
