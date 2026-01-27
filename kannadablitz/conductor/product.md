@@ -13,6 +13,7 @@ A React + TypeScript application built with Vite for learning Kannada.
 - **Gamification:** Hearts system, streaks, and badges to motivate users.
 - **Flashcards:** Vocabulary practice with flip cards.
 - **Progress Tracking:** Dashboard to visualize daily progress and unlocked achievements.
+- **Offline Support:** Full PWA support allowing for offline gameplay and automatic progress synchronization when back online.
 
 ## User Goals
 - Learn essential Kannada phrases for daily survival in Bangalore.
