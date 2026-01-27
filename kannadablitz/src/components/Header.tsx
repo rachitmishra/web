@@ -7,14 +7,65 @@ import { useNotifications } from "../hooks/useNotifications";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 interface HeaderProps {
-// ... (lines 14-41)
+  onBack?: () => void;
+  center?: React.ReactNode;
+  right?: React.ReactNode;
+  variant?: "light" | "dark" | "auto";
+  theme: "light" | "dark";
+  toggleTheme: () => void;
+  currentLanguage: SupportedLanguage;
+  setCurrentLanguage: (lang: SupportedLanguage) => void;
+  resetGame: () => void;
+  showLanguageSelector?: boolean;
+  onOpenSettings?: () => void;
+}
+
+export default function Header({
+  onBack,
+  center,
+  right,
+  variant = "auto",
+  theme,
+  toggleTheme,
+  currentLanguage,
+  setCurrentLanguage,
+  resetGame,
+  showLanguageSelector = false,
   onOpenSettings,
 }: HeaderProps) {
   const { requestPermission, deactivateNotifications, isEnabled } = useNotifications();
   const isOnline = useOnlineStatus();
 
   const handleToggleNotifications = () => {
-// ... (lines 68-76)
+    if (isEnabled) {
+      deactivateNotifications();
+    } else {
+      requestPermission();
+    }
+  };
+
+  const handleLanguageChange = (val: string) => {
+    setCurrentLanguage(val as SupportedLanguage);
+    resetGame();
+  };
+
+  return (
+    <div className="fc-header" data-variant={variant}>
+      <div className="fc-left">
+        {onBack && (
+          <Button
+            variant="surface"
+            onClick={() => onBack && onBack()}
+            className="btn--icon"
+            aria-label="Back"
+          >
+            <Home size={18} />
+          </Button>
+        )}
+      </div>
+
+      <span className="fc-title">{center}</span>
+
       <div className="fc-right">
         {!isOnline && (
             <div className="offline-badge" title="Offline Mode - Progress will sync later">
@@ -23,8 +74,13 @@ interface HeaderProps {
         )}
         {onOpenSettings && (
             <button 
-// ... (lines 83-112)
-
+                onClick={onOpenSettings} 
+                className="btn--icon btn-icon-transparent" 
+                title="Settings"
+            >
+                <Settings size={20} />
+            </button>
+        )}
         <button 
             onClick={handleToggleNotifications} 
             className="btn--icon btn-icon-transparent" 

@@ -303,7 +303,7 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                   </div>
                   
                   <div className="social-panel-recovery-actions">
-                       <button onClick={startEditing} className="social-panel-edit-button">
+                       <button onClick={startEditing} className="social-panel-edit-button" aria-label="Edit Profile">
                           <Edit2 size={16} />
                        </button>
                        {effectiveUid && localStorage.getItem("recovered_uid") === effectiveUid ? (
