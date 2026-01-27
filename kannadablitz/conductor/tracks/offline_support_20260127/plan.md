@@ -25,7 +25,7 @@
     - Modify `SocialPanel.tsx` and `FriendItem.tsx` to accept an `isOffline` prop (from `useOnlineStatus`).
     - Disable nudge buttons and add-friend functionality when `isOffline` is true.
     - Add a subtle offline indicator (e.g., a "cloud-off" icon) to the Social Panel header.
-- [ ] Task 6: Dashboard Offline Indicators
+- [x] Task 6: Dashboard Offline Indicators affb76e
     - Add a small connectivity status indicator to the `Header` or `Dashboard`.
     - Write tests to ensure UI components react correctly to online/offline state changes.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: UI/UX & Social Features' (Protocol in workflow.md)
