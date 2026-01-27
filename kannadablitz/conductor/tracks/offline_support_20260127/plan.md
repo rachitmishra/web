@@ -12,7 +12,7 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Project Setup' (Protocol in workflow.md)
 
 ## Phase 2: Offline Data Persistence
-- [ ] Task 3: Enable Firestore Persistence
+- [x] Task 3: Enable Firestore Persistence a94ce33
     - Update `src/firebase.ts` to enable `enableMultiTabPersistentCache` for Firestore.
     - Handle potential initialization errors (e.g., if persistence is already enabled or unsupported).
 - [ ] Task 4: Implement Connectivity Hook
