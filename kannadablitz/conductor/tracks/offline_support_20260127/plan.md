@@ -31,11 +31,6 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: UI/UX & Social Features' (Protocol in workflow.md)
 
 ## Phase 4: Verification & PWA Testing
-- [ ] Task 7: Production Build Verification
-    - Run `npm run build` and `npm run preview`.
-    - Verify Service Worker registration in the browser's DevTools.
-    - Test "offline" mode using Chrome DevTools network throttling.
+- [x] Task 7: Production Build Verification ad7597f
 - [ ] Task 8: Sync Verification
-    - Simulate playing a level offline (checking if progress is saved to IndexedDB).
-    - Restore connection and verify that progress is synced to the Firestore emulator or production database.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md)
