@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Copy, User, Edit2, Save, Trash2, X, Lock, Share2, LogOut, ChevronDown, ChevronRight, Users } from "./Icons";
+import { Copy, User, Edit2, Save, Trash2, X, Lock, Share2, LogOut, ChevronDown, ChevronRight, Users, CloudOff } from "./Icons";
 import Button from "./Button";
 import { useSocial } from "../hooks/useSocial";
 import { useToast } from "../context/ToastContext";
@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import ShareCard from "./ShareCard";
 import { toPng } from 'html-to-image';
 import FriendItem from "./FriendItem";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 const EMOJIS = ["😀", "😎", "🦊", "🚀", "🐯", "🌟", "🔥", "🦄", "🐼", "🦁"];
 
@@ -18,6 +19,8 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
   const { friends, nudges, getInviteLink, nudgeFriend, removeFriend, checkUsernameAvailability, updateProfile, login, myProfile, deleteProfile, removeNudge } = useSocial();
   const { showToast } = useToast();
   const { setRecoveredUid, effectiveUid } = useAuth();
+  const isOnline = useOnlineStatus();
+  const isOffline = !isOnline;
   const inviteLink = getInviteLink();
 
   const currentName = myProfile.userName || localProfile?.userName;
@@ -97,6 +100,10 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
   };
 
   const handleDeleteProfile = async () => {
+      if (isOffline) {
+          showToast("Cannot delete profile while offline.");
+          return;
+      }
       if (window.confirm("Are you sure you want to delete your profile? This cannot be undone and you will lose all progress.")) {
           const success = await deleteProfile();
           if (success) {
@@ -232,7 +239,7 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                         value={newName} 
                         onChange={(e) => setNewName(e.target.value)}
                         className="social-panel-input"
-                        disabled={!!myProfile.isCustomName}
+                        disabled={!!myProfile.isCustomName || isOffline}
                       />
                   </div>
                   <div className="social-panel-form-group">
@@ -243,6 +250,7 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                         onChange={(e) => setNewPasscode(e.target.value)}
                         placeholder="Set a secret passcode"
                         className="social-panel-input"
+                        disabled={isOffline}
                       />
                   </div>
                   <div className="social-panel-form-group">
@@ -251,8 +259,9 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                           {EMOJIS.map(emoji => (
                               <button 
                                 key={emoji} 
-                                onClick={() => setNewEmoji(emoji)}
+                                onClick={() => !isOffline && setNewEmoji(emoji)}
                                 className={`social-panel-emoji-button ${newEmoji === emoji ? 'selected' : ''}`}
+                                disabled={isOffline}
                               >
                                   {emoji}
                               </button>
@@ -261,7 +270,7 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                   </div>
                   {error && <p className="social-panel-error">{error}</p>}
                   <div className="social-panel-form-actions">
-                      <Button onClick={handleSaveProfile}>
+                      <Button onClick={handleSaveProfile} disabled={isOffline}>
                           <Save size={16} className="btn-icon-spacing"/> Save
                       </Button>
                       <Button onClick={() => setIsEditing(false)} variant="neutral">
@@ -271,7 +280,8 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                         <button 
                             onClick={handleDeleteProfile} 
                             className="btn-delete-icon"
-                            title="Delete Profile"
+                            title={isOffline ? "Unavailable offline" : "Delete Profile"}
+                            disabled={isOffline}
                         >
                             <Trash2 size={18} />
                         </button>
@@ -301,7 +311,12 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                                <LogOut size={16} />
                            </button>
                        ) : (
-                           <button onClick={() => setIsRecovering(true)} className="social-panel-recover-button">
+                           <button 
+                             onClick={() => !isOffline && setIsRecovering(true)} 
+                             className="social-panel-recover-button"
+                             disabled={isOffline}
+                             title={isOffline ? "Unavailable offline" : ""}
+                           >
                                Recover Account
                            </button>
                        )}
@@ -315,8 +330,8 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
         className={`community-toggle-header ${Object.keys(nudges || {}).length > 0 ? 'has-nudge' : ''}`}
         onClick={() => setIsCommunityOpen(!isCommunityOpen)}
       >
-        <div className="social-title" style={{ fontSize: '1rem' }}>
-            <Users size={18} /> Friends
+        <div className="social-title" style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Users size={18} /> Friends {isOffline && <CloudOff size={16} title="Offline Mode" style={{ opacity: 0.6 }} />}
         </div>
         <div className="badge-toggle">
             {isCommunityOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -329,7 +344,13 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                 <Button onClick={handleShare} variant="primary" fullWidth>
                     <Share2 size={16} /> Share Progress
                 </Button>
-                <Button onClick={copyLink} variant="outline" fullWidth>
+                <Button 
+                  onClick={() => !isOffline && copyLink()} 
+                  variant="outline" 
+                  fullWidth
+                  disabled={isOffline}
+                  title={isOffline ? "Unavailable offline" : ""}
+                >
                    <Copy size={16} /> Invite Friend
                 </Button>
             </div>
@@ -351,6 +372,7 @@ export default function SocialPanel({ localProfile }: SocialPanelProps) {
                         handleNudge={handleNudge}
                         handleRemove={handleRemove}
                         onAvatarClick={handleNudgeDismiss}
+                        isOffline={isOffline}
                     />
                 );
               })

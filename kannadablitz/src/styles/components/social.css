@@ -109,6 +109,14 @@
     background: var(--neutral-50);
   }
 
+  .friend-item.offline-mode {
+    opacity: 0.8;
+  }
+
+  .friend-item.offline-mode .avatar-circle {
+    filter: grayscale(1);
+  }
+
   .friend-info {
     display: flex;
     align-items: center;

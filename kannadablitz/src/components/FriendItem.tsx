@@ -7,15 +7,16 @@ interface FriendItemProps {
     handleNudge: (uid: string) => void;
     handleRemove: (uid: string) => void;
     onAvatarClick: (friend: FriendProfile) => void;
+    isOffline?: boolean;
 }
 
-export default function FriendItem({ friend, hasNudgedMe, handleNudge, handleRemove, onAvatarClick }: FriendItemProps) {
+export default function FriendItem({ friend, hasNudgedMe, handleNudge, handleRemove, onAvatarClick, isOffline }: FriendItemProps) {
     return (
-            <div className="friend-item">
+            <div className={`friend-item ${isOffline ? 'offline-mode' : ''}`}>
               <div className="friend-info">
                 <div 
                     className={`avatar-wrapper ${hasNudgedMe ? "has-nudge" : ""}`}
-                    onClick={() => hasNudgedMe && onAvatarClick(friend)}
+                    onClick={() => !isOffline && hasNudgedMe && onAvatarClick(friend)}
                 >
                   <div className="avatar-circle">
                     {friend.emoji ? <span className="emoji-lg">{friend.emoji}</span> : <User size={14} />}
@@ -34,16 +35,18 @@ export default function FriendItem({ friend, hasNudgedMe, handleNudge, handleRem
                    <span>{friend.streak}</span>
                 </div>
                 <button 
-                  onClick={() => handleNudge(friend.uid)}
+                  onClick={() => !isOffline && handleNudge(friend.uid)}
                   className="nudge-btn"
-                  title="Send a nudge"
+                  title={isOffline ? "Unavailable offline" : "Send a nudge"}
+                  disabled={isOffline}
                 >
                   <Bell size={18} />
                 </button>
                 <button
-                    onClick={() => handleRemove(friend.uid)}
+                    onClick={() => !isOffline && handleRemove(friend.uid)}
                     className="nudge-btn btn-outline-danger"
-                    title="Remove friend"
+                    title={isOffline ? "Unavailable offline" : "Remove friend"}
+                    disabled={isOffline}
                 >
                     <Trash2 size={16} />
                 </button>
