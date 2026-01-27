@@ -1,6 +1,6 @@
 # Implementation Plan: Offline Support
 
-## Phase 1: Project Setup (Testing & PWA)
+## Phase 1: Project Setup (Testing & PWA) [checkpoint: 2872ad4]
 - [x] Task 1: Setup Testing Environment e967e70
     - Install `vitest`, `@testing-library/react`, `jsdom`, and `@testing-library/jest-dom`.
     - Update `vite.config.ts` to include `test` configuration.
