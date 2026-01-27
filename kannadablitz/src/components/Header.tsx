@@ -1,79 +1,30 @@
-import { Home, Bell, BellOff, Settings, Globe } from "./Icons";
+import { Home, Bell, BellOff, Settings, Globe, CloudOff } from "./Icons";
 import ThemeToggle from "./ThemeToggle";
 import Button from "./Button";
 import { type SupportedLanguage, supportedLanguages } from "../data";
 import IconSelect from "./IconSelect";
 import { useNotifications } from "../hooks/useNotifications";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 interface HeaderProps {
-  onBack?: () => void;
-  center?: React.ReactNode;
-  right?: React.ReactNode;
-  variant?: "light" | "dark" | "auto";
-  theme: "light" | "dark";
-  toggleTheme: () => void;
-  currentLanguage: SupportedLanguage;
-  setCurrentLanguage: (lang: SupportedLanguage) => void;
-  resetGame: () => void;
-  showLanguageSelector?: boolean;
-  onOpenSettings?: () => void;
-}
-
-export default function Header({
-  onBack,
-  center,
-  right,
-  variant = "auto",
-  theme,
-  toggleTheme,
-  currentLanguage,
-  setCurrentLanguage,
-  resetGame,
-  showLanguageSelector = false,
+// ... (lines 14-41)
   onOpenSettings,
 }: HeaderProps) {
   const { requestPermission, deactivateNotifications, isEnabled } = useNotifications();
+  const isOnline = useOnlineStatus();
 
   const handleToggleNotifications = () => {
-    if (isEnabled) {
-      deactivateNotifications();
-    } else {
-      requestPermission();
-    }
-  };
-
-  const handleLanguageChange = (val: string) => {
-    setCurrentLanguage(val as SupportedLanguage);
-    resetGame();
-  };
-
-  return (
-    <div className="fc-header" data-variant={variant}>
-      <div className="fc-left">
-        {onBack && (
-          <Button
-            variant="surface"
-            onClick={() => onBack && onBack()}
-            className="btn--icon"
-            aria-label="Back"
-          >
-            <Home size={18} />
-          </Button>
-        )}
-      </div>
-
-      <span className="fc-title">{center}</span>
-
+// ... (lines 68-76)
       <div className="fc-right">
+        {!isOnline && (
+            <div className="offline-badge" title="Offline Mode - Progress will sync later">
+                <CloudOff size={20} />
+            </div>
+        )}
         {onOpenSettings && (
             <button 
-                onClick={onOpenSettings} 
-                className="btn--icon btn-icon-transparent" 
-                title="Settings"
-            >
-                <Settings size={20} />
-            </button>
-        )}
+// ... (lines 83-112)
+
         <button 
             onClick={handleToggleNotifications} 
             className="btn--icon btn-icon-transparent" 
