@@ -15,7 +15,7 @@
 - [x] Task 3: Enable Firestore Persistence a94ce33
     - Update `src/firebase.ts` to enable `enableMultiTabPersistentCache` for Firestore.
     - Handle potential initialization errors (e.g., if persistence is already enabled or unsupported).
-- [ ] Task 4: Implement Connectivity Hook
+- [x] Task 4: Implement Connectivity Hook 8313bf7
     - Create a `useOnlineStatus` custom hook to track `navigator.onLine`.
     - Write unit tests for the hook.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Offline Data Persistence' (Protocol in workflow.md)
