@@ -20,7 +20,7 @@
     - Write unit tests for the hook.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Offline Data Persistence' (Protocol in workflow.md)
 
-## Phase 3: UI/UX & Social Features
+## Phase 3: UI/UX & Social Features [checkpoint: eac2a8a]
 - [x] Task 5: Social Panel Read-Only Mode 760f4f7
     - Modify `SocialPanel.tsx` and `FriendItem.tsx` to accept an `isOffline` prop (from `useOnlineStatus`).
     - Disable nudge buttons and add-friend functionality when `isOffline` is true.
