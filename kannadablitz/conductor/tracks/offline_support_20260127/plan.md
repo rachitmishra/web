@@ -5,7 +5,7 @@
     - Install `vitest`, `@testing-library/react`, `jsdom`, and `@testing-library/jest-dom`.
     - Update `vite.config.ts` to include `test` configuration.
     - Create a test setup file.
-- [ ] Task 2: Install and Configure `vite-plugin-pwa`
+- [x] Task 2: Install and Configure `vite-plugin-pwa` 836078c
     - Install `vite-plugin-pwa`.
     - Configure the plugin in `vite.config.ts` with a basic manifest and `registerType: 'autoUpdate'`.
     - Define `workbox` strategies for caching fonts and images.
