@@ -25,13 +25,19 @@ const MaintenanceGuard: React.FC<MaintenanceGuardProps> = ({ children }) => {
 
     // 2. Subscribe to Auth State and Fetch Profile
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const profile = await getUserProfile(user.uid);
-        setUserProfile(profile);
-      } else {
+      try {
+        if (user) {
+          const profile = await getUserProfile(user.uid);
+          setUserProfile(profile);
+        } else {
+          setUserProfile(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
         setUserProfile(null);
+      } finally {
+        setAuthLoading(false);
       }
-      setAuthLoading(false);
     });
 
     return () => {
@@ -53,11 +59,8 @@ const MaintenanceGuard: React.FC<MaintenanceGuardProps> = ({ children }) => {
     }
   }, [isMaintenanceMode, userProfile, authLoading, location.pathname, navigate]);
 
-  // Show a blank screen or a simple loader while checking state to prevent flickers
-  if (isMaintenanceMode === null || authLoading) {
-    return null; 
-  }
-
+  // We render children immediately to support SSR and hydration.
+  // The useEffect will handle navigation if maintenance mode is active.
   return <>{children}</>;
 };
 

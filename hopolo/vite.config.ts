@@ -5,6 +5,11 @@ import { reactRouter } from '@react-router/dev/vite'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
+  server: {
+    https: false,
+    port: 5174,
+    host: true,
+  },
   plugins: [
     mode === 'test' ? react() : reactRouter(),
   ],

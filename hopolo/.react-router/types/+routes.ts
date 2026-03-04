@@ -45,6 +45,9 @@ type Pages = {
   "/profile": {
     params: {};
   };
+  "/maintenance": {
+    params: {};
+  };
   "/admin": {
     params: {};
   };
@@ -74,12 +77,15 @@ type Pages = {
   "/admin/invitations": {
     params: {};
   };
+  "/admin/storefront": {
+    params: {};
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/product/:id" | "/cart" | "/login" | "/checkout" | "/checkout/success/:orderId" | "/about" | "/shipping" | "/contact" | "/profile" | "/admin" | "/admin/orders" | "/admin/orders/:id" | "/admin/email-logs" | "/admin/inventory" | "/admin/marketing" | "/admin/seed" | "/admin/analytics" | "/admin/invitations";
+    page: "/" | "/product/:id" | "/cart" | "/login" | "/checkout" | "/checkout/success/:orderId" | "/about" | "/shipping" | "/contact" | "/profile" | "/maintenance" | "/admin" | "/admin/orders" | "/admin/orders/:id" | "/admin/email-logs" | "/admin/inventory" | "/admin/marketing" | "/admin/seed" | "/admin/analytics" | "/admin/invitations" | "/admin/storefront";
   };
   "../src/pages/Home.tsx": {
     id: "../src/pages/Home";
@@ -119,6 +125,10 @@ type RouteFiles = {
     id: "../src/pages/Profile";
     page: "/profile";
   };
+  "../src/pages/Static/Maintenance.tsx": {
+    id: "../src/pages/Static/Maintenance";
+    page: "/maintenance";
+  };
   "../src/pages/Admin/Orders.tsx": {
     id: "admin-home";
     page: "/admin";
@@ -154,6 +164,10 @@ type RouteFiles = {
     id: "../src/pages/Admin/Invitations";
     page: "/admin/invitations";
   };
+  "../src/pages/Admin/Storefront.tsx": {
+    id: "../src/pages/Admin/Storefront";
+    page: "/admin/storefront";
+  };
 };
 
 type RouteModules = {
@@ -168,6 +182,7 @@ type RouteModules = {
   "shipping": unknown;
   "contact": unknown;
   "../src/pages/Profile": unknown;
+  "../src/pages/Static/Maintenance": unknown;
   "admin-home": unknown;
   "admin-orders": unknown;
   "../src/pages/Admin/OrderDetail": unknown;
@@ -177,4 +192,5 @@ type RouteModules = {
   "../src/pages/Admin/SeedData": unknown;
   "../src/pages/Admin/Analytics": unknown;
   "../src/pages/Admin/Invitations": unknown;
+  "../src/pages/Admin/Storefront": unknown;
 };

@@ -5,7 +5,7 @@
     - Add `heroTitle`, `heroSubtitle`, `heroImage`, `heroCtaText`, and `reviews` to `StorefrontSettings`.
     - Update `getStorefrontSettings` to provide default values if Firestore is empty.
     - **Tests:** Verify `getStorefrontSettings` returns default values for new fields.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Service Layer' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 1: Service Layer' (Protocol in workflow.md)
 
 ## Phase 2: Admin Storefront Dashboard Enhancement
 - [ ] Task: Create Tests for Storefront Admin Page

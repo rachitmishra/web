@@ -1,6 +1,10 @@
+import { PassThrough } from "node:stream";
 import type { AppLoadContext, EntryContext } from "react-router";
-import { ServerRouter } from "react-router-dom";
-import { renderToString } from "react-dom/server";
+import { createReadableStreamFromReadable } from "@react-router/node";
+import { ServerRouter } from "react-router";
+import { renderToPipeableStream } from "react-dom/server";
+
+const ABORT_DELAY = 5_000;
 
 export default function handleRequest(
   request: Request,
@@ -9,14 +13,40 @@ export default function handleRequest(
   routerContext: EntryContext,
   loadContext: AppLoadContext
 ) {
-  const html = renderToString(
-    <ServerRouter context={routerContext} url={request.url} />
-  );
+  return new Promise((resolve, reject) => {
+    let shellRendered = false;
 
-  responseHeaders.set("Content-Type", "text/html");
+    const { pipe, abort } = renderToPipeableStream(
+      <ServerRouter context={routerContext} url={request.url} abortDelay={ABORT_DELAY} />,
+      {
+        onShellReady() {
+          shellRendered = true;
+          const body = new PassThrough();
+          const stream = createReadableStreamFromReadable(body);
 
-  return new Response("<!DOCTYPE html>" + html, {
-    status: responseStatusCode,
-    headers: responseHeaders,
+          responseHeaders.set("Content-Type", "text/html");
+
+          resolve(
+            new Response(stream, {
+              headers: responseHeaders,
+              status: responseStatusCode,
+            })
+          );
+
+          pipe(body);
+        },
+        onShellError(error: unknown) {
+          reject(error);
+        },
+        onError(error: unknown) {
+          responseStatusCode = 500;
+          if (shellRendered) {
+            console.error(error);
+          }
+        },
+      }
+    );
+
+    setTimeout(abort, ABORT_DELAY);
   });
 }
