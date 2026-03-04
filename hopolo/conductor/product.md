@@ -21,5 +21,5 @@ Email notifications (order placed + delivery feedback)
 - **Real-Time Cart:** Instant sync across devices and tabs using Firebase Firestore.
 - **Clean Storefront:** Modern homepage with cinematic hero and best sellers, product detail pages (PDP), and cart interfaces.
 - **Secure Checkout:** Integrated Razorpay checkout flow with webhook confirmation.
-- **Operational Tools:** Admin dashboard for order management, refunds, and shipping (Shadowfax integration).
+- **Operational Tools:** Admin dashboard for order management, refunds, shipping (Shadowfax), and dynamic storefront configuration (promo banner, maintenance mode).
 - **Communication:** Automated email notifications for order confirmation and delivery feedback.
