@@ -30,4 +30,4 @@
 - [x] Task: Final Polish & CSS Adjustments fb5fa7d
     - Ensure the Admin Storefront form layout is clean and responsive.
     - **Tests:** Visual check of the new admin sections and the dynamic homepage.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Final Verification' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 3: Final Verification' (Protocol in workflow.md)
