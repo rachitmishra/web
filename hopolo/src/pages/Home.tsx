@@ -5,15 +5,15 @@ import CategoryTabs from '../components/ui/CategoryTabs/CategoryTabs';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
 import BestSellers from '../components/ui/BestSellers/BestSellers';
 import { fetchProducts, fetchCategories, fetchBestSellers, type Product, type Category } from '../services/productService';
+import { getStorefrontSettings, type StorefrontSettings, DEFAULT_SETTINGS } from '../services/storefrontService';
 import { useSEO } from '../hooks/useSEO';
 import styles from './Home.module.css';
-
-const HERO_IMAGE = "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1920&q=80&fm=webp";
 
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
+  const [settings, setSettings] = useState<StorefrontSettings>(DEFAULT_SETTINGS);
   const [activeCategoryId, setActiveCategoryId] = useState('all');
   const [loading, setLoading] = useState(true);
   const [isGridChanging, setIsGridChanging] = useState(false);
@@ -21,26 +21,28 @@ const Home: React.FC = () => {
   const productSectionRef = useRef<HTMLElement>(null);
 
   const seoTitle = activeCategoryId === 'all' 
-    ? 'Hopolo Boutique' 
-    : `${activeCategoryId.charAt(0).toUpperCase() + activeCategoryId.slice(1)} | Hopolo Boutique`;
+    ? settings.heroTitle || 'Hopolo Boutique' 
+    : `${activeCategoryId.charAt(0).toUpperCase() + activeCategoryId.slice(1)} | ${settings.heroTitle || 'Hopolo Boutique'}`;
 
   useSEO({
     title: seoTitle,
-    description: 'Discover unique products curated just for you. Minimalist design, playful details.',
+    description: settings.heroSubtitle || 'Discover unique products curated just for you. Minimalist design, playful details.',
     ogType: 'website'
   });
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [fetchedProducts, fetchedCategories, fetchedBestSellers] = await Promise.all([
+        const [fetchedProducts, fetchedCategories, fetchedBestSellers, fetchedSettings] = await Promise.all([
           fetchProducts(),
           fetchCategories(),
           fetchBestSellers(),
+          getStorefrontSettings(),
         ]);
 
         setProducts(fetchedProducts);
         setBestSellers(fetchedBestSellers);
+        setSettings(fetchedSettings);
 
         // Ensure "All" is always present if not already in Firestore
         const hasAll = fetchedCategories.find((c) => c.id === "all");
@@ -89,10 +91,10 @@ const Home: React.FC = () => {
   return (
     <div className={styles.container}>
       <CinematicHero
-        title="Hopolo Boutique"
-        subtitle="Discover unique products curated just for you. Minimalist design, playful details."
-        backgroundImage={HERO_IMAGE}
-        ctaText="Shop the Collection"
+        title={settings.heroTitle}
+        subtitle={settings.heroSubtitle}
+        backgroundImage={settings.heroImage}
+        ctaText={settings.heroCtaText}
         onCtaClick={scrollToProducts}
       />
 
@@ -135,23 +137,7 @@ const Home: React.FC = () => {
           Loved by Customers
         </h2>
         <div className={styles.reviewGrid}>
-          {[
-            {
-              name: "Sarah L.",
-              emoji: "😊",
-              text: "Amazing quality and fast delivery. Highly recommended!",
-            },
-            {
-              name: "Marcus T.",
-              emoji: "😊",
-              text: "Minimalist design that fits perfectly in my home.",
-            },
-            {
-              name: "Elena G.",
-              emoji: "😊",
-              text: "The emoji-based review system is so fun and easy!",
-            },
-          ].map((rev, i) => (
+          {settings.reviews.map((rev, i) => (
             <div key={i} className={styles.reviewCard}>
               <div className={styles.reviewerName}>
                 {rev.name} {rev.emoji}
