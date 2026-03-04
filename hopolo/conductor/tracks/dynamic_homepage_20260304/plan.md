@@ -8,7 +8,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Service Layer' (Protocol in workflow.md) 05ae769
 
 ## Phase 2: Admin Storefront Dashboard Enhancement
-- [ ] Task: Create Tests for Storefront Admin Page
+- [x] Task: Create Tests for Storefront Admin Page a3fff0e
     - Mock `StorefrontSettings` with new fields.
     - **Tests:** Verify inputs exist for Hero settings and Reviews.
 - [ ] Task: Implement Hero Settings Form in Admin Dashboard
