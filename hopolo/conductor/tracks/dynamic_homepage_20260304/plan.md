@@ -11,7 +11,7 @@
 - [x] Task: Create Tests for Storefront Admin Page a3fff0e
     - Mock `StorefrontSettings` with new fields.
     - **Tests:** Verify inputs exist for Hero settings and Reviews.
-- [ ] Task: Implement Hero Settings Form in Admin Dashboard
+- [x] Task: Implement Hero Settings Form in Admin Dashboard c2a83ac
     - Update `Storefront.tsx` to include fields for Hero Title, Subtitle, Image URL, and CTA Text.
     - **Tests:** Verify fields are present and save correctly to the service.
 - [ ] Task: Implement Reviews Management in Admin Dashboard
