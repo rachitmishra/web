@@ -17,14 +17,16 @@ export default [
   route("maintenance", "../src/pages/Static/Maintenance.tsx"),
   
   // Admin Routes
-  route("admin", "../src/pages/Admin/Orders.tsx", { id: "admin-home" }),
-  route("admin/orders", "../src/pages/Admin/Orders.tsx", { id: "admin-orders" }),
-  route("admin/orders/:id", "../src/pages/Admin/OrderDetail.tsx"),
-  route("admin/email-logs", "../src/pages/Admin/EmailLogs.tsx"),
-  route("admin/inventory", "../src/pages/Admin/Inventory.tsx"),
-  route("admin/marketing", "../src/pages/Admin/Marketing.tsx"),
-  route("admin/seed", "../src/pages/Admin/SeedData.tsx"),
-  route("admin/analytics", "../src/pages/Admin/Analytics.tsx"),
-  route("admin/invitations", "../src/pages/Admin/Invitations.tsx"),
-  route("admin/storefront", "../src/pages/Admin/Storefront.tsx"),
+  route("admin", "../src/components/layout/AdminLayout.tsx", [
+    index("../src/pages/Admin/Orders.tsx"),
+    route("orders", "../src/pages/Admin/Orders.tsx"),
+    route("orders/:id", "../src/pages/Admin/OrderDetail.tsx"),
+    route("email-logs", "../src/pages/Admin/EmailLogs.tsx"),
+    route("inventory", "../src/pages/Admin/Inventory.tsx"),
+    route("marketing", "../src/pages/Admin/Marketing.tsx"),
+    route("seed", "../src/pages/Admin/SeedData.tsx"),
+    route("analytics", "../src/pages/Admin/Analytics.tsx"),
+    route("invitations", "../src/pages/Admin/Invitations.tsx"),
+    route("storefront", "../src/pages/Admin/Storefront.tsx"),
+  ]),
 ] satisfies RouteConfig;
