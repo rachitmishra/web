@@ -14,7 +14,7 @@
 - [x] Task: Implement Hero Settings Form in Admin Dashboard c2a83ac
     - Update `Storefront.tsx` to include fields for Hero Title, Subtitle, Image URL, and CTA Text.
     - **Tests:** Verify fields are present and save correctly to the service.
-- [ ] Task: Implement Reviews Management in Admin Dashboard
+- [x] Task: Implement Reviews Management in Admin Dashboard 737d90a
     - Add a dynamic list for adding/removing customer reviews in `Storefront.tsx`.
     - **Tests:** Verify reviews can be added and deleted from the state before saving.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Admin Dashboard' (Protocol in workflow.md)
