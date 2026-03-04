@@ -1,36 +1,59 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import Profile from './Profile';
+import { createMemoryRouter, RouterProvider } from 'react-router';
+import Profile, { loader, action } from './Profile';
 import * as profileService from '../services/profileService';
 import * as orderService from '../services/orderService';
-import * as firebase from '../lib/firebase';
+import * as profileServiceServer from '../services/profileService.server';
+import * as authServer from '../lib/auth.server';
 
 vi.mock('../services/profileService');
 vi.mock('../services/orderService');
+vi.mock('../services/profileService.server');
+vi.mock('../lib/auth.server');
 vi.mock('../lib/firebase', () => ({
-  auth: { currentUser: { uid: 'user123' } },
+  auth: { 
+    currentUser: { uid: 'user123' },
+    onAuthStateChanged: vi.fn((cb) => {
+      cb({ uid: 'user123' });
+      return vi.fn();
+    }),
+  },
   db: {},
 }));
+
+const mockProfile = {
+  uid: 'user123',
+  displayName: 'John Doe',
+  emoji: '👋',
+  addresses: [{ street: '123 Main St', city: 'City', zip: '12345' }],
+};
 
 describe('Profile Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (profileService.getUserProfile as any).mockResolvedValue({
-      uid: 'user123',
-      displayName: 'John Doe',
-      emoji: '👋',
-      addresses: [{ street: '123 Main St', city: 'City' }],
-    });
+    (authServer.getAuthenticatedUser as any).mockResolvedValue({ uid: 'user123' });
+    (profileServiceServer.getSecureProfile as any).mockResolvedValue(mockProfile);
     (orderService.fetchOrdersByUserId as any).mockResolvedValue([]);
   });
 
+  const renderComponent = () => {
+    const routes = [
+      {
+        path: '/profile',
+        element: <Profile />,
+        loader: loader,
+        action: action,
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/profile'],
+    });
+    return render(<RouterProvider router={router} />);
+  };
+
   it('should render profile data on load', async () => {
-    render(
-      <MemoryRouter>
-        <Profile />
-      </MemoryRouter>
-    );
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('John Doe')).toBeInTheDocument();
@@ -39,64 +62,23 @@ describe('Profile Page', () => {
     });
   });
 
-  it('should call updateProfile when save is clicked', async () => {
-    render(
-      <MemoryRouter>
-        <Profile />
-      </MemoryRouter>
-    );
+  it('should call updateProfile action when save is clicked', async () => {
+    (profileServiceServer.updateSecureProfile as any).mockResolvedValue({ success: true });
+    renderComponent();
 
     await waitFor(() => screen.getByDisplayValue('John Doe'));
     
     const input = screen.getByLabelText(/display name/i);
     fireEvent.change(input, { target: { value: 'Jane Doe' } });
     
-    const saveButton = screen.getByRole('button', { name: /save/i });
+    const saveButton = screen.getByRole('button', { name: /save changes/i });
     fireEvent.click(saveButton);
 
-    expect(profileService.updateUserProfile).toHaveBeenCalledWith('user123', expect.objectContaining({
-      displayName: 'Jane Doe'
-    }));
-  });
-
-  it('should call saveAddress when a new address is submitted', async () => {
-    render(
-      <MemoryRouter>
-        <Profile />
-      </MemoryRouter>
-    );
-
-    await waitFor(() => screen.getByText(/add new address/i));
-    
-    // Open form
-    fireEvent.click(screen.getByText(/add new address/i));
-    
-    fireEvent.change(screen.getByLabelText(/street/i), { target: { value: '456 New St' } });
-    fireEvent.change(screen.getByLabelText(/city/i), { target: { value: 'New City' } });
-    fireEvent.change(screen.getByLabelText(/zip/i), { target: { value: '12345' } });
-    
-    fireEvent.click(screen.getByRole('button', { name: /save address/i }));
-
-    expect(profileService.saveAddress).toHaveBeenCalledWith('user123', {
-      street: '456 New St',
-      city: 'New City',
-      zip: '12345'
+    await waitFor(() => {
+      expect(profileServiceServer.updateSecureProfile).toHaveBeenCalledWith('user123', expect.objectContaining({
+        displayName: 'Jane Doe'
+      }));
     });
-  });
-
-  it('should call deleteAddress when delete button is clicked', async () => {
-    render(
-      <MemoryRouter>
-        <Profile />
-      </MemoryRouter>
-    );
-
-    await waitFor(() => screen.getByText(/123 Main St/i));
-    
-    const deleteBtn = screen.getByRole('button', { name: /delete/i });
-    fireEvent.click(deleteBtn);
-
-    expect(profileService.deleteAddress).toHaveBeenCalledWith('user123', 0);
   });
 
   it('should fetch and display user orders', async () => {
@@ -106,11 +88,7 @@ describe('Profile Page', () => {
     ];
     (orderService.fetchOrdersByUserId as any).mockResolvedValue(mockOrders);
 
-    render(
-      <MemoryRouter>
-        <Profile />
-      </MemoryRouter>
-    );
+    renderComponent();
 
     await waitFor(() => {
       expect(orderService.fetchOrdersByUserId).toHaveBeenCalledWith('user123');

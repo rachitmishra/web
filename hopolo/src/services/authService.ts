@@ -30,5 +30,8 @@ export const verifyOtp = async (
 };
 
 export const signOutUser = async (): Promise<void> => {
+  if (typeof window !== 'undefined') {
+    document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  }
   return signOut(auth);
 };

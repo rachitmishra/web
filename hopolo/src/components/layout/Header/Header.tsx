@@ -4,6 +4,7 @@ import styles from './Header.module.css';
 import { subscribeToCart, type CartItem } from '../../../services/cartService';
 import { auth } from '../../../lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
+import { signOutUser } from '../../../services/authService';
 
 interface HeaderProps {
   onOpenCart: () => void;
@@ -30,6 +31,15 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
     };
   }, []);
 
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      navigate('/login');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
+
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.logo}>
@@ -38,7 +48,10 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
       
       <div className={styles.actions}>
         {user ? (
-          <Link to="/profile" className={styles.link}>Account</Link>
+          <>
+            <Link to="/profile" className={styles.link}>Account</Link>
+            <button onClick={handleSignOut} className={styles.linkButton}>Sign Out</button>
+          </>
         ) : (
           <Link to="/login" className={styles.link}>Sign In</Link>
         )}

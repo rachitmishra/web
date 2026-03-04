@@ -37,7 +37,13 @@ const Login: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      await verifyOtp(confirmationResult, otp);
+      const userCredential = await verifyOtp(confirmationResult, otp);
+      const idToken = await userCredential.user.getIdToken();
+      
+      // Set the session cookie for SSR loaders
+      // We use a simple document.cookie here for now
+      document.cookie = `session=${idToken}; path=/; max-age=${60 * 60 * 24 * 5}; SameSite=Lax`;
+      
       navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.message || 'Invalid code');

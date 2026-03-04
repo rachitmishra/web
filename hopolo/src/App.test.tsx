@@ -47,6 +47,13 @@ describe('App Routing', () => {
       cb({ isMaintenanceMode: false });
       return () => {};
     });
+    (storefrontService.getStorefrontSettings as any).mockResolvedValue({
+      heroTitle: 'Hopolo Boutique',
+      heroSubtitle: 'Discover unique products',
+      heroImage: '',
+      heroCtaText: 'Shop Now',
+      reviews: []
+    });
     (auth.currentUser as any) = { uid: 'user123' }; 
   });
 
