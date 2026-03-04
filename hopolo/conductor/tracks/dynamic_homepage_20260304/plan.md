@@ -19,7 +19,7 @@
     - **Tests:** Verify reviews can be added and deleted from the state before saving.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Admin Dashboard' (Protocol in workflow.md) aa96736
 
-## Phase 3: Homepage Integration & Final Polish
+## Phase 3: Homepage Integration & Final Polish [checkpoint: 834cdae]
 - [x] Task: Create Tests for Dynamic Homepage 7f0992e
     - Mock `StorefrontSettings` to return custom hero content and reviews.
     - **Tests:** Verify `CinematicHero` and the review section display the mocked content.
@@ -30,4 +30,4 @@
 - [x] Task: Final Polish & CSS Adjustments fb5fa7d
     - Ensure the Admin Storefront form layout is clean and responsive.
     - **Tests:** Visual check of the new admin sections and the dynamic homepage.
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Final Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Final Verification' (Protocol in workflow.md) 834cdae
