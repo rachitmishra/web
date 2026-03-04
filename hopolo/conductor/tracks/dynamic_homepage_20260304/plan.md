@@ -23,7 +23,7 @@
 - [x] Task: Create Tests for Dynamic Homepage 7f0992e
     - Mock `StorefrontSettings` to return custom hero content and reviews.
     - **Tests:** Verify `CinematicHero` and the review section display the mocked content.
-- [ ] Task: Refactor Homepage to use Dynamic Settings
+- [x] Task: Refactor Homepage to use Dynamic Settings adb9b32
     - Use `getStorefrontSettings` (or subscription) in `Home.tsx`.
     - Replace hardcoded Hero and Review arrays with settings data.
     - **Tests:** Verify the homepage reflects live data from the Firestore settings.
