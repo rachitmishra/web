@@ -1,7 +1,7 @@
 # Implementation Plan: Fully Dynamic Homepage Configuration
 
 ## Phase 1: Data Model & Service Layer
-- [ ] Task: Update `StorefrontSettings` Interface and Service
+- [x] Task: Update `StorefrontSettings` Interface and Service b9b5c71
     - Add `heroTitle`, `heroSubtitle`, `heroImage`, `heroCtaText`, and `reviews` to `StorefrontSettings`.
     - Update `getStorefrontSettings` to provide default values if Firestore is empty.
     - **Tests:** Verify `getStorefrontSettings` returns default values for new fields.
