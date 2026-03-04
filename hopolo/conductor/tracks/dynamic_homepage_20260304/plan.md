@@ -17,7 +17,7 @@
 - [x] Task: Implement Reviews Management in Admin Dashboard 737d90a
     - Add a dynamic list for adding/removing customer reviews in `Storefront.tsx`.
     - **Tests:** Verify reviews can be added and deleted from the state before saving.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Admin Dashboard' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Admin Dashboard' (Protocol in workflow.md)
 
 ## Phase 3: Homepage Integration & Final Polish
 - [ ] Task: Create Tests for Dynamic Homepage
