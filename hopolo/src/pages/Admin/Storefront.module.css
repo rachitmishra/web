@@ -42,10 +42,51 @@
   font-size: 0.875rem;
 }
 
-.success {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: var(--color-success);
-  border: 1px solid var(--color-success);
+.colorInput {
+  width: 100%;
+  height: 40px;
+  padding: 2px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.reviewItem {
+  padding: var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  background-color: var(--color-bg-alt, #f9f9f9);
+}
+
+.reviewRow {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+.removeBtn {
+  align-self: flex-end;
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  padding: 4px 12px;
+  font-size: 0.75rem;
+}
+
+.removeBtn:hover {
+  background-color: rgba(239, 68, 68, 0.05);
 }
 
 .divider {

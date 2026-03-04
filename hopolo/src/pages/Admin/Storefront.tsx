@@ -29,7 +29,6 @@ export async function action({ request }: { request: Request }) {
     heroCtaText: formData.get('heroCtaText') as string,
   };
 
-  // If reviews are present in formData, parse them
   const reviewsJson = formData.get('reviews') as string;
   if (reviewsJson) {
     try {
@@ -60,6 +59,25 @@ const AdminStorefront: React.FC = () => {
       setLoading(false);
     }
   }, [actionData]);
+
+  const handleAddReview = () => {
+    setSettings({
+      ...settings,
+      reviews: [...settings.reviews, { name: '', emoji: '😊', text: '' }]
+    });
+  };
+
+  const handleRemoveReview = (index: number) => {
+    const newReviews = [...settings.reviews];
+    newReviews.splice(index, 1);
+    setSettings({ ...settings, reviews: newReviews });
+  };
+
+  const handleUpdateReview = (index: number, field: keyof CustomerReview, value: string) => {
+    const newReviews = [...settings.reviews];
+    newReviews[index] = { ...newReviews[index], [field]: value };
+    setSettings({ ...settings, reviews: newReviews });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +121,7 @@ const AdminStorefront: React.FC = () => {
                 type="color"
                 value={settings.bannerColor}
                 onChange={(e) => setSettings({ ...settings, bannerColor: e.target.value })}
-                style={{ width: '100%', height: '40px', padding: '2px', border: '1px solid #ddd', borderRadius: '4px' }}
+                className={styles.colorInput}
               />
             </div>
             <Input
@@ -156,6 +174,53 @@ const AdminStorefront: React.FC = () => {
               onChange={(e) => setSettings({ ...settings, heroCtaText: e.target.value })}
               required
             />
+          </section>
+
+          <hr className={styles.divider} />
+
+          <section className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h3>Customer Reviews</h3>
+              <Button type="button" variant="secondary" onClick={handleAddReview} size="small">
+                Add Review
+              </Button>
+            </div>
+            
+            <div className={styles.reviewsList}>
+              {settings.reviews.map((review, index) => (
+                <div key={index} className={styles.reviewItem}>
+                  <div className={styles.reviewRow}>
+                    <Input
+                      label="Reviewer Name"
+                      value={review.name}
+                      onChange={(e) => handleUpdateReview(index, 'name', e.target.value)}
+                      required
+                    />
+                    <Input
+                      label="Emoji"
+                      value={review.emoji}
+                      onChange={(e) => handleUpdateReview(index, 'emoji', e.target.value)}
+                      required
+                      style={{ width: '80px' }}
+                    />
+                  </div>
+                  <Input
+                    label="Review Text"
+                    value={review.text}
+                    onChange={(e) => handleUpdateReview(index, 'text', e.target.value)}
+                    required
+                  />
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => handleRemoveReview(index)}
+                    className={styles.removeBtn}
+                  >
+                    Remove Review
+                  </Button>
+                </div>
+              ))}
+            </div>
           </section>
 
           <hr className={styles.divider} />

@@ -66,8 +66,8 @@ describe('AdminStorefront Page', () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText(/john/i)).toBeInTheDocument();
-      expect(screen.getByText(/great!/i)).toBeInTheDocument();
+      expect(screen.getByDisplayValue(/john/i)).toBeInTheDocument();
+      expect(screen.getByDisplayValue(/great!/i)).toBeInTheDocument();
     });
 
     // Add review
