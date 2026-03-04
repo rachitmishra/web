@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLoaderData, useActionData, useSubmit, Form } from 'react-router';
 import { requireRole } from '../../lib/auth.server';
-import { getStorefrontSettings, updateStorefrontSettings, type StorefrontSettings } from '../../services/storefrontService';
+import { getStorefrontSettings, updateStorefrontSettings, type StorefrontSettings, type CustomerReview } from '../../services/storefrontService';
 import Button from '../../components/ui/Button/Button';
 import Input from '../../components/ui/Input/Input';
 import Card from '../../components/ui/Card/Card';
@@ -23,7 +23,21 @@ export async function action({ request }: { request: Request }) {
     bannerLink: formData.get('bannerLink') as string,
     bannerVisible: formData.get('bannerVisible') === 'true',
     isMaintenanceMode: formData.get('isMaintenanceMode') === 'true',
+    heroTitle: formData.get('heroTitle') as string,
+    heroSubtitle: formData.get('heroSubtitle') as string,
+    heroImage: formData.get('heroImage') as string,
+    heroCtaText: formData.get('heroCtaText') as string,
   };
+
+  // If reviews are present in formData, parse them
+  const reviewsJson = formData.get('reviews') as string;
+  if (reviewsJson) {
+    try {
+      settings.reviews = JSON.parse(reviewsJson);
+    } catch (e) {
+      console.error("Failed to parse reviews JSON", e);
+    }
+  }
 
   try {
     await updateStorefrontSettings(settings);
@@ -34,18 +48,11 @@ export async function action({ request }: { request: Request }) {
 }
 
 const AdminStorefront: React.FC = () => {
-  const { settings: initialSettings } = useLoaderData() as { settings: StorefrontSettings | null };
+  const { settings: initialSettings } = useLoaderData() as { settings: StorefrontSettings };
   const actionData = useActionData() as { success?: boolean; error?: string };
   const submit = useSubmit();
 
-  const [settings, setSettings] = useState<StorefrontSettings>(initialSettings || {
-    bannerText: '',
-    bannerColor: '#5D3FD3',
-    bannerLink: '',
-    bannerVisible: false,
-    isMaintenanceMode: false,
-  });
-
+  const [settings, setSettings] = useState<StorefrontSettings>(initialSettings);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -57,17 +64,20 @@ const AdminStorefront: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Convert boolean to string for formData compatibility if needed, 
-    // or just pass the object to submit if using json submission.
-    // RRv7 submit handles objects well if second arg is method: post.
-    submit(
-      { 
-        ...settings, 
-        bannerVisible: String(settings.bannerVisible),
-        isMaintenanceMode: String(settings.isMaintenanceMode)
-      }, 
-      { method: 'post' }
-    );
+    
+    const formData = new FormData();
+    formData.append('bannerText', settings.bannerText);
+    formData.append('bannerColor', settings.bannerColor);
+    formData.append('bannerLink', settings.bannerLink);
+    formData.append('bannerVisible', String(settings.bannerVisible));
+    formData.append('isMaintenanceMode', String(settings.isMaintenanceMode));
+    formData.append('heroTitle', settings.heroTitle);
+    formData.append('heroSubtitle', settings.heroSubtitle);
+    formData.append('heroImage', settings.heroImage);
+    formData.append('heroCtaText', settings.heroCtaText);
+    formData.append('reviews', JSON.stringify(settings.reviews));
+
+    submit(formData, { method: 'post' });
   };
 
   return (
@@ -114,7 +124,41 @@ const AdminStorefront: React.FC = () => {
             </div>
           </section>
 
-          <hr style={{ border: 'none', borderTop: '1px solid var(--color-border)' }} />
+          <hr className={styles.divider} />
+
+          <section className={styles.section}>
+            <h3>Hero Section</h3>
+            <Input
+              name="heroTitle"
+              label="Hero Title"
+              value={settings.heroTitle}
+              onChange={(e) => setSettings({ ...settings, heroTitle: e.target.value })}
+              required
+            />
+            <Input
+              name="heroSubtitle"
+              label="Hero Subtitle"
+              value={settings.heroSubtitle}
+              onChange={(e) => setSettings({ ...settings, heroSubtitle: e.target.value })}
+              required
+            />
+            <Input
+              name="heroImage"
+              label="Hero Image URL"
+              value={settings.heroImage}
+              onChange={(e) => setSettings({ ...settings, heroImage: e.target.value })}
+              required
+            />
+            <Input
+              name="heroCtaText"
+              label="CTA Text"
+              value={settings.heroCtaText}
+              onChange={(e) => setSettings({ ...settings, heroCtaText: e.target.value })}
+              required
+            />
+          </section>
+
+          <hr className={styles.divider} />
 
           <section className={styles.section}>
             <h3>Site Status</h3>
@@ -128,7 +172,7 @@ const AdminStorefront: React.FC = () => {
               />
               <label htmlFor="isMaintenanceMode" className={styles.label}>Maintenance Mode (Close Storefront)</label>
             </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '-8px' }}>
+            <p className={styles.hint}>
               When enabled, non-admin users will be redirected to a maintenance page.
             </p>
           </section>

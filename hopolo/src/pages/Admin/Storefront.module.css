@@ -48,8 +48,14 @@
   border: 1px solid var(--color-success);
 }
 
-.error {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: var(--color-danger);
-  border: 1px solid var(--color-danger);
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--spacing-2) 0;
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: calc(-1 * var(--spacing-3));
 }
