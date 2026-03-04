@@ -20,7 +20,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Admin Dashboard' (Protocol in workflow.md) aa96736
 
 ## Phase 3: Homepage Integration & Final Polish
-- [ ] Task: Create Tests for Dynamic Homepage
+- [x] Task: Create Tests for Dynamic Homepage 7f0992e
     - Mock `StorefrontSettings` to return custom hero content and reviews.
     - **Tests:** Verify `CinematicHero` and the review section display the mocked content.
 - [ ] Task: Refactor Homepage to use Dynamic Settings
