@@ -43,16 +43,19 @@ describe('storefrontService', () => {
 
     expect(doc).toHaveBeenCalledWith(expect.anything(), 'settings', 'storefront');
     expect(getDoc).toHaveBeenCalledWith('mock-doc-ref');
-    expect(settings).toEqual(mockSettings);
+    expect(settings).toEqual(expect.objectContaining(mockSettings));
   });
 
-  it('getStorefrontSettings should return null if document does not exist', async () => {
+  it('getStorefrontSettings should return default settings if document does not exist', async () => {
     (getDoc as any).mockResolvedValue({
       exists: () => false,
     });
 
     const settings = await getStorefrontSettings();
-    expect(settings).toBeNull();
+    expect(settings).not.toBeNull();
+    expect(settings?.heroTitle).toBe('Hopolo Boutique');
+    expect(settings?.bannerVisible).toBe(false);
+    expect(settings?.reviews).toHaveLength(3);
   });
 
   it('updateStorefrontSettings should call setDoc with correct data', async () => {
@@ -85,7 +88,7 @@ describe('storefrontService', () => {
     subscribeToStorefrontSettings(callback);
 
     expect(doc).toHaveBeenCalledWith(expect.anything(), 'settings', 'storefront');
-    expect(onSnapshot).toHaveBeenCalledWith('mock-doc-ref', expect.any(Function));
-    expect(callback).toHaveBeenCalledWith(mockSettings);
+    expect(onSnapshot).toHaveBeenCalledWith('mock-doc-ref', expect.any(Function), expect.any(Function));
+    expect(callback).toHaveBeenCalledWith(expect.objectContaining(mockSettings));
   });
 });
