@@ -7,7 +7,7 @@
     - **Tests:** Verify `getStorefrontSettings` returns default values for new fields.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Service Layer' (Protocol in workflow.md) 05ae769
 
-## Phase 2: Admin Storefront Dashboard Enhancement
+## Phase 2: Admin Storefront Dashboard Enhancement [checkpoint: aa96736]
 - [x] Task: Create Tests for Storefront Admin Page a3fff0e
     - Mock `StorefrontSettings` with new fields.
     - **Tests:** Verify inputs exist for Hero settings and Reviews.
@@ -17,7 +17,7 @@
 - [x] Task: Implement Reviews Management in Admin Dashboard 737d90a
     - Add a dynamic list for adding/removing customer reviews in `Storefront.tsx`.
     - **Tests:** Verify reviews can be added and deleted from the state before saving.
-- [~] Task: Conductor - User Manual Verification 'Phase 2: Admin Dashboard' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Admin Dashboard' (Protocol in workflow.md) aa96736
 
 ## Phase 3: Homepage Integration & Final Polish
 - [ ] Task: Create Tests for Dynamic Homepage
