@@ -1,11 +1,11 @@
 # Implementation Plan: Fully Dynamic Homepage Configuration
 
-## Phase 1: Data Model & Service Layer
+## Phase 1: Data Model & Service Layer [checkpoint: 05ae769]
 - [x] Task: Update `StorefrontSettings` Interface and Service b9b5c71
     - Add `heroTitle`, `heroSubtitle`, `heroImage`, `heroCtaText`, and `reviews` to `StorefrontSettings`.
     - Update `getStorefrontSettings` to provide default values if Firestore is empty.
     - **Tests:** Verify `getStorefrontSettings` returns default values for new fields.
-- [~] Task: Conductor - User Manual Verification 'Phase 1: Service Layer' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Service Layer' (Protocol in workflow.md) 05ae769
 
 ## Phase 2: Admin Storefront Dashboard Enhancement
 - [ ] Task: Create Tests for Storefront Admin Page
