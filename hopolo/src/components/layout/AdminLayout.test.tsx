@@ -39,4 +39,19 @@ describe('AdminLayout Component', () => {
     fireEvent.click(toggleBtn);
     expect(screen.getByText(/hopolo admin/i)).toBeInTheDocument();
   });
+
+  it('should render hamburger menu on mobile', () => {
+    // Mock window.innerWidth
+    const originalWidth = window.innerWidth;
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 500 });
+    window.dispatchEvent(new Event('resize'));
+
+    renderLayout();
+
+    expect(screen.getByRole('button', { name: /open navigation/i })).toBeInTheDocument();
+
+    // Restore window.innerWidth
+    window.innerWidth = originalWidth;
+    window.dispatchEvent(new Event('resize'));
+  });
 });
