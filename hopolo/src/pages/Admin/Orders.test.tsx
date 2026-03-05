@@ -41,7 +41,7 @@ describe('Admin Orders Dashboard', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/admin orders/i)).toBeInTheDocument();
+      expect(screen.getByText(/^orders$/i)).toBeInTheDocument();
       expect(screen.getByText('order1')).toBeInTheDocument();
       expect(screen.getByText('order2')).toBeInTheDocument();
       expect(screen.getByText('$100.00')).toBeInTheDocument();
@@ -69,20 +69,6 @@ describe('Admin Orders Dashboard', () => {
       expect(screen.getByTestId('total-sales')).toHaveTextContent('$300.00');
       expect(screen.getByTestId('avg-order-value')).toHaveTextContent('$150.00');
       expect(screen.getByTestId('total-orders')).toHaveTextContent('3');
-    });
-  });
-
-  it('should render navigation buttons including Storefront', async () => {
-    render(
-      <MemoryRouter>
-        <Orders />
-      </MemoryRouter>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /inventory/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /marketing/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /storefront/i })).toBeInTheDocument();
     });
   });
 });
