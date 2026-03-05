@@ -12,11 +12,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Layout' (Protocol in workflow.md) 62e7da2
 
 ## Phase 2: Routing & Integration
-- [ ] Task: Update Admin Routing in `app/routes.ts`
+- [x] Task: Update Admin Routing in `app/routes.ts` 2fa88c6
     - Wrap admin routes in `AdminLayout`.
     - Ensure nested paths work correctly.
     - **Tests:** Verify navigation to `/admin` and sub-routes loads the layout.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Routing' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Routing' (Protocol in workflow.md)
 
 ## Phase 3: Page Refactoring & Polish
 - [ ] Task: Refactor Admin Pages
