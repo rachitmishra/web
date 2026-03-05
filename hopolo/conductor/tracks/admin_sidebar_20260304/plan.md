@@ -18,7 +18,7 @@
     - **Tests:** Verify navigation to `/admin` and sub-routes loads the layout.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Routing' (Protocol in workflow.md) 709c631
 
-## Phase 3: Page Refactoring & Polish
+## Phase 3: Page Refactoring & Polish [checkpoint: b844d98]
 - [x] Task: Refactor Admin Pages 8964ddf
     - Remove manual navigation buttons from all admin pages listed in spec.
     - Ensure consistent header/title styling across pages.
@@ -27,4 +27,4 @@
     - Fine-tune animations and mobile overlay behavior.
     - Ensure sidebar state is persistent (optional enhancement).
     - **Tests:** Manual visual check on different screen sizes.
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Final Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Final Verification' (Protocol in workflow.md) b844d98
