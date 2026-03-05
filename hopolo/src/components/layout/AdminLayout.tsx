@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import AdminSidebar from './AdminSidebar/AdminSidebar';
 import styles from './AdminLayout.module.css';
 
@@ -55,7 +56,7 @@ const AdminLayout: React.FC = () => {
               onClick={() => setIsCollapsed(false)}
               aria-label="Open Navigation"
             >
-              ☰
+              <Menu size={24} />
             </button>
             <span className={styles.mobileLogo}>Hopolo Admin</span>
           </header>

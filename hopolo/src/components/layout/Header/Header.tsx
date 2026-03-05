@@ -4,6 +4,7 @@ import styles from './Header.module.css';
 import { subscribeToCart, type CartItem } from '../../../services/cartService';
 import { auth } from '../../../lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
+import { ShoppingBag } from 'lucide-react';
 import { signOutUser } from '../../../services/authService';
 
 interface HeaderProps {
@@ -57,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
         )}
 
         <button className={styles.cartButton} onClick={onOpenCart} aria-label="Shopping Cart">
-          🛒
+          <ShoppingBag size={20} />
           {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
         </button>
       </div>
