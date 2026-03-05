@@ -19,6 +19,20 @@ describe('AdminSidebar Component', () => {
     expect(screen.getByText(/invitations/i)).toBeInTheDocument();
   });
 
+  it('should render icons for each link', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <AdminSidebar isCollapsed={false} onToggle={() => {}} />
+      </MemoryRouter>
+    );
+
+    // Lucide icons are SVGs. Currently they are emojis (strings).
+    // This will fail once we expect SVGs.
+    const svgs = container.querySelectorAll('svg');
+    // We expect at least 8 nav icons + 1 toggle icon = 9 SVGs
+    expect(svgs.length).toBeGreaterThanOrEqual(9);
+  });
+
   it('should call onToggle when the toggle button is clicked', () => {
     const onToggle = vi.fn();
     render(
