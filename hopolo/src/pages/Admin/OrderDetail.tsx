@@ -79,7 +79,6 @@ const OrderDetail: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Order {order.id}</h1>
-        <Button variant="secondary" onClick={() => navigate('/admin')}>Back to Dashboard</Button>
       </div>
 
       <div className={styles.section}>

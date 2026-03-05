@@ -30,7 +30,6 @@ const SeedData: React.FC = () => {
     <div className={styles.container}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Seed Database</h1>
-        <Button variant="secondary" onClick={() => navigate('/admin')}>Back to Dashboard</Button>
       </div>
 
       <Card>
