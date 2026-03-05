@@ -37,7 +37,7 @@ describe('Login Page', () => {
     );
 
     // Enter phone
-    fireEvent.change(screen.getByPlaceholderText(/phone number/i), { target: { value: '1234567890' } });
+    fireEvent.change(screen.getByPlaceholderText(/enter 10-digit mobile number/i), { target: { value: '1234567890' } });
     fireEvent.click(screen.getByRole('button', { name: /send code/i }));
 
     // Wait for OTP step

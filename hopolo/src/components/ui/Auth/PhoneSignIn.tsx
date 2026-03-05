@@ -12,27 +12,36 @@ const PhoneSignIn: React.FC<PhoneSignInProps> = ({ onSubmit, loading = false }) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmedPhone = phoneNumber.trim();
-    if (trimmedPhone) {
-      onSubmit(trimmedPhone);
+    const digitsOnly = phoneNumber.replace(/\D/g, '');
+    if (digitsOnly.length === 10) {
+      onSubmit(`+91${digitsOnly}`);
     }
   };
 
-  // Improved disabled logic: check for trimmed length
-  const isButtonDisabled = loading || phoneNumber.trim().length === 0;
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+    setPhoneNumber(value);
+  };
+
+  // Button disabled if not exactly 10 digits
+  const isButtonDisabled = loading || phoneNumber.length !== 10;
 
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
-      <input
-        type="tel"
-        className={styles.input}
-        placeholder="Phone Number (e.g. +1234567890)"
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
-        disabled={loading}
-        required
-        autoFocus
-      />
+      <div className={styles.inputWrapper}>
+        <span className={styles.prefix}>+91</span>
+        <input
+          type="tel"
+          className={styles.phoneNumberInput}
+          placeholder="Enter 10-digit mobile number"
+          value={phoneNumber}
+          onChange={handlePhoneChange}
+          disabled={loading}
+          required
+          autoFocus
+          pattern="[0-9]{10}"
+        />
+      </div>
       <div id="recaptcha-container"></div>
       <Button 
         type="submit" 

@@ -7,6 +7,44 @@
   margin: 0 auto;
 }
 
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  transition: outline 0.2s, border-color 0.2s;
+}
+
+.inputWrapper:focus-within {
+  outline: 2px solid var(--color-primary);
+  border-color: transparent;
+}
+
+.prefix {
+  padding: 0 var(--spacing-3);
+  color: var(--color-text-muted);
+  border-right: 1px solid #e5e7eb;
+  font-size: 1rem;
+  user-select: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.phoneNumberInput {
+  flex: 1;
+  padding: var(--spacing-3);
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.phoneNumberInput:focus {
+  outline: none;
+}
+
 .input {
   padding: var(--spacing-3);
   border: 1px solid #e5e7eb;

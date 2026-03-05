@@ -129,11 +129,15 @@ type RouteFiles = {
     id: "../src/pages/Static/Maintenance";
     page: "/maintenance";
   };
+  "../src/components/layout/AdminLayout.tsx": {
+    id: "../src/components/layout/AdminLayout";
+    page: "/admin" | "/admin/orders" | "/admin/orders/:id" | "/admin/email-logs" | "/admin/inventory" | "/admin/marketing" | "/admin/seed" | "/admin/analytics" | "/admin/invitations" | "/admin/storefront";
+  };
   "../src/pages/Admin/Orders.tsx": {
-    id: "admin-home";
+    id: "admin-index";
     page: "/admin";
   } | {
-    id: "admin-orders";
+    id: "admin-orders-list";
     page: "/admin/orders";
   };
   "../src/pages/Admin/OrderDetail.tsx": {
@@ -183,8 +187,9 @@ type RouteModules = {
   "contact": unknown;
   "../src/pages/Profile": unknown;
   "../src/pages/Static/Maintenance": unknown;
-  "admin-home": unknown;
-  "admin-orders": unknown;
+  "../src/components/layout/AdminLayout": unknown;
+  "admin-index": unknown;
+  "admin-orders-list": unknown;
   "../src/pages/Admin/OrderDetail": unknown;
   "../src/pages/Admin/EmailLogs": unknown;
   "../src/pages/Admin/Inventory": unknown;

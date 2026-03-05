@@ -18,8 +18,8 @@ export default [
   
   // Admin Routes
   route("admin", "../src/components/layout/AdminLayout.tsx", [
-    index("../src/pages/Admin/Orders.tsx"),
-    route("orders", "../src/pages/Admin/Orders.tsx"),
+    index("../src/pages/Admin/Orders.tsx", { id: "admin-index" }),
+    route("orders", "../src/pages/Admin/Orders.tsx", { id: "admin-orders-list" }),
     route("orders/:id", "../src/pages/Admin/OrderDetail.tsx"),
     route("email-logs", "../src/pages/Admin/EmailLogs.tsx"),
     route("inventory", "../src/pages/Admin/Inventory.tsx"),
