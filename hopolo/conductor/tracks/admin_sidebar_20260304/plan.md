@@ -19,12 +19,12 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Routing' (Protocol in workflow.md) 709c631
 
 ## Phase 3: Page Refactoring & Polish
-- [ ] Task: Refactor Admin Pages
+- [x] Task: Refactor Admin Pages 8964ddf
     - Remove manual navigation buttons from all admin pages listed in spec.
     - Ensure consistent header/title styling across pages.
     - **Tests:** Verify buttons are removed and pages look correct.
-- [ ] Task: Final Polish & Responsive Fixes
+- [x] Task: Final Polish & Responsive Fixes 5565713
     - Fine-tune animations and mobile overlay behavior.
     - Ensure sidebar state is persistent (optional enhancement).
     - **Tests:** Manual visual check on different screen sizes.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Final Verification' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 3: Final Verification' (Protocol in workflow.md)
