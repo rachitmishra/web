@@ -16,7 +16,7 @@
 
   /* Typography */
   --font-family-sans: 'Space Grotesk', sans-serif;
-  --font-family-display: 'Unbounded', sans-serif;
+  --font-family-display: 'Syne', sans-serif;
   --font-family-logo: 'Righteous', cursive;
   
   /* Spacing */
@@ -60,7 +60,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-family: var(--font-family-display);
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: -0.04em;
   line-height: 1;
