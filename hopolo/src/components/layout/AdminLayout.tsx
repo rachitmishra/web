@@ -9,14 +9,26 @@ const AdminLayout: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
 
+  const getRouteTheme = (pathname: string) => {
+    if (pathname.includes('/orders')) return { color: '#e0f2fe', emoji: '📦' }; // Light Blue
+    if (pathname.includes('/inventory')) return { color: '#f0fdf4', emoji: '🏬' }; // Light Green
+    if (pathname.includes('/marketing')) return { color: '#fdf2f8', emoji: '📣' }; // Light Pink
+    if (pathname.includes('/storefront')) return { color: '#f5f3ff', emoji: '🎨' }; // Light Purple
+    if (pathname.includes('/analytics')) return { color: '#fefce8', emoji: '📈' }; // Light Yellow
+    if (pathname.includes('/invitations')) return { color: '#eef2ff', emoji: '✉️' }; // Light Indigo
+    if (pathname.includes('/email-logs')) return { color: '#fff7ed', emoji: '📧' }; // Light Orange
+    if (pathname.includes('/seed')) return { color: '#f0fdfa', emoji: '🌱' }; // Light Teal
+    return { color: '#f3f4f6', emoji: '⚙️' }; // Default
+  };
+
+  const currentTheme = getRouteTheme(location.pathname);
+
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
       if (mobile) {
-        setIsCollapsed(true); // Default to hidden on mobile
-      } else {
-        setIsCollapsed(false); // Default to visible on desktop
+        setIsCollapsed(true);
       }
     };
 
@@ -25,15 +37,18 @@ const AdminLayout: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Close sidebar on route change (for mobile)
+  // Auto-collapse sidebar on route change for all devices
   useEffect(() => {
-    if (isMobile) {
-      setIsCollapsed(true);
-    }
-  }, [location.pathname, isMobile]);
+    setIsCollapsed(true);
+  }, [location.pathname]);
 
   return (
-    <div className={styles.adminLayout}>
+    <div className={styles.adminLayout} style={{ '--admin-bg-color': currentTheme.color } as React.CSSProperties}>
+      {/* Background Illustration */}
+      <div className={styles.bgIllustration} aria-hidden="true">
+        {currentTheme.emoji}
+      </div>
+
       {/* Mobile Overlay */}
       {isMobile && !isCollapsed && (
         <div 

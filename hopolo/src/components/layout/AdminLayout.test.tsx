@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
@@ -19,6 +19,10 @@ describe('AdminLayout Component', () => {
   it('should render the sidebar and main content', () => {
     renderLayout();
     
+    // Toggle sidebar to expand it so we can see the logo
+    const toggleBtn = screen.getByRole('button', { name: /toggle sidebar/i });
+    fireEvent.click(toggleBtn);
+
     expect(screen.getByText(/hopolo admin/i)).toBeInTheDocument();
     expect(screen.getByTestId('child-content')).toBeInTheDocument();
   });
@@ -28,16 +32,13 @@ describe('AdminLayout Component', () => {
     
     const toggleBtn = screen.getByRole('button', { name: /toggle sidebar/i });
     
-    // Initially expanded
+    // Expand
+    fireEvent.click(toggleBtn);
     expect(screen.getByText(/hopolo admin/i)).toBeInTheDocument();
     
-    // Click to collapse
+    // Collapse
     fireEvent.click(toggleBtn);
     expect(screen.queryByText(/hopolo admin/i)).not.toBeInTheDocument();
-    
-    // Click to expand
-    fireEvent.click(toggleBtn);
-    expect(screen.getByText(/hopolo admin/i)).toBeInTheDocument();
   });
 
   it('should render hamburger menu on mobile', () => {
