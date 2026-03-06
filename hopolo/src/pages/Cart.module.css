@@ -2,6 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-12) var(--spacing-4);
 }
 
 .cartGrid {
@@ -24,20 +27,18 @@
 
 .item {
   display: grid;
-  grid-template-columns: 80px 1fr auto;
-  gap: var(--spacing-4);
-  padding: var(--spacing-4);
-  background-color: var(--color-surface);
-  border-radius: var(--radius-md);
-  border: 1px solid #e5e7eb;
+  grid-template-columns: 100px 1fr auto;
+  gap: var(--spacing-6);
+  padding: var(--spacing-4) 0;
+  background-color: transparent;
+  border-bottom: 1px solid var(--color-border);
   align-items: center;
 }
 
 .itemImage {
-  width: 80px;
-  height: 80px;
-  background-color: #f3f4f6;
-  border-radius: var(--radius-sm);
+  width: 100px;
+  height: 125px;
+  background-color: var(--color-bg-alt);
   overflow: hidden;
 }
 
@@ -54,12 +55,16 @@
 }
 
 .itemName {
-  font-weight: 500;
+  font-family: var(--font-family-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.125rem;
 }
 
 .itemPrice {
   color: var(--color-text-muted);
   font-size: 0.9rem;
+  font-family: var(--font-family-sans);
 }
 
 .itemActions {
@@ -72,14 +77,16 @@
 .removeButton {
   background: none;
   border: none;
-  color: var(--color-danger);
-  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
   padding: 4px;
 }
 
 .removeButton:hover {
-  text-decoration: underline;
+  color: var(--color-danger);
 }
 
 .summary {
@@ -87,21 +94,32 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
+  background-color: var(--color-bg-alt);
+  padding: var(--spacing-8);
+}
+
+.summary h2 {
+  font-family: var(--font-family-display);
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-2);
 }
 
 .summaryRow {
   display: flex;
   justify-content: space-between;
   color: var(--color-text-muted);
+  font-size: 0.875rem;
+  text-transform: uppercase;
 }
 
 .totalRow {
   color: var(--color-text);
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   border-top: 1px solid var(--color-border);
   padding-top: var(--spacing-4);
   margin-top: var(--spacing-2);
+  font-family: var(--font-family-display);
 }
 
 .emptyState {
@@ -125,10 +143,10 @@
 
 .promoInput {
   flex: 1;
-  padding: 8px 12px;
+  padding: 12px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
+  background-color: #fff;
+  font-size: 0.875rem;
 }
 
 .discountRow {

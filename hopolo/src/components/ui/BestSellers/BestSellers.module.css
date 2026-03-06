@@ -1,21 +1,32 @@
 .section {
-  padding: var(--spacing-8) 0;
+  padding: var(--spacing-12) 0;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: var(--spacing-8);
 }
 
 .title {
   text-align: center;
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-family: var(--font-family-display);
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
   margin-bottom: var(--spacing-4);
-  line-height: 1;
+  line-height: 0.9;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-6);
+  gap: var(--spacing-8);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-4);
+  }
 }
 
 .empty {
