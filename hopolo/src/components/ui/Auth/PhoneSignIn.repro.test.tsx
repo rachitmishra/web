@@ -8,7 +8,7 @@ describe('PhoneSignIn Reproduction', () => {
     render(<PhoneSignIn onSubmit={onSubmit} loading={false} />);
 
     const button = screen.getByRole('button', { name: /send code/i });
-    const input = screen.getByPlaceholderText(/phone number/i);
+    const input = screen.getByPlaceholderText(/enter 10-digit mobile number/i);
 
     // Initially disabled
     expect(button).toBeDisabled();

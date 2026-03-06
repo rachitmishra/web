@@ -133,7 +133,7 @@ const Home: React.FC = () => {
       </section>
 
       <section className={styles.reviewSection}>
-        <h2 style={{ textAlign: "center", marginBottom: "var(--spacing-8)" }}>
+        <h2 className={styles.reviewSectionTitle}>
           Loved by Customers
         </h2>
         <div className={styles.reviewGrid}>

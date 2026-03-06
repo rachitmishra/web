@@ -27,25 +27,32 @@
 .content {
   position: relative;
   z-index: 2;
-  max-width: 800px;
+  max-width: 900px;
 }
 
 .title {
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
-  font-weight: 800;
+  font-size: clamp(3rem, 12vw, 8rem);
+  font-weight: 400;
   margin-bottom: var(--spacing-4);
-  line-height: 1.1;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  line-height: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: transparent;
+  -webkit-text-stroke: 2px white;
+  text-shadow: 4px 4px 0px var(--color-primary);
 }
 
 .subtitle {
-  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
   margin-bottom: var(--spacing-8);
-  opacity: 0.9;
+  opacity: 1;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .cta {

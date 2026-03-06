@@ -7,8 +7,9 @@
 
 .title {
   text-align: center;
-  font-size: 2rem;
+  font-size: clamp(2rem, 5vw, 3rem);
   margin-bottom: var(--spacing-4);
+  line-height: 1;
 }
 
 .grid {
