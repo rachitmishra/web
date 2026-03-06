@@ -32,6 +32,11 @@ const navItems = [
 ];
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onItemClick }) => {
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggle();
+  };
+
   return (
     <aside 
       className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}
@@ -41,10 +46,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onIt
       <div className={styles.header}>
         {!isCollapsed && <span className={styles.logo}>Hopolo Admin</span>}
         <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggle();
-          }} 
+          onClick={handleToggle} 
           className={styles.toggleBtn}
           aria-label="Toggle Sidebar"
         >
