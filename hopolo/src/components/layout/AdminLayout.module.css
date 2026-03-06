@@ -69,6 +69,8 @@
   font-family: var(--font-family-logo);
   font-size: 1.25rem;
   color: var(--color-primary);
+  text-transform: lowercase;
+  letter-spacing: -0.04em;
 }
 
 /* Overlay */

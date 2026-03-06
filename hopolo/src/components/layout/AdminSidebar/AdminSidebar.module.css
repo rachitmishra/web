@@ -43,9 +43,11 @@
 .logo {
   font-family: var(--font-family-logo);
   font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--color-primary);
   white-space: nowrap;
+  text-transform: lowercase;
+  letter-spacing: -0.04em;
 }
 
 .toggleBtn {
