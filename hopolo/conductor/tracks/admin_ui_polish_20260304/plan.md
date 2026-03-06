@@ -13,14 +13,14 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Icon Integration' (Protocol in workflow.md) 8db5f90
 
 ## Phase 2: Custom CSS & Component Consistency
-- [ ] Task: Refine Global/Admin CSS Variables
+- [x] Task: Refine Global/Admin CSS Variables 567f693
     - Update spacing, typography, and color variables for a more professional look in global CSS or AdminLayout.
     - **Tests:** Visual regression checks (manual).
-- [ ] Task: Standardize Admin Components
+- [x] Task: Standardize Admin Components 8977167
     - Review `Button`, `Input`, and `Card` usages within `/admin` routes.
     - Ensure consistent classes, paddings, and border-radii are applied.
     - **Tests:** Ensure unit tests for `Button` and `Input` still pass with any style modifications.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Custom CSS' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Custom CSS' (Protocol in workflow.md)
 
 ## Phase 3: Mobile Optimization & Route Verification
 - [ ] Task: Optimize Mobile Layouts
