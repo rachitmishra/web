@@ -20,5 +20,6 @@
 
 ## UI & Styling
 - **Styling Engine:** CSS Modules
+- **Icons:** Lucide React
 - **Design System:** Custom CSS-variable based system (No Tailwind CSS)
 - **Testing:** Vitest + React Testing Library
