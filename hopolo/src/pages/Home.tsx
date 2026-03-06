@@ -15,8 +15,9 @@ const Home: React.FC = () => {
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [settings, setSettings] = useState<StorefrontSettings>(DEFAULT_SETTINGS);
   const [activeCategoryId, setActiveCategoryId] = useState('all');
-  const [loading, setLoading] = useState(true);
   const [isGridChanging, setIsGridChanging] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  
   const navigate = useNavigate();
   const productSectionRef = useRef<HTMLElement>(null);
 
@@ -34,41 +35,36 @@ const Home: React.FC = () => {
     let mounted = true;
     
     const loadData = async () => {
-      // Safety timer: force loading to false after 8 seconds no matter what
-      const safetyTimer = setTimeout(() => {
-        if (mounted) {
-          setLoading(false);
-        }
-      }, 8000);
-
       try {
-        const [fetchedProducts, fetchedCategories, fetchedBestSellers, fetchedSettings] = await Promise.all([
-          fetchProducts().catch(e => { console.error("fetchProducts error:", e); return []; }),
-          fetchCategories().catch(e => { console.error("fetchCategories error:", e); return []; }),
-          fetchBestSellers().catch(e => { console.error("fetchBestSellers error:", e); return []; }),
-          getStorefrontSettings().catch(e => { console.error("getStorefrontSettings error:", e); return DEFAULT_SETTINGS; }),
+        // Individual fetches so one failure doesn't block the rest
+        const pProducts = fetchProducts().catch(e => { console.error("fetchProducts error:", e); return []; });
+        const pCategories = fetchCategories().catch(e => { console.error("fetchCategories error:", e); return []; });
+        const pBestSellers = fetchBestSellers().catch(e => { console.error("fetchBestSellers error:", e); return []; });
+        const pSettings = getStorefrontSettings().catch(e => { console.error("getStorefrontSettings error:", e); return DEFAULT_SETTINGS; });
+
+        const [fProducts, fCategories, fBestSellers, fSettings] = await Promise.all([
+          pProducts, pCategories, pBestSellers, pSettings
         ]);
 
         if (!mounted) return;
 
-        setProducts(fetchedProducts);
-        setBestSellers(fetchedBestSellers);
-        setSettings(fetchedSettings);
+        setProducts(fProducts || []);
+        setBestSellers(fBestSellers || []);
+        setSettings(fSettings || DEFAULT_SETTINGS);
 
         // Ensure "All" is always present
-        const hasAll = fetchedCategories.find((c) => c.id === "all");
+        const fetchedCats = fCategories || [];
+        const hasAll = fetchedCats.find((c) => c.id === "all");
         if (!hasAll) {
-          setCategories([{ id: "all", name: "All" }, ...fetchedCategories]);
+          setCategories([{ id: "all", name: "All" }, ...fetchedCats]);
         } else {
-          setCategories(fetchedCategories);
+          setCategories(fetchedCats);
         }
-        
       } catch (error) {
-        console.error("[Home] Error in loadData block:", error);
+        console.error("[Home] Error loading data:", error);
       } finally {
         if (mounted) {
-          setLoading(false);
-          clearTimeout(safetyTimer);
+          setIsInitialLoad(false);
         }
       }
     };
@@ -99,14 +95,6 @@ const Home: React.FC = () => {
     productSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  if (loading) {
-    return (
-      <div style={{ padding: "var(--spacing-8)", textAlign: "center" }}>
-        Loading boutique experience...
-      </div>
-    );
-  }
-
   return (
     <div className={styles.container}>
       <CinematicHero
@@ -118,7 +106,7 @@ const Home: React.FC = () => {
       />
 
       <section ref={productSectionRef} className={styles.productSection}>
-        <BestSellers products={bestSellers} />
+        {bestSellers.length > 0 && <BestSellers products={bestSellers} />}
 
         <CategoryTabs
           categories={categories}
@@ -138,7 +126,7 @@ const Home: React.FC = () => {
           ))}
         </div>
 
-        {filteredProducts.length === 0 && (
+        {!isInitialLoad && filteredProducts.length === 0 && (
           <div
             style={{
               textAlign: "center",
@@ -147,6 +135,12 @@ const Home: React.FC = () => {
             }}
           >
             No products found in this category.
+          </div>
+        )}
+        
+        {isInitialLoad && (
+          <div style={{ textAlign: "center", padding: "var(--spacing-8)", opacity: 0.5 }}>
+            Loading products...
           </div>
         )}
       </section>
