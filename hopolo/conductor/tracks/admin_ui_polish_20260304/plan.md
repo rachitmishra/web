@@ -23,11 +23,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Custom CSS' (Protocol in workflow.md) c98d8b7
 
 ## Phase 3: Mobile Optimization & Route Verification
-- [ ] Task: Optimize Mobile Layouts
+- [x] Task: Optimize Mobile Layouts f873a37
     - Adjust CSS modules for admin pages (e.g., Orders table, Inventory grid) to stack correctly on small screens (`max-width: 768px`).
     - Ensure touch targets are at least 44x44px.
     - **Tests:** Add/update responsive tests if applicable, verify rendering via mobile dev tools.
-- [ ] Task: Verify and Fix Admin Routes
+- [~] Task: Verify and Fix Admin Routes
     - Audit `app/routes.ts` and `src/App.tsx` admin sections.
     - Ensure all links in the sidebar navigate to the correct, functional page.
     - **Tests:** Run `src/routes.integration.test.tsx` to confirm routing integrity.
