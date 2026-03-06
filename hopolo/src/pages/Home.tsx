@@ -32,21 +32,33 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const loadData = async () => {
+      console.log("[Home] loadData started");
+      
       // 5-second timeout to prevent permanent loading screen
       const timeout = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Loading timeout")), 5000)
+        setTimeout(() => {
+          console.log("[Home] Data loading timed out (5s)");
+          reject(new Error("Loading timeout"));
+        }, 5000)
       );
 
       try {
+        console.log("[Home] Starting Promise.race...");
         const [fetchedProducts, fetchedCategories, fetchedBestSellers, fetchedSettings] = await Promise.race([
           Promise.all([
-            fetchProducts(),
-            fetchCategories(),
-            fetchBestSellers(),
-            getStorefrontSettings(),
+            fetchProducts().then(res => { console.log("[Home] fetchProducts done"); return res; }),
+            fetchCategories().then(res => { console.log("[Home] fetchCategories done"); return res; }),
+            fetchBestSellers().then(res => { console.log("[Home] fetchBestSellers done"); return res; }),
+            getStorefrontSettings().then(res => { console.log("[Home] getStorefrontSettings done"); return res; }),
           ]),
           timeout
         ]) as [Product[], Category[], Product[], StorefrontSettings];
+
+        console.log("[Home] Promise.race resolved successfully", {
+          products: fetchedProducts?.length,
+          categories: fetchedCategories?.length,
+          bestSellers: fetchedBestSellers?.length
+        });
 
         if (fetchedProducts) setProducts(fetchedProducts);
         if (fetchedBestSellers) setBestSellers(fetchedBestSellers);
@@ -55,13 +67,15 @@ const Home: React.FC = () => {
         // Ensure "All" is always present if not already in Firestore
         const hasAll = (fetchedCategories || []).find((c) => c.id === "all");
         if (!hasAll) {
+          console.log("[Home] Adding 'All' category manually");
           setCategories([{ id: "all", name: "All" }, ...(fetchedCategories || [])]);
         } else {
           setCategories(fetchedCategories);
         }
       } catch (error) {
-        console.error("Failed to load home data:", error);
+        console.error("[Home] Error in loadData:", error);
       } finally {
+        console.log("[Home] Setting loading to false");
         setLoading(false);
       }
     };
@@ -83,6 +97,20 @@ const Home: React.FC = () => {
     if (activeCategoryId === "all") return products;
     return products.filter((p) => p.category === activeCategoryId);
   }, [products, activeCategoryId]);
+
+  useEffect(() => {
+    console.log("[Home] loading state changed to:", loading);
+  }, [loading]);
+
+  useEffect(() => {
+    const safetyTimeout = setTimeout(() => {
+      if (loading) {
+        console.warn("[Home] Safety timeout triggered: forcing loading to false");
+        setLoading(false);
+      }
+    }, 6000);
+    return () => clearTimeout(safetyTimeout);
+  }, [loading]);
 
   const scrollToProducts = () => {
     productSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
