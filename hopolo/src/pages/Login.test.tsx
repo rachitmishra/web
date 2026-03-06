@@ -3,12 +3,15 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Login from './Login';
 import * as authService from '../services/authService';
+import * as profileService from '../services/profileService';
 
 vi.mock('../services/authService');
+vi.mock('../services/profileService');
 
 describe('Login Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (profileService.getUserProfile as any).mockResolvedValue({ role: 'user' });
   });
 
   it('should render the welcome back title and set session cookie after successful OTP verification', async () => {
@@ -55,6 +58,38 @@ describe('Login Page', () => {
     await waitFor(() => {
       expect(authService.verifyOtp).toHaveBeenCalled();
       expect(document.cookie).toContain('session=mock-id-token');
+    });
+  });
+
+  it('should redirect admin to /admin after successful login', async () => {
+    const mockUser = {
+      uid: 'admin-uid',
+      getIdToken: vi.fn().mockResolvedValue('mock-id-token'),
+    };
+    const mockConfirmationResult = {
+      confirm: vi.fn().mockResolvedValue({ user: mockUser }),
+    };
+    (authService.signInWithPhone as any).mockResolvedValue(mockConfirmationResult);
+    (authService.verifyOtp as any).mockResolvedValue({ user: mockUser });
+    (profileService.getUserProfile as any).mockResolvedValue({ role: 'admin' });
+
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    // Enter phone
+    fireEvent.change(screen.getByPlaceholderText(/enter 10-digit mobile number/i), { target: { value: '1234567890' } });
+    fireEvent.click(screen.getByRole('button', { name: /send code/i }));
+
+    // Wait for OTP step and enter OTP
+    await waitFor(() => expect(screen.getByPlaceholderText(/enter verification code/i)).toBeInTheDocument());
+    fireEvent.change(screen.getByPlaceholderText(/enter verification code/i), { target: { value: '123456' } });
+    fireEvent.click(screen.getByRole('button', { name: /verify/i }));
+
+    await waitFor(() => {
+      expect(profileService.getUserProfile).toHaveBeenCalledWith('admin-uid');
     });
   });
 });
