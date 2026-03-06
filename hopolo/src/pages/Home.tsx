@@ -31,56 +31,67 @@ const Home: React.FC = () => {
   });
 
   useEffect(() => {
+    let mounted = true;
+    
     const loadData = async () => {
-      console.log("[Home] loadData started");
+      console.log("[Home] 🚀 loadData starting...");
       
-      // 5-second timeout to prevent permanent loading screen
-      const timeout = new Promise((_, reject) => 
-        setTimeout(() => {
-          console.log("[Home] Data loading timed out (5s)");
-          reject(new Error("Loading timeout"));
-        }, 5000)
-      );
+      // Safety timer: force loading to false after 8 seconds no matter what
+      const safetyTimer = setTimeout(() => {
+        if (mounted && loading) {
+          console.error("[Home] 🚨 CRITICAL: Safety timeout reached! Forcing loading = false");
+          setLoading(false);
+        }
+      }, 8000);
 
       try {
-        console.log("[Home] Starting Promise.race...");
-        const [fetchedProducts, fetchedCategories, fetchedBestSellers, fetchedSettings] = await Promise.race([
-          Promise.all([
-            fetchProducts().then(res => { console.log("[Home] fetchProducts done"); return res; }),
-            fetchCategories().then(res => { console.log("[Home] fetchCategories done"); return res; }),
-            fetchBestSellers().then(res => { console.log("[Home] fetchBestSellers done"); return res; }),
-            getStorefrontSettings().then(res => { console.log("[Home] getStorefrontSettings done"); return res; }),
-          ]),
-          timeout
-        ]) as [Product[], Category[], Product[], StorefrontSettings];
+        console.log("[Home] 🕒 Starting Promise.all for products, categories, etc...");
+        
+        // Parallel fetch with individual timeouts could be better, but let's try this first
+        const [fetchedProducts, fetchedCategories, fetchedBestSellers, fetchedSettings] = await Promise.all([
+          fetchProducts().catch(e => { console.error("fetchProducts error:", e); return []; }),
+          fetchCategories().catch(e => { console.error("fetchCategories error:", e); return []; }),
+          fetchBestSellers().catch(e => { console.error("fetchBestSellers error:", e); return []; }),
+          getStorefrontSettings().catch(e => { console.error("getStorefrontSettings error:", e); return DEFAULT_SETTINGS; }),
+        ]);
 
-        console.log("[Home] Promise.race resolved successfully", {
-          products: fetchedProducts?.length,
-          categories: fetchedCategories?.length,
-          bestSellers: fetchedBestSellers?.length
+        if (!mounted) return;
+
+        console.log("[Home] ✅ All data fetched successfully", {
+          products: fetchedProducts.length,
+          categories: fetchedCategories.length,
+          bestSellers: fetchedBestSellers.length,
+          settings: !!fetchedSettings
         });
 
-        if (fetchedProducts) setProducts(fetchedProducts);
-        if (fetchedBestSellers) setBestSellers(fetchedBestSellers);
-        if (fetchedSettings) setSettings(fetchedSettings);
+        setProducts(fetchedProducts);
+        setBestSellers(fetchedBestSellers);
+        setSettings(fetchedSettings);
 
-        // Ensure "All" is always present if not already in Firestore
-        const hasAll = (fetchedCategories || []).find((c) => c.id === "all");
+        // Ensure "All" is always present
+        const hasAll = fetchedCategories.find((c) => c.id === "all");
         if (!hasAll) {
-          console.log("[Home] Adding 'All' category manually");
-          setCategories([{ id: "all", name: "All" }, ...(fetchedCategories || [])]);
+          setCategories([{ id: "all", name: "All" }, ...fetchedCategories]);
         } else {
           setCategories(fetchedCategories);
         }
+        
       } catch (error) {
-        console.error("[Home] Error in loadData:", error);
+        console.error("[Home] ❌ Error in loadData block:", error);
       } finally {
-        console.log("[Home] Setting loading to false");
-        setLoading(false);
+        if (mounted) {
+          console.log("[Home] 🏁 finally: setting loading to false");
+          setLoading(false);
+          clearTimeout(safetyTimer);
+        }
       }
     };
 
     loadData();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const handleCategoryChange = (id: string) => {
@@ -97,20 +108,6 @@ const Home: React.FC = () => {
     if (activeCategoryId === "all") return products;
     return products.filter((p) => p.category === activeCategoryId);
   }, [products, activeCategoryId]);
-
-  useEffect(() => {
-    console.log("[Home] loading state changed to:", loading);
-  }, [loading]);
-
-  useEffect(() => {
-    const safetyTimeout = setTimeout(() => {
-      if (loading) {
-        console.warn("[Home] Safety timeout triggered: forcing loading to false");
-        setLoading(false);
-      }
-    }, 6000);
-    return () => clearTimeout(safetyTimeout);
-  }, [loading]);
 
   const scrollToProducts = () => {
     productSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
