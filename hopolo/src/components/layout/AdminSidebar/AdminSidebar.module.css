@@ -41,8 +41,9 @@
 }
 
 .logo {
-  font-weight: bold;
-  font-size: 1.1rem;
+  font-family: var(--font-family-logo);
+  font-weight: 400;
+  font-size: 1.2rem;
   color: var(--color-primary);
   white-space: nowrap;
 }
