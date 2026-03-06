@@ -16,29 +16,36 @@ describe('AdminLayout Component', () => {
     );
   };
 
-  it('should render the sidebar and main content', () => {
+  it('should render the sidebar and main content', async () => {
+    // Set desktop width
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 });
+    window.dispatchEvent(new Event('resize'));
+    
     renderLayout();
     
-    // Toggle sidebar to expand it so we can see the logo
-    const toggleBtn = screen.getByRole('button', { name: /toggle sidebar/i });
-    fireEvent.click(toggleBtn);
-
+    // By default on desktop it should be expanded
     expect(screen.getByText(/hopolo admin/i)).toBeInTheDocument();
     expect(screen.getByTestId('child-content')).toBeInTheDocument();
   });
 
-  it('should toggle the sidebar when clicked', () => {
+  it('should toggle the sidebar when clicked', async () => {
+    // Set desktop width
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 });
+    window.dispatchEvent(new Event('resize'));
+
     renderLayout();
     
     const toggleBtn = screen.getByRole('button', { name: /toggle sidebar/i });
     
-    // Expand
-    fireEvent.click(toggleBtn);
-    expect(screen.getByText(/hopolo admin/i)).toBeInTheDocument();
-    
     // Collapse
     fireEvent.click(toggleBtn);
-    expect(screen.queryByText(/hopolo admin/i)).not.toBeInTheDocument();
+    await vi.waitFor(() => {
+      expect(screen.queryByText(/hopolo admin/i)).not.toBeInTheDocument();
+    });
+    
+    // Expand
+    fireEvent.click(toggleBtn);
+    expect(await screen.findByText(/hopolo admin/i)).toBeInTheDocument();
   });
 
   it('should render hamburger menu on mobile', () => {

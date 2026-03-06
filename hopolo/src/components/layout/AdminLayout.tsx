@@ -37,10 +37,12 @@ const AdminLayout: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-collapse sidebar on route change for all devices
+  // Auto-collapse sidebar on route change for mobile only
   useEffect(() => {
-    setIsCollapsed(true);
-  }, [location.pathname]);
+    if (isMobile) {
+      setIsCollapsed(true);
+    }
+  }, [location.pathname, isMobile]);
 
   return (
     <div className={styles.adminLayout} style={{ '--admin-bg-color': currentTheme.color } as React.CSSProperties}>
@@ -60,7 +62,7 @@ const AdminLayout: React.FC = () => {
       <AdminSidebar 
         isCollapsed={isCollapsed} 
         onToggle={() => setIsCollapsed(!isCollapsed)} 
-        onItemClick={() => setIsCollapsed(true)}
+        onItemClick={() => isMobile && setIsCollapsed(true)}
       />
 
       <div className={styles.mainWrapper}>

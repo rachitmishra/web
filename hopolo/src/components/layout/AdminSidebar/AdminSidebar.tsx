@@ -41,7 +41,10 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onIt
       <div className={styles.header}>
         {!isCollapsed && <span className={styles.logo}>Hopolo Admin</span>}
         <button 
-          onClick={onToggle} 
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle();
+          }} 
           className={styles.toggleBtn}
           aria-label="Toggle Sidebar"
         >
@@ -54,7 +57,10 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onIt
           <NavLink
             key={item.path}
             to={item.path}
-            onClick={onItemClick}
+            onClick={(e) => {
+              e.stopPropagation();
+              onItemClick?.();
+            }}
             className={({ isActive }) => 
               `${styles.navLink} ${isActive ? styles.active : ''}`
             }
