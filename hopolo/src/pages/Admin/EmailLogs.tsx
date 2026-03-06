@@ -28,53 +28,46 @@ const EmailLogs: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className={styles.header}>
         <h1>Email Logs</h1>
-        <Button variant="secondary" onClick={() => navigate("/admin")}>
-          Back to Dashboard
-        </Button>
       </div>
 
       <Card>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th className={styles.th}>Date</th>
-              <th className={styles.th}>To</th>
-              <th className={styles.th}>Subject</th>
-              <th className={styles.th}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((log) => (
-              <tr key={log.id}>
-                <td className={styles.td}>
-                  {log.createdAt?.toDate
-                    ? log.createdAt.toDate().toLocaleString()
-                    : "N/A"}
-                </td>
-                <td className={styles.td}>{log.to}</td>
-                <td className={styles.td}>{log.subject}</td>
-                <td className={styles.td}>
-                  <span
-                    className={`${styles.status} ${
-                      styles[`status_${log.status}`]
-                    }`}
-                  >
-                    {log.status}
-                  </span>
-                  {log.error && <div className={styles.error}>{log.error}</div>}
-                </td>
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th className={styles.th}>Date</th>
+                <th className={styles.th}>To</th>
+                <th className={styles.th}>Subject</th>
+                <th className={styles.th}>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {logs.map((log) => (
+                <tr key={log.id}>
+                  <td className={styles.td}>
+                    {log.createdAt?.toDate
+                      ? log.createdAt.toDate().toLocaleString()
+                      : "N/A"}
+                  </td>
+                  <td className={styles.td}>{log.to}</td>
+                  <td className={styles.td}>{log.subject}</td>
+                  <td className={styles.td}>
+                    <span
+                      className={`${styles.status} ${
+                        styles[`status_${log.status}`]
+                      }`}
+                    >
+                      {log.status}
+                    </span>
+                    {log.error && <div className={styles.error}>{log.error}</div>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         {logs.length === 0 && (
           <div
             style={{
