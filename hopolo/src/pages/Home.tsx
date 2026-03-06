@@ -118,14 +118,32 @@ const Home: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ padding: "var(--spacing-8)", textAlign: "center" }}>
-        Loading boutique experience...
+      <div style={{ 
+        padding: "var(--spacing-8)", 
+        textAlign: "center", 
+        background: "red", 
+        color: "white", 
+        position: "fixed", 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        bottom: 0, 
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: "20px"
+      }}>
+        <h1 style={{ color: "white" }}>DEBUG: HOME LOADING V2</h1>
+        HOPOLO LOADING V2...
       </div>
     );
   }
 
   return (
     <div className={styles.container}>
+      <div style={{ position: 'fixed', top: 0, left: 0, padding: '10px', background: 'green', color: 'white', zIndex: 1000 }}>DEBUG: LOADED</div>
       <CinematicHero
         title={settings.heroTitle}
         subtitle={settings.heroSubtitle}
