@@ -103,7 +103,7 @@ describe('App Routing', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
     });
   });
 });

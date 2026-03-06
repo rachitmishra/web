@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Header.module.css';
 import { subscribeToCart, type CartItem } from '../../../services/cartService';
 import { auth } from '../../../lib/firebase';
@@ -15,6 +15,10 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
   const [itemCount, setItemCount] = useState(0);
   const [user, setUser] = useState<User | null>(auth.currentUser);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isLoginPage = location.pathname === '/login';
+  const isAdminPage = location.pathname.startsWith('/admin');
 
   useEffect(() => {
     const unsubscribeCart = subscribeToCart((items: CartItem[]) => {
@@ -54,13 +58,15 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
             <button onClick={handleSignOut} className={styles.linkButton}>Sign Out</button>
           </>
         ) : (
-          <Link to="/login" className={styles.link}>Sign In</Link>
+          !isLoginPage && <Link to="/login" className={styles.link}>Sign In</Link>
         )}
 
-        <button className={styles.cartButton} onClick={onOpenCart} aria-label="Shopping Cart">
-          <ShoppingBag size={20} />
-          {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
-        </button>
+        {!isAdminPage && (
+          <button className={styles.cartButton} onClick={onOpenCart} aria-label="Shopping Cart">
+            <ShoppingBag size={20} />
+            {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
+          </button>
+        )}
       </div>
     </header>
   );

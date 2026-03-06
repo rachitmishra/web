@@ -11,7 +11,7 @@ describe('Login Page', () => {
     vi.clearAllMocks();
   });
 
-  it('should set session cookie after successful OTP verification', async () => {
+  it('should render the welcome back title and set session cookie after successful OTP verification', async () => {
     const mockUser = {
       getIdToken: vi.fn().mockResolvedValue('mock-id-token'),
     };
@@ -28,6 +28,7 @@ describe('Login Page', () => {
         cookieStore = val;
       },
       get: () => cookieStore,
+      configurable: true
     });
 
     render(
@@ -36,11 +37,15 @@ describe('Login Page', () => {
       </MemoryRouter>
     );
 
+    // Check for title
+    expect(screen.getByText(/welcome back/i)).toBeInTheDocument();
+
     // Enter phone
     fireEvent.change(screen.getByPlaceholderText(/enter 10-digit mobile number/i), { target: { value: '1234567890' } });
     fireEvent.click(screen.getByRole('button', { name: /send code/i }));
 
     // Wait for OTP step
+    await waitFor(() => expect(screen.getByText(/security check/i)).toBeInTheDocument());
     await waitFor(() => expect(screen.getByPlaceholderText(/enter verification code/i)).toBeInTheDocument());
 
     // Enter OTP

@@ -4,10 +4,11 @@ import PhoneSignIn from '../components/ui/Auth/PhoneSignIn';
 import OtpVerification from '../components/ui/Auth/OtpVerification';
 import { signInWithPhone, verifyOtp } from '../services/authService';
 import Card from '../components/ui/Card/Card';
+import styles from './Login.module.css';
 
 const Login: React.FC = () => {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [confirmationResult, setConfirmationResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -16,16 +17,13 @@ const Login: React.FC = () => {
   const from = (location.state as any)?.from?.pathname || '/';
 
   const handlePhoneSubmit = async (phoneNumber: string) => {
-    console.log('handlePhoneSubmit triggered with:', phoneNumber);
     setLoading(true);
     setError('');
     try {
       const result = await signInWithPhone(phoneNumber, 'recaptcha-container');
-      console.log('signInWithPhone result:', result);
       setConfirmationResult(result);
       setStep('otp');
     } catch (err: any) {
-      console.error('signInWithPhone error:', err);
       setError(err.message || 'Failed to send code');
     } finally {
       setLoading(false);
@@ -41,7 +39,6 @@ const Login: React.FC = () => {
       const idToken = await userCredential.user.getIdToken();
       
       // Set the session cookie for SSR loaders
-      // We use a simple document.cookie here for now
       document.cookie = `session=${idToken}; path=/; max-age=${60 * 60 * 24 * 5}; SameSite=Lax`;
       
       navigate(from, { replace: true });
@@ -53,23 +50,35 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'var(--spacing-8) auto' }}>
+    <div className={styles.container}>
       <Card>
-        <h1 style={{ textAlign: 'center', marginBottom: 'var(--spacing-6)' }}>
-          {step === 'phone' ? 'Sign In' : 'Verify Code'}
-        </h1>
-        
-        {error && (
-          <div style={{ color: 'var(--color-danger)', marginBottom: 'var(--spacing-4)', textAlign: 'center' }}>
-            {error}
+        <div className={styles.cardContent}>
+          <div className={styles.illustration}>
+            {step === 'phone' ? '✨' : '🔐'}
           </div>
-        )}
+          
+          <h1 className={styles.title}>
+            {step === 'phone' ? 'Welcome Back' : 'Security Check'}
+          </h1>
+          
+          <p className={styles.subtitle}>
+            {step === 'phone' 
+              ? 'Sign in to access your boutique experience' 
+              : 'Enter the code we sent to your mobile'}
+          </p>
+          
+          {error && (
+            <div className={styles.error}>
+              {error}
+            </div>
+          )}
 
-        {step === 'phone' ? (
-          <PhoneSignIn onSubmit={handlePhoneSubmit} loading={loading} />
-        ) : (
-          <OtpVerification onVerify={handleOtpVerify} loading={loading} />
-        )}
+          {step === 'phone' ? (
+            <PhoneSignIn onSubmit={handlePhoneSubmit} loading={loading} />
+          ) : (
+            <OtpVerification onVerify={handleOtpVerify} loading={loading} />
+          )}
+        </div>
       </Card>
     </div>
   );

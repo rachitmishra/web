@@ -11,10 +11,17 @@
 }
 
 .logo {
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: var(--color-primary);
+  font-family: var(--font-family-logo);
+  font-size: 1.75rem;
+  font-weight: 400;
   text-decoration: none;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
 }
 
 .actions {
