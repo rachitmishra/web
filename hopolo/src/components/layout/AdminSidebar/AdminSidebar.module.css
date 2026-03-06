@@ -16,6 +16,21 @@
   width: 64px;
 }
 
+.collapsed .header {
+  padding: var(--spacing-4) 0;
+  justify-content: center;
+}
+
+.collapsed .toggleBtn {
+  width: 40px;
+  height: 40px;
+}
+
+.collapsed .navLink {
+  justify-content: center;
+  padding: var(--spacing-3) 0;
+}
+
 .header {
   padding: var(--spacing-4);
   display: flex;

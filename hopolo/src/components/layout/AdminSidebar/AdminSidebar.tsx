@@ -33,7 +33,11 @@ const navItems = [
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onItemClick }) => {
   return (
-    <aside className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
+    <aside 
+      className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}
+      onClick={() => isCollapsed && onToggle()}
+      style={{ cursor: isCollapsed ? 'pointer' : 'default' }}
+    >
       <div className={styles.header}>
         {!isCollapsed && <span className={styles.logo}>Hopolo Admin</span>}
         <button 
