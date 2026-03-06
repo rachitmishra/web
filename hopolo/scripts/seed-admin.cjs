@@ -216,8 +216,20 @@ const seedSettings = async () => {
   console.log("Storefront settings seeded.");
 };
 
+const clearCollection = async (collectionPath) => {
+  const snapshot = await db.collection(collectionPath).get();
+  const batch = db.batch();
+  snapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+  await batch.commit();
+  console.log(`Cleared collection: ${collectionPath}`);
+};
+
 const run = async () => {
   try {
+    await clearCollection("categories");
+    await clearCollection("products");
     await seedCategories();
     await seedProducts();
     await seedSettings();
