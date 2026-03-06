@@ -1,64 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useLoaderData, useActionData, useSubmit, Form } from 'react-router';
-import { requireRole } from '../../lib/auth.server';
-import { getStorefrontSettings, updateStorefrontSettings, type StorefrontSettings, type CustomerReview } from '../../services/storefrontService';
+import { getStorefrontSettings, updateStorefrontSettings, type StorefrontSettings, type CustomerReview, DEFAULT_SETTINGS } from '../../services/storefrontService';
 import Button from '../../components/ui/Button/Button';
 import Input from '../../components/ui/Input/Input';
 import Card from '../../components/ui/Card/Card';
 import styles from './Storefront.module.css';
 
-export async function loader({ request }: { request: Request }) {
-  await requireRole(request, ['admin']);
-  const settings = await getStorefrontSettings();
-  return { settings };
-}
-
-export async function action({ request }: { request: Request }) {
-  await requireRole(request, ['admin']);
-  const formData = await request.formData();
-  
-  const settings: Partial<StorefrontSettings> = {
-    bannerText: formData.get('bannerText') as string,
-    bannerColor: formData.get('bannerColor') as string,
-    bannerLink: formData.get('bannerLink') as string,
-    bannerVisible: formData.get('bannerVisible') === 'true',
-    isMaintenanceMode: formData.get('isMaintenanceMode') === 'true',
-    heroTitle: formData.get('heroTitle') as string,
-    heroSubtitle: formData.get('heroSubtitle') as string,
-    heroImage: formData.get('heroImage') as string,
-    heroCtaText: formData.get('heroCtaText') as string,
-  };
-
-  const reviewsJson = formData.get('reviews') as string;
-  if (reviewsJson) {
-    try {
-      settings.reviews = JSON.parse(reviewsJson);
-    } catch (e) {
-      console.error("Failed to parse reviews JSON", e);
-    }
-  }
-
-  try {
-    await updateStorefrontSettings(settings);
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
-
 const AdminStorefront: React.FC = () => {
-  const { settings: initialSettings } = useLoaderData() as { settings: StorefrontSettings };
-  const actionData = useActionData() as { success?: boolean; error?: string };
-  const submit = useSubmit();
-
-  const [settings, setSettings] = useState<StorefrontSettings>(initialSettings);
-  const [loading, setLoading] = useState(false);
+  const [settings, setSettings] = useState<StorefrontSettings>(DEFAULT_SETTINGS);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   useEffect(() => {
-    if (actionData) {
-      setLoading(false);
-    }
-  }, [actionData]);
+    const loadSettings = async () => {
+      try {
+        const data = await getStorefrontSettings();
+        setSettings(data);
+      } catch (err) {
+        console.error("Failed to load storefront settings", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadSettings();
+  }, []);
 
   const handleAddReview = () => {
     setSettings({
@@ -79,33 +44,33 @@ const AdminStorefront: React.FC = () => {
     setSettings({ ...settings, reviews: newReviews });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
+    setStatus(null);
     
-    const formData = new FormData();
-    formData.append('bannerText', settings.bannerText);
-    formData.append('bannerColor', settings.bannerColor);
-    formData.append('bannerLink', settings.bannerLink);
-    formData.append('bannerVisible', String(settings.bannerVisible));
-    formData.append('isMaintenanceMode', String(settings.isMaintenanceMode));
-    formData.append('heroTitle', settings.heroTitle);
-    formData.append('heroSubtitle', settings.heroSubtitle);
-    formData.append('heroImage', settings.heroImage);
-    formData.append('heroCtaText', settings.heroCtaText);
-    formData.append('reviews', JSON.stringify(settings.reviews));
-
-    submit(formData, { method: 'post' });
+    try {
+      await updateStorefrontSettings(settings);
+      setStatus({ type: 'success', message: 'Settings saved successfully!' });
+    } catch (error: any) {
+      setStatus({ type: 'error', message: `Error: ${error.message}` });
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) return <div className={styles.container}>Loading settings...</div>;
 
   return (
     <div className={styles.container}>
       <h1>Storefront Settings</h1>
       
       <Card>
-        <Form className={styles.form} onSubmit={handleSubmit} method="post">
+        <form className={styles.form} onSubmit={handleSubmit}>
           <section className={styles.section}>
-            <h3>Promo Banner</h3>
+            <div className={styles.sectionHeader}>
+              <h3>Promo Banner</h3>
+            </div>
             <Input
               name="bannerText"
               label="Banner Text"
@@ -145,7 +110,9 @@ const AdminStorefront: React.FC = () => {
           <hr className={styles.divider} />
 
           <section className={styles.section}>
-            <h3>Hero Section</h3>
+            <div className={styles.sectionHeader}>
+              <h3>Hero Section</h3>
+            </div>
             <Input
               name="heroTitle"
               label="Hero Title"
@@ -181,7 +148,7 @@ const AdminStorefront: React.FC = () => {
           <section className={styles.section}>
             <div className={styles.sectionHeader}>
               <h3>Customer Reviews</h3>
-              <Button type="button" variant="secondary" onClick={handleAddReview} size="small">
+              <Button type="button" variant="secondary" onClick={handleAddReview} style={{ padding: '4px 12px', fontSize: '0.75rem' }}>
                 Add Review
               </Button>
             </div>
@@ -226,7 +193,9 @@ const AdminStorefront: React.FC = () => {
           <hr className={styles.divider} />
 
           <section className={styles.section}>
-            <h3>Site Status</h3>
+            <div className={styles.sectionHeader}>
+              <h3>Site Status</h3>
+            </div>
             <div className={styles.toggleField}>
               <input
                 id="isMaintenanceMode"
@@ -242,19 +211,14 @@ const AdminStorefront: React.FC = () => {
             </p>
           </section>
 
-          <Button type="submit" loading={loading}>
+          <Button type="submit" loading={saving}>
             Save Settings
           </Button>
-        </Form>
+        </form>
 
-        {actionData?.success && (
-          <div className={`${styles.status} ${styles.success}`}>
-            Settings saved successfully!
-          </div>
-        )}
-        {actionData?.error && (
-          <div className={`${styles.status} ${styles.error}`}>
-            Error: {actionData.error}
+        {status && (
+          <div className={`${styles.status} ${status.type === 'success' ? styles.success : styles.error}`}>
+            {status.message}
           </div>
         )}
       </Card>

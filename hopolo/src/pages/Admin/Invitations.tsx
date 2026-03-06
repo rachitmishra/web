@@ -1,61 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { useActionData, useSubmit, Form } from 'react-router';
-import { getAuthenticatedUser, requireRole } from '../../lib/auth.server';
-import { createInvitation } from '../../services/profileService.server';
+import React, { useState } from 'react';
+import { createInvitation } from '../../services/profileService';
+import { auth } from '../../lib/firebase';
 import Button from '../../components/ui/Button/Button';
 import Input from '../../components/ui/Input/Input';
 import Card from '../../components/ui/Card/Card';
 import styles from './Invitations.module.css';
 
-export async function loader({ request }: { request: Request }) {
-  await requireRole(request, ['admin']);
-  return null;
-}
-
-export async function action({ request }: { request: Request }) {
-  const user = await getAuthenticatedUser(request);
-  if (!user) throw new Response("Unauthorized", { status: 401 });
-
-  const formData = await request.formData();
-  const phoneNumber = formData.get("phoneNumber") as string;
-  const role = formData.get("role") as string;
-
-  try {
-    const { inviteCode } = await createInvitation(user.uid, phoneNumber, role);
-    return { success: true, inviteCode, phoneNumber, role };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
-
 const Invitations: React.FC = () => {
-  const actionData = useActionData() as { success?: boolean; inviteCode?: string; phoneNumber?: string; role?: string; error?: string };
-  const submit = useSubmit();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [role, setRole] = useState('editor');
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{ success: boolean, inviteCode?: string, error?: string } | null>(null);
 
-  useEffect(() => {
-    if (actionData) {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!auth.currentUser) return;
+    
+    setLoading(true);
+    setResult(null);
+    
+    try {
+      // Note: We use the client-side profileService which calls the Cloud Function
+      const data = await createInvitation(phoneNumber, role);
+      setResult({ success: true, inviteCode: data.inviteCode });
+    } catch (error: any) {
+      setResult({ success: false, error: error.message });
+    } finally {
       setLoading(false);
     }
-  }, [actionData]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    submit({ phoneNumber, role }, { method: "post" });
   };
 
   return (
     <div className={styles.container}>
       <h1>Invite New Admin</h1>
       <Card>
-        <Form className={styles.form} onSubmit={handleSubmit} method="post">
+        <form className={styles.form} onSubmit={handleSubmit}>
           <Input 
             name="phoneNumber"
             label="Mobile Number" 
-            placeholder="+1234567890" 
+            placeholder="+919839098390" 
             value={phoneNumber} 
             onChange={(e) => setPhoneNumber(e.target.value)} 
             required 
@@ -76,21 +59,21 @@ const Invitations: React.FC = () => {
           <Button type="submit" loading={loading} style={{ marginTop: 'var(--spacing-4)' }}>
             Generate Invitation
           </Button>
-        </Form>
+        </form>
       </Card>
 
-      {actionData?.error && (
+      {result?.error && (
         <div style={{ color: 'var(--color-danger)', marginTop: 'var(--spacing-4)' }}>
-          {actionData.error}
+          {result.error}
         </div>
       )}
 
-      {actionData?.success && actionData.inviteCode && (
+      {result?.success && result.inviteCode && (
         <div className={styles.result}>
           <p>Invitation created! Share this code with the user:</p>
-          <div className={styles.inviteCode}>{actionData.inviteCode}</div>
+          <div className={styles.inviteCode}>{result.inviteCode}</div>
           <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-            The role <strong>{actionData.role}</strong> will be assigned automatically when they sign up with {actionData.phoneNumber}.
+            The role <strong>{role}</strong> will be assigned automatically when they sign up with {phoneNumber}.
           </p>
         </div>
       )}
