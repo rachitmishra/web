@@ -15,7 +15,7 @@ const Home: React.FC = () => {
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [settings, setSettings] = useState<StorefrontSettings>(DEFAULT_SETTINGS);
   const [activeCategoryId, setActiveCategoryId] = useState('all');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isGridChanging, setIsGridChanging] = useState(false);
   const navigate = useNavigate();
   const productSectionRef = useRef<HTMLElement>(null);
