@@ -3,6 +3,7 @@ import { fetchAllOrders, type Order } from "../../services/orderService";
 import Card from "../../components/ui/Card/Card";
 import Button from "../../components/ui/Button/Button";
 import { useNavigate } from "react-router-dom";
+import styles from "./Orders.module.css";
 
 const Orders: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -23,7 +24,7 @@ const Orders: React.FC = () => {
     loadOrders();
   }, []);
 
-  if (loading) return <div>Loading orders...</div>;
+  if (loading) return <div className={styles.empty}>Loading orders...</div>;
 
   const totalOrders = orders.length;
   const totalSales = orders
@@ -35,127 +36,88 @@ const Orders: React.FC = () => {
       : 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-8)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className={styles.container}>
+      <div className={styles.header}>
         <h1>Orders</h1>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-4)' }}>
+      <div className={styles.statsGrid}>
         <Card>
-          <div
-            style={{ fontSize: "0.875rem", color: "var(--color-text-muted)" }}
-          >
-            Total Sales
-          </div>
-          <div
-            data-testid="total-sales"
-            style={{ fontSize: "1.5rem", fontWeight: "bold" }}
-          >
+          <div className={styles.statLabel}>Total Sales</div>
+          <div data-testid="total-sales" className={styles.statValue}>
             ${totalSales.toFixed(2)}
           </div>
         </Card>
         <Card>
-          <div
-            style={{ fontSize: "0.875rem", color: "var(--color-text-muted)" }}
-          >
-            Avg Order Value
-          </div>
-          <div
-            data-testid="avg-order-value"
-            style={{ fontSize: "1.5rem", fontWeight: "bold" }}
-          >
+          <div className={styles.statLabel}>Avg Order Value</div>
+          <div data-testid="avg-order-value" className={styles.statValue}>
             ${aov.toFixed(2)}
           </div>
         </Card>
         <Card>
-          <div
-            style={{ fontSize: "0.875rem", color: "var(--color-text-muted)" }}
-          >
-            Total Orders
-          </div>
-          <div
-            data-testid="total-orders"
-            style={{ fontSize: "1.5rem", fontWeight: "bold" }}
-          >
+          <div className={styles.statLabel}>Total Orders</div>
+          <div data-testid="total-orders" className={styles.statValue}>
             {totalOrders}
           </div>
         </Card>
       </div>
 
       <Card>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr
-              style={{ textAlign: "left", borderBottom: "1px solid #e5e7eb" }}
-            >
-              <th style={{ padding: "var(--spacing-4)" }}>Order ID</th>
-              <th style={{ padding: "var(--spacing-4)" }}>User ID</th>
-              <th style={{ padding: "var(--spacing-4)" }}>Date</th>
-              <th style={{ padding: "var(--spacing-4)" }}>Total</th>
-              <th style={{ padding: "var(--spacing-4)" }}>Status</th>
-              <th style={{ padding: "var(--spacing-4)" }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order.id} style={{ borderBottom: "1px solid #f3f4f6" }}>
-                <td
-                  style={{
-                    padding: "var(--spacing-4)",
-                    fontFamily: "monospace",
-                  }}
-                >
-                  {order.id}
-                </td>
-                <td
-                  style={{ padding: "var(--spacing-4)", fontSize: "0.875rem" }}
-                >
-                  {order.userId}
-                </td>
-                <td style={{ padding: "var(--spacing-4)" }}>
-                  {order.createdAt?.toDate
-                    ? order.createdAt.toDate().toLocaleDateString()
-                    : "N/A"}
-                </td>
-                <td style={{ padding: "var(--spacing-4)", fontWeight: 600 }}>
-                  ${order.total.toFixed(2)}
-                </td>
-                <td style={{ padding: "var(--spacing-4)" }}>
-                  <span
-                    style={{
-                      padding: "2px 8px",
-                      borderRadius: "9999px",
-                      fontSize: "0.75rem",
-                      backgroundColor:
-                        order.status === "paid" ? "#d1fae5" : "#f3f4f6",
-                      color: order.status === "paid" ? "#065f46" : "#374151",
-                    }}
-                  >
-                    {order.status}
-                  </span>
-                </td>
-                <td style={{ padding: "var(--spacing-4)" }}>
-                  <Button
-                    variant="outline"
-                    style={{ fontSize: "0.75rem", padding: "4px 8px" }}
-                    onClick={() => navigate(`/admin/orders/${order.id}`)}
-                  >
-                    Details
-                  </Button>
-                </td>
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr className={styles.tr}>
+                <th className={styles.th}>Order ID</th>
+                <th className={styles.th}>User ID</th>
+                <th className={styles.th}>Date</th>
+                <th className={styles.th}>Total</th>
+                <th className={styles.th}>Status</th>
+                <th className={styles.th}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order.id} className={styles.tr}>
+                  <td className={`${styles.td} ${styles.orderId}`}>
+                    {order.id}
+                  </td>
+                  <td className={`${styles.td} ${styles.userId}`}>
+                    {order.userId}
+                  </td>
+                  <td className={styles.td}>
+                    {order.createdAt?.toDate
+                      ? order.createdAt.toDate().toLocaleDateString()
+                      : "N/A"}
+                  </td>
+                  <td className={`${styles.td} ${styles.amount}`}>
+                    ${order.total.toFixed(2)}
+                  </td>
+                  <td className={styles.td}>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        order.status === "paid" ? styles.statusPaid : styles.statusOther
+                      }`}
+                    >
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className={styles.td}>
+                    <Button
+                      variant="outline"
+                      style={{ fontSize: "0.75rem", padding: "4px 8px" }}
+                      onClick={() => navigate(`/admin/orders/${order.id}`)}
+                    >
+                      Details
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {orders.length === 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "var(--spacing-8)",
-              color: "var(--color-text-muted)",
-            }}
-          >
+          <div className={styles.empty}>
             No orders found.
           </div>
         )}

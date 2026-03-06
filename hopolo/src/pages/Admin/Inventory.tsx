@@ -46,35 +46,37 @@ const Inventory: React.FC = () => {
       </div>
 
       <Card>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th className={styles.th}>Name</th>
-              <th className={styles.th}>Category</th>
-              <th className={styles.th}>Price</th>
-              <th className={styles.th}>Stock</th>
-              <th className={styles.th}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product.id}>
-                <td className={styles.td}>{product.name}</td>
-                <td className={styles.td}>{product.category}</td>
-                <td className={styles.td}>${product.price}</td>
-                <td className={styles.td}>
-                  {product.variants?.reduce((acc, v) => acc + v.stock, 0) || 0}
-                </td>
-                <td className={styles.td}>
-                  <div className={styles.actions}>
-                    <Button variant="outline" style={{ padding: '4px 8px', fontSize: '0.75rem' }}>Edit</Button>
-                    <Button variant="outline" style={{ padding: '4px 8px', fontSize: '0.75rem' }}>Delete</Button>
-                  </div>
-                </td>
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th className={styles.th}>Name</th>
+                <th className={styles.th}>Category</th>
+                <th className={styles.th}>Price</th>
+                <th className={styles.th}>Stock</th>
+                <th className={styles.th}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product.id}>
+                  <td className={styles.td}>{product.name}</td>
+                  <td className={styles.td}>{product.category}</td>
+                  <td className={styles.td}>${product.price}</td>
+                  <td className={styles.td}>
+                    {product.variants?.reduce((acc, v) => acc + v.stock, 0) || 0}
+                  </td>
+                  <td className={styles.td}>
+                    <div className={styles.actions}>
+                      <Button variant="outline" style={{ padding: '4px 8px', fontSize: '0.75rem' }}>Edit</Button>
+                      <Button variant="outline" style={{ padding: '4px 8px', fontSize: '0.75rem' }}>Delete</Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         {products.length === 0 && (
           <div style={{ textAlign: 'center', padding: 'var(--spacing-8)', color: 'var(--color-text-muted)' }}>
             No products found.
