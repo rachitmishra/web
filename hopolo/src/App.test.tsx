@@ -42,6 +42,7 @@ describe('App Routing', () => {
     vi.clearAllMocks();
     (productService.fetchProducts as any).mockResolvedValue(mockProducts);
     (productService.fetchCategories as any).mockResolvedValue(mockCategories);
+    (productService.fetchBestSellers as any).mockResolvedValue(mockProducts);
     (reviewService.fetchReviews as any).mockResolvedValue([]);
     (storefrontService.subscribeToStorefrontSettings as any).mockImplementation((cb: any) => {
       cb({ isMaintenanceMode: false });

@@ -45,15 +45,26 @@ const ProductDetail: React.FC = () => {
 
   const loadProductAndReviews = async () => {
     if (!id) return;
+    
+    // 5-second timeout to prevent permanent loading screen
+    const timeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("Loading timeout")), 5000)
+    );
+
     try {
-      const [products, reviewsData] = await Promise.all([
-        fetchProducts(),
-        fetchReviews(id)
+      const result = await Promise.race([
+        Promise.all([
+          fetchProducts(),
+          fetchReviews(id)
+        ]),
+        timeout
       ]);
+      
+      const [products, reviewsData] = result as [Product[], Review[]];
       
       const found = products.find(p => p.id === id);
       setProduct(found || null);
-      setReviews(reviewsData);
+      setReviews(reviewsData || []);
       
       if (found) {
         const related = products.filter(p => p.category === found.category && p.id !== id).slice(0, 4);

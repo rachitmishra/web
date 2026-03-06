@@ -32,22 +32,30 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      try {
-        const [fetchedProducts, fetchedCategories, fetchedBestSellers, fetchedSettings] = await Promise.all([
-          fetchProducts(),
-          fetchCategories(),
-          fetchBestSellers(),
-          getStorefrontSettings(),
-        ]);
+      // 5-second timeout to prevent permanent loading screen
+      const timeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Loading timeout")), 5000)
+      );
 
-        setProducts(fetchedProducts);
-        setBestSellers(fetchedBestSellers);
-        setSettings(fetchedSettings);
+      try {
+        const [fetchedProducts, fetchedCategories, fetchedBestSellers, fetchedSettings] = await Promise.race([
+          Promise.all([
+            fetchProducts(),
+            fetchCategories(),
+            fetchBestSellers(),
+            getStorefrontSettings(),
+          ]),
+          timeout
+        ]) as [Product[], Category[], Product[], StorefrontSettings];
+
+        if (fetchedProducts) setProducts(fetchedProducts);
+        if (fetchedBestSellers) setBestSellers(fetchedBestSellers);
+        if (fetchedSettings) setSettings(fetchedSettings);
 
         // Ensure "All" is always present if not already in Firestore
-        const hasAll = fetchedCategories.find((c) => c.id === "all");
+        const hasAll = (fetchedCategories || []).find((c) => c.id === "all");
         if (!hasAll) {
-          setCategories([{ id: "all", name: "All" }, ...fetchedCategories]);
+          setCategories([{ id: "all", name: "All" }, ...(fetchedCategories || [])]);
         } else {
           setCategories(fetchedCategories);
         }

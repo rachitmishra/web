@@ -168,10 +168,32 @@ const seedUsers = async () => {
   console.log("Encrypted user profiles seeded.");
 };
 
+const seedSettings = async () => {
+  console.log("Seeding storefront settings...");
+  const settingsRef = db.collection("settings").doc("storefront");
+  await settingsRef.set({
+    bannerText: "Welcome to Hopolo!",
+    bannerColor: "#5D3FD3",
+    bannerVisible: true,
+    heroTitle: "Hopolo Boutique",
+    heroSubtitle: "Discover unique products curated just for you. Minimalist design, playful details.",
+    heroImage: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1920&q=80&fm=webp",
+    heroCtaText: "Shop the Collection",
+    isMaintenanceMode: false,
+    reviews: [
+      { name: "Sarah L.", emoji: "😊", text: "Amazing quality and fast delivery. Highly recommended!" },
+      { name: "Marcus T.", emoji: "😊", text: "Minimalist design that fits perfectly in my home." },
+      { name: "Elena G.", emoji: "😊", text: "The emoji-based review system is so fun and easy!" },
+    ]
+  }, { merge: true });
+  console.log("Storefront settings seeded.");
+};
+
 const run = async () => {
   try {
-    // await seedCategories();
-    // await seedProducts();
+    await seedCategories();
+    await seedProducts();
+    await seedSettings();
     await seedUsers();
     console.log("Database seeding complete!");
     process.exit(0);
