@@ -15,7 +15,7 @@ const Home: React.FC = () => {
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [settings, setSettings] = useState<StorefrontSettings>(DEFAULT_SETTINGS);
   const [activeCategoryId, setActiveCategoryId] = useState('all');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isGridChanging, setIsGridChanging] = useState(false);
   const navigate = useNavigate();
   const productSectionRef = useRef<HTMLElement>(null);
@@ -34,20 +34,14 @@ const Home: React.FC = () => {
     let mounted = true;
     
     const loadData = async () => {
-      console.log("[Home] 🚀 loadData starting...");
-      
       // Safety timer: force loading to false after 8 seconds no matter what
       const safetyTimer = setTimeout(() => {
-        if (mounted && loading) {
-          console.error("[Home] 🚨 CRITICAL: Safety timeout reached! Forcing loading = false");
+        if (mounted) {
           setLoading(false);
         }
       }, 8000);
 
       try {
-        console.log("[Home] 🕒 Starting Promise.all for products, categories, etc...");
-        
-        // Parallel fetch with individual timeouts could be better, but let's try this first
         const [fetchedProducts, fetchedCategories, fetchedBestSellers, fetchedSettings] = await Promise.all([
           fetchProducts().catch(e => { console.error("fetchProducts error:", e); return []; }),
           fetchCategories().catch(e => { console.error("fetchCategories error:", e); return []; }),
@@ -56,13 +50,6 @@ const Home: React.FC = () => {
         ]);
 
         if (!mounted) return;
-
-        console.log("[Home] ✅ All data fetched successfully", {
-          products: fetchedProducts.length,
-          categories: fetchedCategories.length,
-          bestSellers: fetchedBestSellers.length,
-          settings: !!fetchedSettings
-        });
 
         setProducts(fetchedProducts);
         setBestSellers(fetchedBestSellers);
@@ -77,10 +64,9 @@ const Home: React.FC = () => {
         }
         
       } catch (error) {
-        console.error("[Home] ❌ Error in loadData block:", error);
+        console.error("[Home] Error in loadData block:", error);
       } finally {
         if (mounted) {
-          console.log("[Home] 🏁 finally: setting loading to false");
           setLoading(false);
           clearTimeout(safetyTimer);
         }
@@ -115,25 +101,8 @@ const Home: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ 
-        padding: "var(--spacing-8)", 
-        textAlign: "center", 
-        background: "red", 
-        color: "white", 
-        position: "fixed", 
-        top: 0, 
-        left: 0, 
-        right: 0, 
-        bottom: 0, 
-        zIndex: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        gap: "20px"
-      }}>
-        <h1 style={{ color: "white" }}>DEBUG: HOME LOADING V2</h1>
-        HOPOLO LOADING V2...
+      <div style={{ padding: "var(--spacing-8)", textAlign: "center" }}>
+        Loading boutique experience...
       </div>
     );
   }
