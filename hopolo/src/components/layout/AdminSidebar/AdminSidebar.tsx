@@ -17,6 +17,7 @@ import styles from './AdminSidebar.module.css';
 interface AdminSidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
+  onItemClick?: () => void;
 }
 
 const navItems = [
@@ -30,7 +31,7 @@ const navItems = [
   { path: '/admin/seed', label: 'Seed Data', icon: <Leaf size={20} /> },
 ];
 
-const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle }) => {
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onItemClick }) => {
   return (
     <aside className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
       <div className={styles.header}>
@@ -49,6 +50,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle }) =>
           <NavLink
             key={item.path}
             to={item.path}
+            onClick={onItemClick}
             className={({ isActive }) => 
               `${styles.navLink} ${isActive ? styles.active : ''}`
             }

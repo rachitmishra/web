@@ -60,6 +60,7 @@ const AdminLayout: React.FC = () => {
       <AdminSidebar 
         isCollapsed={isCollapsed} 
         onToggle={() => setIsCollapsed(!isCollapsed)} 
+        onItemClick={() => setIsCollapsed(true)}
       />
 
       <div className={styles.mainWrapper}>
