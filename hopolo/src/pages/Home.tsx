@@ -140,7 +140,6 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div style={{ position: 'fixed', top: 0, left: 0, padding: '10px', background: 'green', color: 'white', zIndex: 1000 }}>DEBUG: LOADED</div>
       <CinematicHero
         title={settings.heroTitle}
         subtitle={settings.heroSubtitle}
