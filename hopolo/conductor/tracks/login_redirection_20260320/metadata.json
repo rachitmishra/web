@@ -1,0 +1,8 @@
+{
+  "track_id": "login_redirection_20260320",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-03-20T10:00:00Z",
+  "updated_at": "2026-03-20T10:00:00Z",
+  "description": "bug fix: on login with mobile number the after succesful login the otp verification dialog is not dismissed. also after successful login admin is not redirected to admin page."
+}
