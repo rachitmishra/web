@@ -160,7 +160,7 @@ const seedUsers = async () => {
   const profiles = [
     {
       uid: ADMIN_UID,
-      phoneNumber: ADMIN_PHONE,
+      phoneNumber: encrypt(ADMIN_PHONE),
       email: "admin@hopolo.com", // Optional
       role: "admin",
       // Encrypt sensitive fields

@@ -1,73 +1,78 @@
 .container {
-  padding: 0;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: var(--spacing-4);
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  letter-spacing: -0.05em;
 }
 
 .tableWrapper {
   width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-border);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 800px;
 }
 
 .th {
   text-align: left;
   padding: var(--spacing-4);
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.tr {
   border-bottom: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  font-size: 0.875rem;
 }
 
 .td {
   padding: var(--spacing-4);
-  border-bottom: 1px solid var(--color-border);
   font-size: 0.875rem;
 }
 
-.status {
-  padding: 2px 8px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: capitalize;
+.statusBadge {
+  padding: 4px 12px;
+  border: 1px solid var(--color-border);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
-.status_success {
-  background-color: #d1fae5;
-  color: #065f46;
+.statusSuccess {
+  background-color: #000;
+  color: #fff;
 }
 
-.status_failed {
-  background-color: #fee2e2;
-  color: #991b1b;
+.statusError {
+  background-color: var(--color-danger);
+  color: #fff;
 }
 
-.error {
-  color: #991b1b;
-  font-size: 0.75rem;
-  margin-top: 4px;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .container {
-    padding: var(--spacing-4);
-  }
-
-  .header h1 {
-    font-size: 1.5rem;
-  }
+.empty {
+  text-align: center;
+  padding: var(--spacing-12);
+  color: var(--color-text-muted);
 }

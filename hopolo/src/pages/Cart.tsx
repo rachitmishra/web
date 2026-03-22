@@ -1,69 +1,127 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData, useSubmit, useActionData } from "react-router-dom";
 import Button from "../components/ui/Button/Button";
 import Card from "../components/ui/Card/Card";
 import QuantitySelector from "../components/ui/QuantitySelector/QuantitySelector";
 import styles from "./Cart.module.css";
-import {
-  subscribeToCart,
-  removeFromCart,
-  updateQuantity,
-  type CartItem,
-} from "../services/cartService";
-import { validatePromoCode } from "../services/promoService";
+import { type CartItem } from "../services/cartService";
+import { getCart, removeFromCart, updateQuantity } from "../services/cartService.server";
+import { validatePromoCode } from "../services/promoService.server";
+import { getSessionIdFromRequest } from "../lib/session";
+
+export async function loader({ request }: { request: Request }) {
+  const sessionId = getSessionIdFromRequest(request);
+  const items = await getCart(sessionId);
+  return { items };
+}
+
+export async function action({ request }: { request: Request }) {
+  const sessionId = getSessionIdFromRequest(request);
+  const formData = await request.formData();
+  const intent = formData.get("intent");
+
+  if (intent === "remove") {
+    const productId = formData.get("productId") as string;
+    const size = formData.get("size") as string;
+    const color = formData.get("color") as string;
+    await removeFromCart(sessionId, productId, { size, color });
+    return { success: true };
+  }
+
+  if (intent === "update-quantity") {
+    const productId = formData.get("productId") as string;
+    const quantity = parseInt(formData.get("quantity") as string, 10);
+    const size = formData.get("size") as string;
+    const color = formData.get("color") as string;
+    await updateQuantity(sessionId, productId, quantity, { size, color });
+    return { success: true };
+  }
+
+  if (intent === "apply-promo") {
+    const code = formData.get("code") as string;
+    const subtotal = parseFloat(formData.get("subtotal") as string);
+    try {
+      const result = await validatePromoCode(code, subtotal);
+      return { success: true, promo: { code, ...result } };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  }
+
+  return null;
+}
 
 const Cart: React.FC = () => {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { items: initialItems } = useLoaderData() as { items: CartItem[] };
+  const actionData = useActionData() as { success: boolean; promo?: any; error?: string };
+  const submit = useSubmit();
 
-  // Promo Code State
+  const [items, setItems] = useState<CartItem[]>(initialItems);
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [appliedCode, setAppliedCode] = useState("");
   const [promoError, setPromoError] = useState("");
   const [loadingPromo, setLoadingPromo] = useState(false);
 
+  // Sync items when loader data changes
   useEffect(() => {
-    const unsubscribe = subscribeToCart((cartItems) => {
-      setItems(cartItems);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+    setItems(initialItems);
+  }, [initialItems]);
 
-  // Recalculate discount if items change (e.g. if total drops below min purchase)
   useEffect(() => {
-    if (appliedCode) {
-      handleApplyPromo(appliedCode);
+    if (actionData) {
+      setLoadingPromo(false);
+      if (actionData.promo) {
+        setDiscount(actionData.promo.discount);
+        setAppliedCode(actionData.promo.code);
+        setPromoError("");
+      } else if (actionData.error) {
+        setPromoError(actionData.error);
+        setDiscount(0);
+        setAppliedCode("");
+      }
     }
-  }, [items]);
+  }, [actionData]);
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
-  const shipping = items.length > 0 ? 5.99 : 0; // Flat rate for now
+  const shipping = items.length > 0 ? 5.99 : 0;
   const total = Math.max(0, subtotal + shipping - discount);
 
-  const handleApplyPromo = async (code: string = promoCode) => {
-    if (!code) return;
-    setLoadingPromo(true);
-    setPromoError("");
-
-    try {
-      const result = await validatePromoCode(code, subtotal);
-      setDiscount(result.discount);
-      setAppliedCode(code);
-    } catch (err: any) {
-      setPromoError(err.message);
-      setDiscount(0);
-      setAppliedCode("");
-    } finally {
-      setLoadingPromo(false);
-    }
+  const handleRemove = (item: CartItem) => {
+    submit(
+      { 
+        intent: "remove", 
+        productId: item.product.id, 
+        size: item.selectedSize || "", 
+        color: item.selectedColor || "" 
+      },
+      { method: "post" }
+    );
   };
 
-  if (loading) return <div>Loading cart...</div>;
+  const handleUpdateQuantity = (item: CartItem, q: number) => {
+    submit(
+      { 
+        intent: "update-quantity", 
+        productId: item.product.id, 
+        quantity: q.toString(),
+        size: item.selectedSize || "", 
+        color: item.selectedColor || "" 
+      },
+      { method: "post" }
+    );
+  };
+
+  const handleApplyPromo = () => {
+    setLoadingPromo(true);
+    submit(
+      { intent: "apply-promo", code: promoCode, subtotal: subtotal.toString() },
+      { method: "post" }
+    );
+  };
 
   if (items.length === 0) {
     return (
@@ -127,11 +185,11 @@ const Cart: React.FC = () => {
               <div className={styles.itemActions}>
                 <QuantitySelector
                   quantity={item.quantity}
-                  onChange={(q) => updateQuantity(item.product.id, q)}
+                  onChange={(q) => handleUpdateQuantity(item, q)}
                 />
                 <button
                   className={styles.removeButton}
-                  onClick={() => removeFromCart(item.product.id)}
+                  onClick={() => handleRemove(item)}
                   aria-label="Remove item"
                 >
                   Remove
@@ -178,7 +236,7 @@ const Cart: React.FC = () => {
               <Button
                 variant="outline"
                 style={{ padding: "8px 12px" }}
-                onClick={() => handleApplyPromo()}
+                onClick={handleApplyPromo}
                 loading={loadingPromo}
               >
                 Apply

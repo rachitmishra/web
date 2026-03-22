@@ -1,39 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { fetchOrderById, updateOrderStatus } from '../../services/orderService';
-import { createShippingOrder } from '../../services/shippingService';
-import { refundOrder } from '../../services/paymentService';
+import React, { useState, useEffect } from 'react';
+import { useLoaderData, useNavigate, useSubmit, useActionData } from 'react-router';
+import { fetchOrderById, updateOrderStatus } from '../../services/orderService.server';
+import { type Order } from '../../services/orderService';
+import { createShippingOrder } from '../../services/shippingService.server';
+import { refundOrder } from '../../services/paymentService.server';
+import { requireRole } from '../../lib/auth.server';
 import Button from '../../components/ui/Button/Button';
 import styles from './OrderDetail.module.css';
 
-const OrderDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const [order, setOrder] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [shippingLoading, setShippingLoading] = useState(false);
-  const [refundLoading, setRefundLoading] = useState(false);
-  const [shippingInfo, setShippingInfo] = useState<{ trackingId: string; labelUrl: string } | null>(null);
+export async function loader({ request, params }: { request: Request, params: any }) {
+  await requireRole(request, ['admin']);
+  const orderId = params.id;
+  if (!orderId) throw new Response("Order ID required", { status: 400 });
+  
+  const order = await fetchOrderById(orderId);
+  if (!order) throw new Response("Order not found", { status: 404 });
+  
+  return { order };
+}
 
-  useEffect(() => {
-    const loadOrder = async () => {
-      if (id) {
-        const data = await fetchOrderById(id);
-        setOrder(data);
-      }
-      setLoading(false);
-    };
-    loadOrder();
-  }, [id]);
+export async function action({ request, params }: { request: Request, params: any }) {
+  await requireRole(request, ['admin']);
+  const { id: orderId } = params;
+  const formData = await request.formData();
+  const intent = formData.get("intent");
 
-  const handleShip = async () => {
-    if (!order) return;
-    setShippingLoading(true);
+  if (intent === "update-status") {
+    const status = formData.get("status") as Order["status"];
+    await updateOrderStatus(orderId, status);
+    return { success: true };
+  }
+
+  if (intent === "ship-order") {
+    const order = await fetchOrderById(orderId);
+    if (!order) return { success: false, error: "Order not found" };
+    
     try {
       const result = await createShippingOrder({
         orderId: order.id,
         customerName: order.userId,
-        phone: order.phone || '9999999999',
+        phone: (order as any).phone || '9999999999',
         address: `${order.address?.street}, ${order.address?.city}`,
         items: order.items.map((item: any) => ({
           name: item.name,
@@ -42,16 +48,62 @@ const OrderDetail: React.FC = () => {
         }))
       });
       
-      setShippingInfo(result);
-      await updateOrderStatus(order.id, 'shipped');
-      setOrder((prev: any) => ({ ...prev, status: 'shipped' }));
-      alert('Order shipped successfully!');
-    } catch (error) {
-      console.error(error);
-      alert('Failed to ship order.');
-    } finally {
-      setShippingLoading(false);
+      await updateOrderStatus(orderId, 'shipped');
+      return { success: true, shippingInfo: result };
+    } catch (err: any) {
+      return { success: false, error: err.message };
     }
+  }
+
+  if (intent === "refund-order") {
+    const order = await fetchOrderById(orderId);
+    if (!order || !order.paymentId) return { success: false, error: "Order or payment ID not found" };
+    
+    try {
+      await refundOrder(order.paymentId, order.total);
+      await updateOrderStatus(orderId, 'refunded');
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  }
+
+  return null;
+}
+
+const OrderDetail: React.FC = () => {
+  const { order: initialOrder } = useLoaderData() as { order: Order };
+  const actionData = useActionData() as { success?: boolean, shippingInfo?: any, error?: string };
+  const submit = useSubmit();
+  const navigate = useNavigate();
+
+  const [order, setOrder] = useState<Order>(initialOrder);
+  const [shippingLoading, setShippingLoading] = useState(false);
+  const [refundLoading, setRefundLoading] = useState(false);
+  const [shippingInfo, setShippingInfo] = useState<{ trackingId: string; labelUrl: string } | null>(null);
+
+  useEffect(() => {
+    if (initialOrder) setOrder(initialOrder);
+  }, [initialOrder]);
+
+  useEffect(() => {
+    if (actionData?.success) {
+      setShippingLoading(false);
+      setRefundLoading(false);
+      if (actionData.shippingInfo) {
+        setShippingInfo(actionData.shippingInfo);
+      }
+    } else if (actionData?.error) {
+      alert(actionData.error);
+      setShippingLoading(false);
+      setRefundLoading(false);
+    }
+  }, [actionData]);
+
+  const handleShip = async () => {
+    if (!order) return;
+    setShippingLoading(true);
+    submit({ intent: "ship-order" }, { method: "post" });
   };
 
   const handleRefund = async () => {
@@ -59,25 +111,17 @@ const OrderDetail: React.FC = () => {
     if (!window.confirm(`Are you sure you want to refund ₹${order.total}?`)) return;
 
     setRefundLoading(true);
-    try {
-      await refundOrder(order.paymentId, order.total);
-      await updateOrderStatus(order.id, 'refunded');
-      setOrder((prev: any) => ({ ...prev, status: 'refunded' }));
-      alert('Refund processed successfully!');
-    } catch (error) {
-      console.error(error);
-      alert('Failed to process refund.');
-    } finally {
-      setRefundLoading(false);
-    }
+    submit({ intent: "refund-order" }, { method: "post" });
   };
 
-  if (loading) return <div className={styles.container}>Loading order details...</div>;
   if (!order) return <div className={styles.container}>Order not found</div>;
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
+        <Button variant="outline" onClick={() => navigate('/admin/orders')} style={{ marginBottom: 'var(--spacing-4)' }}>
+          &larr; Back to Orders
+        </Button>
         <h1>Order {order.id}</h1>
       </div>
 

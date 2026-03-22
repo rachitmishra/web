@@ -34,15 +34,7 @@ vi.mock('firebase/firestore', async () => {
     ...actual,
     getFirestore: vi.fn(() => ({})),
     collection: vi.fn(),
-    addDoc: vi.fn(),
-    getDocs: vi.fn(),
-    query: vi.fn(),
-    where: vi.fn(),
     doc: vi.fn(),
-    getDoc: vi.fn(),
-    setDoc: vi.fn(),
-    updateDoc: vi.fn(),
-    orderBy: vi.fn(),
     onSnapshot: vi.fn(() => vi.fn()),
   };
 });
@@ -52,24 +44,11 @@ vi.mock('firebase/auth', () => {
   return {
     getAuth: vi.fn(() => mockAuth),
     onAuthStateChanged: vi.fn((authObj, cb) => {
-      // In Firebase, onAuthStateChanged callback is called asynchronously after initialization
-      // But for tests, calling it immediately or in a timeout is common.
       cb(authObj?.currentUser || null);
       return vi.fn();
     }),
     signInWithPhoneNumber: vi.fn(),
     RecaptchaVerifier: vi.fn(),
+    signOut: vi.fn(),
   };
 });
-
-vi.mock('firebase/storage', () => ({
-  getStorage: vi.fn(() => ({})),
-  ref: vi.fn(),
-  uploadBytes: vi.fn(),
-  getDownloadURL: vi.fn(),
-}));
-
-vi.mock('firebase/functions', () => ({
-  getFunctions: vi.fn(() => ({})),
-  httpsCallable: vi.fn(() => vi.fn()),
-}));

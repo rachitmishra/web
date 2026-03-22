@@ -1,29 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { getStorefrontSettings, updateStorefrontSettings, type StorefrontSettings, type CustomerReview, DEFAULT_SETTINGS } from '../../services/storefrontService';
+import { useSubmit, useActionData, useLoaderData } from 'react-router';
+import { type StorefrontSettings, type CustomerReview, DEFAULT_SETTINGS } from '../../services/storefrontService';
+import { updateStorefrontSettings, getStorefrontSettings } from '../../services/storefrontService.server';
+import { requireRole } from '../../lib/auth.server';
 import Button from '../../components/ui/Button/Button';
 import Input from '../../components/ui/Input/Input';
 import Card from '../../components/ui/Card/Card';
 import styles from './Storefront.module.css';
 
+export async function loader({ request }: { request: Request }) {
+  await requireRole(request, ['admin']);
+  const settings = await getStorefrontSettings();
+  return { settings };
+}
+
+export async function action({ request }: { request: Request }) {
+  await requireRole(request, ['admin']);
+  const formData = await request.formData();
+  const settingsJson = formData.get("settings") as string;
+  
+  try {
+    const settings = JSON.parse(settingsJson);
+    await updateStorefrontSettings(settings);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
 const AdminStorefront: React.FC = () => {
-  const [settings, setSettings] = useState<StorefrontSettings>(DEFAULT_SETTINGS);
-  const [loading, setLoading] = useState(true);
+  const { settings: initialSettings } = useLoaderData() as { settings: StorefrontSettings };
+  const actionData = useActionData() as { success: boolean, error?: string };
+  const submit = useSubmit();
+
+  const [settings, setSettings] = useState<StorefrontSettings>(initialSettings || DEFAULT_SETTINGS);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const data = await getStorefrontSettings();
-        setSettings(data);
-      } catch (err) {
-        console.error("Failed to load storefront settings", err);
-      } finally {
-        setLoading(false);
+    if (actionData) {
+      setSaving(false);
+      if (actionData.success) {
+        setStatus({ type: 'success', message: 'Settings saved successfully!' });
+      } else {
+        setStatus({ type: 'error', message: `Error: ${actionData.error}` });
       }
-    };
-    loadSettings();
-  }, []);
+    }
+  }, [actionData]);
 
   const handleAddReview = () => {
     setSettings({
@@ -49,17 +72,11 @@ const AdminStorefront: React.FC = () => {
     setSaving(true);
     setStatus(null);
     
-    try {
-      await updateStorefrontSettings(settings);
-      setStatus({ type: 'success', message: 'Settings saved successfully!' });
-    } catch (error: any) {
-      setStatus({ type: 'error', message: `Error: ${error.message}` });
-    } finally {
-      setSaving(false);
-    }
+    submit(
+      { settings: JSON.stringify(settings) },
+      { method: 'post' }
+    );
   };
-
-  if (loading) return <div className={styles.container}>Loading settings...</div>;
 
   return (
     <div className={styles.container}>

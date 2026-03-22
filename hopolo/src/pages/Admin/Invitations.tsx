@@ -1,82 +1,110 @@
-import React, { useState } from 'react';
-import { createInvitation } from '../../services/profileService';
-import { auth } from '../../lib/firebase';
+import React, { useState, useEffect } from 'react';
+import { useSubmit, useActionData, useLoaderData } from 'react-router';
+import { createInvitation } from '../../services/profileService.server';
+import { requireRole } from '../../lib/auth.server';
 import Button from '../../components/ui/Button/Button';
 import Input from '../../components/ui/Input/Input';
 import Card from '../../components/ui/Card/Card';
 import styles from './Invitations.module.css';
 
+export async function loader({ request }: { request: Request }) {
+  await requireRole(request, ['admin']);
+  return null;
+}
+
+export async function action({ request }: { request: Request }) {
+  const { user } = await requireRole(request, ['admin']);
+  const formData = await request.formData();
+  const phoneNumber = formData.get("phoneNumber") as string;
+  const role = formData.get("role") as string;
+
+  try {
+    const result = await createInvitation(user.uid, phoneNumber, role);
+    return { success: true, inviteCode: result.inviteCode };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
 const Invitations: React.FC = () => {
+  const actionData = useActionData() as { success: boolean, inviteCode?: string, error?: string };
+  const submit = useSubmit();
+
   const [phoneNumber, setPhoneNumber] = useState('');
   const [role, setRole] = useState('editor');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ success: boolean, inviteCode?: string, error?: string } | null>(null);
 
+  useEffect(() => {
+    if (actionData) {
+      setLoading(false);
+      setResult(actionData);
+      if (actionData.success) {
+        setPhoneNumber('');
+      }
+    }
+  }, [actionData]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth.currentUser) return;
-    
     setLoading(true);
     setResult(null);
     
-    try {
-      // Note: We use the client-side profileService which calls the Cloud Function
-      const data = await createInvitation(phoneNumber, role);
-      setResult({ success: true, inviteCode: data.inviteCode });
-    } catch (error: any) {
-      setResult({ success: false, error: error.message });
-    } finally {
-      setLoading(false);
-    }
+    submit(
+      { phoneNumber, role },
+      { method: 'post' }
+    );
   };
 
   return (
     <div className={styles.container}>
-      <h1>Invite New Admin</h1>
-      <Card>
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <Input 
-            name="phoneNumber"
-            label="Mobile Number" 
-            placeholder="+919839098390" 
-            value={phoneNumber} 
-            onChange={(e) => setPhoneNumber(e.target.value)} 
-            required 
+      <h1>Manage Invitations</h1>
+      <p className={styles.subtitle}>Invite new team members by their phone number.</p>
+
+      <Card className={styles.formCard}>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <Input
+            label="Phone Number"
+            placeholder="+91..."
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
           />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <label style={{ fontSize: '0.875rem', fontWeight: 500 }}>Role</label>
+          
+          <div className={styles.field}>
+            <label className={styles.label}>Assign Role</label>
             <select 
-              name="role"
-              style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-              value={role}
+              value={role} 
               onChange={(e) => setRole(e.target.value)}
+              className={styles.select}
             >
-              <option value="editor">Editor (Inventory)</option>
-              <option value="manager">Manager (Orders/Refunds)</option>
-              <option value="admin">Admin (Full Access)</option>
+              <option value="editor">Editor</option>
+              <option value="manager">Manager</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
+
           <Button type="submit" loading={loading} style={{ marginTop: 'var(--spacing-4)' }}>
-            Generate Invitation
+            Generate Invite Code
           </Button>
         </form>
+
+        {result && (
+          <div className={`${styles.result} ${result.success ? styles.success : styles.error}`}>
+            {result.success ? (
+              <>
+                <p>Invite code generated successfully!</p>
+                <div className={styles.codeWrapper}>
+                  <code className={styles.code}>{result.inviteCode}</code>
+                </div>
+                <p className={styles.hint}>Share this code with the user to sign up.</p>
+              </>
+            ) : (
+              <p>Error: {result.error}</p>
+            )}
+          </div>
+        )}
       </Card>
-
-      {result?.error && (
-        <div style={{ color: 'var(--color-danger)', marginTop: 'var(--spacing-4)' }}>
-          {result.error}
-        </div>
-      )}
-
-      {result?.success && result.inviteCode && (
-        <div className={styles.result}>
-          <p>Invitation created! Share this code with the user:</p>
-          <div className={styles.inviteCode}>{result.inviteCode}</div>
-          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-            The role <strong>{role}</strong> will be assigned automatically when they sign up with {phoneNumber}.
-          </p>
-        </div>
-      )}
     </div>
   );
 };

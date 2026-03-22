@@ -1,30 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { fetchAllOrders, type Order } from "../../services/orderService";
+import React from "react";
+import { useLoaderData, useNavigate } from "react-router";
+import { fetchAllOrders } from "../../services/orderService.server";
+import { type Order } from "../../services/orderService";
+import { requireRole } from "../../lib/auth.server";
 import Card from "../../components/ui/Card/Card";
 import Button from "../../components/ui/Button/Button";
-import { useNavigate } from "react-router-dom";
 import styles from "./Orders.module.css";
 
+export async function loader({ request }: { request: Request }) {
+  await requireRole(request, ['admin']);
+  const orders = await fetchAllOrders();
+  return { orders };
+}
+
 const Orders: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { orders } = useLoaderData() as { orders: Order[] };
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const data = await fetchAllOrders();
-        setOrders(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadOrders();
-  }, []);
-
-  if (loading) return <div className={styles.empty}>Loading orders...</div>;
 
   const totalOrders = orders.length;
   const totalSales = orders
@@ -32,7 +23,7 @@ const Orders: React.FC = () => {
     .reduce((sum, o) => sum + o.total, 0);
   const aov =
     totalOrders > 0
-      ? totalSales / orders.filter((o) => o.status !== "refunded").length
+      ? totalSales / (orders.filter((o) => o.status !== "refunded").length || 1)
       : 0;
 
   return (

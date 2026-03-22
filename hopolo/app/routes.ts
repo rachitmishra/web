@@ -5,6 +5,7 @@ export default [
   route("product/:id", "../src/pages/ProductDetail.tsx"),
   route("cart", "../src/pages/Cart.tsx"),
   route("login", "../src/pages/Login.tsx"),
+  route("logout", "../src/pages/Logout.tsx"),
   route("checkout", "../src/pages/Checkout.tsx"),
   route("checkout/success/:orderId", "../src/pages/Success.tsx"),
   
@@ -28,5 +29,6 @@ export default [
     route("analytics", "../src/pages/Admin/Analytics.tsx"),
     route("invitations", "../src/pages/Admin/Invitations.tsx"),
     route("storefront", "../src/pages/Admin/Storefront.tsx"),
+    route("upload", "../src/pages/Admin/Upload.tsx"),
   ]),
 ] satisfies RouteConfig;

@@ -98,4 +98,18 @@ describe('Profile Page', () => {
       expect(screen.getByText('$200.00')).toBeInTheDocument();
     });
   });
+
+  it('should display the admin badge and link for admin users', async () => {
+    (profileServiceServer.getSecureProfile as any).mockResolvedValue({
+      ...mockProfile,
+      role: 'admin',
+    });
+
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText(/admin/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /admin panel/i })).toBeInTheDocument();
+    });
+  });
 });

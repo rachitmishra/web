@@ -1,23 +1,96 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLoaderData, useSubmit, useActionData } from 'react-router-dom';
 import Button from '../components/ui/Button/Button';
 import QuantitySelector from '../components/ui/QuantitySelector/QuantitySelector';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
 import styles from './ProductDetail.module.css';
-import { fetchProducts, type Product } from '../services/productService';
-import { addToCart } from '../services/cartService';
-import { fetchReviews, type Review, addReview } from '../services/reviewService';
+import { type Product } from '../services/productService';
+import { fetchProductById, fetchProducts } from '../services/productService.server';
+import { type Review } from '../services/reviewService';
+import { fetchReviews, addReview } from '../services/reviewService.server';
+import { addToCart } from '../services/cartService.server';
 import { auth } from '../lib/firebase';
+import { getAuthenticatedUser } from '../lib/auth.server';
+import { getSessionIdFromRequest } from '../lib/session';
 import { useSEO } from '../hooks/useSEO';
 
+export async function loader({ params }: { params: any }) {
+  const { id } = params;
+  if (!id) throw new Response("Product ID required", { status: 400 });
+
+  try {
+    const [product, reviews, allProducts] = await Promise.all([
+      fetchProductById(id),
+      fetchReviews(id),
+      fetchProducts()
+    ]);
+
+    if (!product) throw new Response("Product not found", { status: 404 });
+
+    const relatedProducts = allProducts
+      .filter(p => p.category === product.category && p.id !== id)
+      .slice(0, 4);
+
+    return { product, reviews, relatedProducts };
+  } catch (error) {
+    console.error("[ProductDetail Loader] Error:", error);
+    throw error;
+  }
+}
+
+export async function action({ request, params }: { request: Request, params: any }) {
+  const { id: productId } = params;
+  const formData = await request.formData();
+  const intent = formData.get("intent");
+
+  if (intent === "add-review") {
+    const user = await getAuthenticatedUser(request);
+    if (!user) throw new Response("Unauthorized", { status: 401 });
+    
+    const rating = parseInt(formData.get("rating") as string, 10);
+    const comment = formData.get("comment") as string;
+    const userName = formData.get("userName") as string;
+
+    await addReview({
+      productId,
+      userId: user.uid,
+      userName: userName || 'Friend',
+      rating,
+      comment
+    });
+    return { success: true };
+  }
+
+  if (intent === "add-to-cart") {
+    const sessionId = getSessionIdFromRequest(request);
+    const quantity = parseInt(formData.get("quantity") as string, 10);
+    const size = formData.get("size") as string;
+    const color = formData.get("color") as string;
+    const productJson = formData.get("product") as string;
+    
+    try {
+      const product = JSON.parse(productJson);
+      await addToCart(sessionId, product, quantity, { size, color });
+      return { success: true, cartUpdated: true };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  }
+
+  return null;
+}
+
 const ProductDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { product, reviews, relatedProducts } = useLoaderData() as {
+    product: Product;
+    reviews: Review[];
+    relatedProducts: Product[];
+  };
+  const actionData = useActionData() as { success?: boolean; cartUpdated?: boolean; error?: string };
+  const submit = useSubmit();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
+
   const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
@@ -43,48 +116,18 @@ const ProductDetail: React.FC = () => {
     }
   };
 
-  const loadProductAndReviews = async () => {
-    if (!id) return;
-    
-    // 5-second timeout to prevent permanent loading screen
-    const timeout = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error("Loading timeout")), 5000)
-    );
-
-    try {
-      const result = await Promise.race([
-        Promise.all([
-          fetchProducts(),
-          fetchReviews(id)
-        ]),
-        timeout
-      ]);
-      
-      const [products, reviewsData] = result as [Product[], Review[]];
-      
-      const found = products.find(p => p.id === id);
-      setProduct(found || null);
-      setReviews(reviewsData || []);
-      
-      if (found) {
-        const related = products.filter(p => p.category === found.category && p.id !== id).slice(0, 4);
-        setRelatedProducts(related);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadProductAndReviews();
-    setQuantity(1);
-    setSelectedSize(undefined);
-    setSelectedColor(undefined);
-  }, [id]);
+    if (actionData?.success) {
+      setSubmittingReview(false);
+      setAdding(false);
+      if (!actionData.cartUpdated) {
+        setNewComment('');
+        setNewRating(3);
+      }
+    }
+  }, [actionData]);
 
-  const handleAddToCart = async (p: Product = product!, q: number = quantity) => {
+  const handleAddToCart = (p: Product = product!, q: number = quantity) => {
     if (!p) return;
     
     if (p.sizes && p.sizes.length > 0 && !selectedSize) {
@@ -97,43 +140,52 @@ const ProductDetail: React.FC = () => {
     }
 
     setAdding(true);
-    try {
-      await addToCart(p, q, { size: selectedSize, color: selectedColor });
-    } catch (err) {
-      console.error('Failed to add to cart:', err);
-    } finally {
-      setAdding(false);
-    }
+    submit(
+      { 
+        intent: "add-to-cart", 
+        product: JSON.stringify(p), 
+        quantity: q.toString(),
+        size: selectedSize || "",
+        color: selectedColor || ""
+      },
+      { method: "post" }
+    );
   };
 
   const handleAddReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth.currentUser || !id) return;
+    if (!auth.currentUser) return;
     
     setSubmittingReview(true);
-    try {
-      await addReview({
-        productId: id,
-        userId: auth.currentUser.uid,
-        userName: auth.currentUser.displayName || 'Friend',
-        rating: newRating,
-        comment: newComment
-      });
-      setNewComment('');
-      setNewRating(3);
-      await loadProductAndReviews();
-    } catch (err) {
-      console.error('Failed to add review:', err);
-    } finally {
-      setSubmittingReview(false);
-    }
+    submit(
+      { 
+        intent: "add-review", 
+        rating: newRating.toString(), 
+        comment: newComment,
+        userName: auth.currentUser.displayName || ''
+      },
+      { method: "post" }
+    );
   };
-
-  if (loading) return <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Loading...</div>;
-  if (!product) return <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Product not found.</div>;
 
   return (
     <div className={styles.container}>
+      {actionData?.error && (
+        <div 
+          style={{ 
+            backgroundColor: 'rgba(255, 0, 0, 0.1)', 
+            color: 'var(--color-danger)', 
+            padding: '1rem', 
+            borderRadius: 'var(--radius-md)', 
+            marginBottom: '1rem',
+            textAlign: 'center',
+            border: '1px solid var(--color-danger)'
+          }}
+        >
+          {actionData.error}
+        </div>
+      )}
+
       <Button variant="outline" onClick={() => navigate(-1)} style={{ width: 'fit-content' }}>
         &larr; Back
       </Button>

@@ -3,7 +3,6 @@ import Input from '../../components/ui/Input/Input';
 import Button from '../../components/ui/Button/Button';
 import styles from './ProductForm.module.css';
 import type { Variant } from '../../services/productService';
-import { uploadProductImages } from '../../services/storageService';
 
 interface ProductFormProps {
   onCancel: () => void;
@@ -40,10 +39,23 @@ const ProductForm: React.FC<ProductFormProps> = ({ onCancel, onSave }) => {
       setUploading(true);
       try {
         const files = Array.from(e.target.files);
-        const urls = await uploadProductImages(files);
-        setImages([...images, ...urls]);
-      } catch (err) {
+        const uploadFormData = new FormData();
+        files.forEach(file => uploadFormData.append("images", file));
+
+        const response = await fetch("/admin/upload", {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        const result = await response.json();
+        if (result.success && result.urls) {
+          setImages([...images, ...result.urls]);
+        } else {
+          alert(`Upload failed: ${result.error || "Unknown error"}`);
+        }
+      } catch (err: any) {
         console.error('Upload failed:', err);
+        alert(`Upload error: ${err.message}`);
       } finally {
         setUploading(false);
       }

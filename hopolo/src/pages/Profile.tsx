@@ -3,14 +3,13 @@ import { useLoaderData, useSubmit, useActionData } from 'react-router';
 import { auth } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { 
-  saveAddress, 
-  deleteAddress,
   type UserProfile,
   type Address
 } from '../services/profileService';
-import { getSecureProfile, updateSecureProfile } from '../services/profileService.server';
+import { getSecureProfile, updateSecureProfile, saveAddress, deleteAddress } from '../services/profileService.server';
 import { getAuthenticatedUser } from '../lib/auth.server';
-import { fetchOrdersByUserId } from '../services/orderService';
+import { fetchOrdersByUserId } from '../services/orderService.server';
+import { useNavigate, Link } from 'react-router-dom';
 import Button from '../components/ui/Button/Button';
 import Card from '../components/ui/Card/Card';
 import Input from '../components/ui/Input/Input';
@@ -18,10 +17,14 @@ import styles from './Profile.module.css';
 
 export async function loader({ request }: { request: Request }) {
   const user = await getAuthenticatedUser(request);
-  if (!user) return { profile: null };
+  if (!user) return { profile: null, orders: [] };
   
-  const profile = await getSecureProfile(user.uid);
-  return { profile };
+  const [profile, orders] = await Promise.all([
+    getSecureProfile(user.uid),
+    fetchOrdersByUserId(user.uid)
+  ]);
+  
+  return { profile, orders };
 }
 
 export async function action({ request }: { request: Request }) {
@@ -38,18 +41,33 @@ export async function action({ request }: { request: Request }) {
     return { success: true };
   }
 
+  if (intent === "add-address") {
+    const street = formData.get("street") as string;
+    const city = formData.get("city") as string;
+    const zip = formData.get("zip") as string;
+    await saveAddress(user.uid, { street, city, zip });
+    return { success: true };
+  }
+
+  if (intent === "delete-address") {
+    const index = parseInt(formData.get("index") as string, 10);
+    await deleteAddress(user.uid, index);
+    return { success: true };
+  }
+
   return null;
 }
 
 const Profile: React.FC = () => {
-  const { profile: serverProfile } = useLoaderData() as { profile: any };
+  const { profile: serverProfile, orders: serverOrders } = useLoaderData() as { profile: any, orders: any[] };
   const actionData = useActionData() as { success?: boolean };
   const submit = useSubmit();
+  const navigate = useNavigate();
 
   const [profile, setProfile] = useState<UserProfile | null>(serverProfile);
   const [loading, setLoading] = useState(!serverProfile);
   const [saving, setSaving] = useState(false);
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<any[]>(serverOrders);
 
   const [displayName, setDisplayName] = useState(serverProfile?.displayName || '');
   const [emoji, setEmoji] = useState(serverProfile?.emoji || '');
@@ -60,29 +78,39 @@ const Profile: React.FC = () => {
   const [newCity, setNewCity] = useState("");
   const [newZip, setNewZip] = useState("");
 
-  const loadClientData = async (uid: string) => {
-    const ordersData = await fetchOrdersByUserId(uid);
-    setOrders(ordersData);
-    setLoading(false);
-  };
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        loadClientData(user.uid);
+      if (!user) {
+        setLoading(false);
+        navigate('/login');
       } else {
         setLoading(false);
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (actionData?.success) {
       setSaving(false);
-      setProfile(prev => prev ? { ...prev, displayName, emoji } : null);
+      setShowAddressForm(false);
+      setNewStreet("");
+      setNewCity("");
+      setNewZip("");
     }
   }, [actionData]);
+
+  // Sync data when loader data changes
+  useEffect(() => {
+    if (serverProfile) {
+      setProfile(serverProfile);
+      setDisplayName(serverProfile.displayName || '');
+      setEmoji(serverProfile.emoji || '');
+    }
+    if (serverOrders) {
+      setOrders(serverOrders);
+    }
+  }, [serverProfile, serverOrders]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,50 +123,40 @@ const Profile: React.FC = () => {
 
   const handleAddAddress = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = auth.currentUser;
-    if (user) {
-      setSaving(true);
-      try {
-        await saveAddress(user.uid, {
-          street: newStreet,
-          city: newCity,
-          zip: newZip,
-        });
-        // In full RR SSR, we'd use an action for this too.
-        // For now, reload via client service.
-        // const updatedProfile = await getSecureProfile(user.uid); // REMOVED to fix build
-        
-        // Wait, I can't call server service from client. 
-        // I should stick to the pattern or migrate addresses too.
-        // For now, I'll let the user refresh or implement address action later.
-        setShowAddressForm(false);
-        setNewStreet("");
-        setNewCity("");
-        setNewZip("");
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setSaving(false);
-      }
-    }
+    setSaving(true);
+    submit(
+      { intent: "add-address", street: newStreet, city: newCity, zip: newZip },
+      { method: "post" }
+    );
   };
 
   const handleDeleteAddress = async (index: number) => {
-    const user = auth.currentUser;
-    if (user) {
-      try {
-        await deleteAddress(user.uid, index);
-      } catch (err) {
-        console.error(err);
-      }
-    }
+    if (!window.confirm("Delete this address?")) return;
+    submit(
+      { intent: "delete-address", index: index.toString() },
+      { method: "post" }
+    );
   };
 
-  if (loading) return <div>Loading profile...</div>;
+  if (loading) return null;
 
   return (
     <div className={styles.container}>
-      <h1>Your Profile</h1>
+      <div className={styles.header}>
+        <div className={styles.titleWrapper}>
+          <h1>Your Profile</h1>
+          {profile?.role === 'admin' && (
+            <span className={styles.adminBadge}>Admin</span>
+          )}
+        </div>
+        {profile?.role === 'admin' && (
+          <Link to="/admin" style={{ textDecoration: 'none' }}>
+            <Button variant="outline" style={{ fontSize: '0.875rem' }}>
+              Admin Panel &rarr;
+            </Button>
+          </Link>
+        )}
+      </div>
 
       <Card>
         <form className={styles.form} onSubmit={handleSave}>

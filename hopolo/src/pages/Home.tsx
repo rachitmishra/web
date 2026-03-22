@@ -1,24 +1,87 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useMemo, useRef } from "react";
+import { useNavigate, useLoaderData, useSubmit, useActionData } from "react-router-dom";
 import CinematicHero from '../components/ui/Hero/CinematicHero';
 import CategoryTabs from '../components/ui/CategoryTabs/CategoryTabs';
 import ProductCard from '../components/ui/ProductCard/ProductCard';
 import BestSellers from '../components/ui/BestSellers/BestSellers';
-import { fetchProducts, fetchCategories, fetchBestSellers, type Product, type Category } from '../services/productService';
-import { getStorefrontSettings, type StorefrontSettings, DEFAULT_SETTINGS } from '../services/storefrontService';
+import { type Product, type Category } from '../services/productService';
+import { fetchProducts, fetchCategories, fetchBestSellers } from '../services/productService.server';
+import { type StorefrontSettings, DEFAULT_SETTINGS } from '../services/storefrontService';
+import { getStorefrontSettings } from '../services/storefrontService.server';
+import { addToCart } from '../services/cartService.server';
+import { getSessionIdFromRequest } from '../lib/session';
 import { useSEO } from '../hooks/useSEO';
 import styles from './Home.module.css';
 
+export async function loader() {
+  try {
+    const [fProducts, fCategories, fBestSellers, fSettings] = await Promise.all([
+      fetchProducts(),
+      fetchCategories(),
+      fetchBestSellers(),
+      getStorefrontSettings()
+    ]);
+
+    const fetchedCats = fCategories || [];
+    const categories = fetchedCats.find((c) => c.id === "all") 
+      ? fetchedCats 
+      : [{ id: "all", name: "All" }, ...fetchedCats];
+
+    return {
+      products: fProducts || [],
+      categories,
+      bestSellers: fBestSellers || [],
+      settings: fSettings || DEFAULT_SETTINGS
+    };
+  } catch (error) {
+    console.error("[Home Loader] Error loading data:", error);
+    return {
+      products: [],
+      categories: [{ id: "all", name: "All" }],
+      bestSellers: [],
+      settings: DEFAULT_SETTINGS
+    };
+  }
+}
+
+export async function action({ request }: { request: Request }) {
+  const sessionId = getSessionIdFromRequest(request);
+  const formData = await request.formData();
+  const intent = formData.get("intent");
+
+  if (intent === "add-to-cart") {
+    const productJson = formData.get("product") as string;
+    if (!productJson) {
+      return { success: false, error: "Product data missing" };
+    }
+    try {
+      const product = JSON.parse(productJson);
+      if (!product || !product.id) {
+        throw new Error("Invalid product data");
+      }
+      await addToCart(sessionId, product, 1);
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  }
+  return null;
+}
+
 const Home: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [bestSellers, setBestSellers] = useState<Product[]>([]);
-  const [settings, setSettings] = useState<StorefrontSettings>(DEFAULT_SETTINGS);
+  const { products, categories, bestSellers, settings } = useLoaderData() as {
+    products: Product[];
+    categories: Category[];
+    bestSellers: Product[];
+    settings: StorefrontSettings;
+  };
+
+  const actionData = useActionData() as { success?: boolean; error?: string };
   const [activeCategoryId, setActiveCategoryId] = useState('all');
   const [isGridChanging, setIsGridChanging] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
   
   const navigate = useNavigate();
+  const submit = useSubmit();
   const productSectionRef = useRef<HTMLElement>(null);
 
   const seoTitle = activeCategoryId === 'all' 
@@ -31,51 +94,6 @@ const Home: React.FC = () => {
     ogType: 'website'
   });
 
-  useEffect(() => {
-    let mounted = true;
-    
-    const loadData = async () => {
-      try {
-        // Individual fetches so one failure doesn't block the rest
-        const pProducts = fetchProducts().catch(e => { console.error("fetchProducts error:", e); return []; });
-        const pCategories = fetchCategories().catch(e => { console.error("fetchCategories error:", e); return []; });
-        const pBestSellers = fetchBestSellers().catch(e => { console.error("fetchBestSellers error:", e); return []; });
-        const pSettings = getStorefrontSettings().catch(e => { console.error("getStorefrontSettings error:", e); return DEFAULT_SETTINGS; });
-
-        const [fProducts, fCategories, fBestSellers, fSettings] = await Promise.all([
-          pProducts, pCategories, pBestSellers, pSettings
-        ]);
-
-        if (!mounted) return;
-
-        setProducts(fProducts || []);
-        setBestSellers(fBestSellers || []);
-        setSettings(fSettings || DEFAULT_SETTINGS);
-
-        // Ensure "All" is always present
-        const fetchedCats = fCategories || [];
-        const hasAll = fetchedCats.find((c) => c.id === "all");
-        if (!hasAll) {
-          setCategories([{ id: "all", name: "All" }, ...fetchedCats]);
-        } else {
-          setCategories(fetchedCats);
-        }
-      } catch (error) {
-        console.error("[Home] Error loading data:", error);
-      } finally {
-        if (mounted) {
-          setIsInitialLoad(false);
-        }
-      }
-    };
-
-    loadData();
-    
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   const handleCategoryChange = (id: string) => {
     if (id === activeCategoryId) return;
     
@@ -84,6 +102,13 @@ const Home: React.FC = () => {
       setActiveCategoryId(id);
       setIsGridChanging(false);
     }, 300);
+  };
+
+  const handleAddToCart = (product: Product) => {
+    submit(
+      { intent: "add-to-cart", product: JSON.stringify(product) },
+      { method: "post" }
+    );
   };
 
   const filteredProducts = useMemo(() => {
@@ -106,7 +131,27 @@ const Home: React.FC = () => {
       />
 
       <section ref={productSectionRef} className={styles.productSection}>
-        {bestSellers.length > 0 && <BestSellers products={bestSellers} />}
+        {actionData?.error && (
+          <div 
+            style={{ 
+              backgroundColor: 'rgba(255, 0, 0, 0.1)', 
+              color: 'var(--color-danger)', 
+              padding: '1rem', 
+              borderRadius: 'var(--radius-md)', 
+              marginBottom: '2rem',
+              textAlign: 'center',
+              border: '1px solid var(--color-danger)'
+            }}
+          >
+            {actionData.error}
+          </div>
+        )}
+        {bestSellers.length > 0 && (
+          <BestSellers 
+            products={bestSellers} 
+            onAddToCart={handleAddToCart}
+          />
+        )}
 
         <CategoryTabs
           categories={categories}
@@ -119,14 +164,14 @@ const Home: React.FC = () => {
             <div key={product.id} className={styles.productCardEntry} style={{ animationDelay: `${index * 0.05}s` }}>
               <ProductCard
                 product={product}
-                onAddToCart={(p) => console.log("Add to cart:", p)}
+                onAddToCart={handleAddToCart}
                 onClick={(id) => navigate(`/product/${id}`)}
               />
             </div>
           ))}
         </div>
 
-        {!isInitialLoad && filteredProducts.length === 0 && (
+        {filteredProducts.length === 0 && (
           <div
             style={{
               textAlign: "center",
@@ -137,12 +182,6 @@ const Home: React.FC = () => {
             No products found in this category.
           </div>
         )}
-        
-        {isInitialLoad && (
-          <div style={{ textAlign: "center", padding: "var(--spacing-8)", opacity: 0.5 }}>
-            Loading products...
-          </div>
-        )}
       </section>
 
       <section className={styles.reviewSection}>
@@ -150,7 +189,7 @@ const Home: React.FC = () => {
           Loved by Customers
         </h2>
         <div className={styles.reviewGrid}>
-          {settings.reviews.map((rev, i) => (
+          {(settings.reviews || []).map((rev, i) => (
             <div key={i} className={styles.reviewCard}>
               <div className={styles.reviewerName}>
                 {rev.name} {rev.emoji}
