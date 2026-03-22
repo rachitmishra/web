@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import Header from './Header';
 import * as cartService from '../../../services/cartService';
 import { auth } from '../../../lib/firebase';
@@ -28,13 +28,11 @@ describe('Header', () => {
   });
 
   const renderHeader = (path = '/') => {
-    return render(
-      <MemoryRouter initialEntries={[path]}>
-        <Routes>
-          <Route path="*" element={<Header onOpenCart={() => {}} />} />
-        </Routes>
-      </MemoryRouter>
+    const router = createMemoryRouter(
+      [{ path: '*', element: <Header onOpenCart={() => {}} /> }],
+      { initialEntries: [path] }
     );
+    return render(<RouterProvider router={router} />);
   };
 
   it('should render the logo and cart icon', () => {

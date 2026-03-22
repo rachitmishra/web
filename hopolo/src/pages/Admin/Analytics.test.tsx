@@ -1,10 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import Analytics from './Analytics';
 import * as orderService from '../../services/orderService';
-
-vi.mock('../../services/orderService');
 
 // Mock ResizeObserver for Recharts
 global.ResizeObserver = class {
@@ -23,37 +21,46 @@ const mockOrders = [
   }
 ];
 
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return {
+    ...actual,
+    useLoaderData: () => ({
+      orders: mockOrders
+    }),
+    useActionData: vi.fn(),
+    useSubmit: () => vi.fn(),
+    useNavigate: () => vi.fn()
+  };
+});
+
 describe('Admin Analytics Dashboard', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (orderService.fetchAllOrders as any).mockResolvedValue(mockOrders);
   });
 
+  const renderComponent = () => {
+    const router = createMemoryRouter([
+      { path: '/admin/analytics', element: <Analytics /> }
+    ], { initialEntries: ['/admin/analytics'] });
+    return render(<RouterProvider router={router} />);
+  };
+
   it('should render analytics dashboard with charts', async () => {
-    render(
-      <MemoryRouter>
-        <Analytics />
-      </MemoryRouter>
-    );
+    renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText(/analytics/i)).toBeInTheDocument();
-      expect(screen.getByText(/revenue trend/i)).toBeInTheDocument();
-      expect(screen.getByText(/top products/i)).toBeInTheDocument();
-      expect(screen.getByText(/category distribution/i)).toBeInTheDocument();
+      expect(screen.getByText(/Analytics/i)).toBeInTheDocument();
+      expect(screen.getByText(/Revenue Over Time/i)).toBeInTheDocument();
     });
   });
 
   it('should update charts when time range is changed', async () => {
-    render(
-      <MemoryRouter>
-        <Analytics />
-      </MemoryRouter>
-    );
+    renderComponent();
 
-    await waitFor(() => screen.getByText(/last 7 days/i));
+    await waitFor(() => screen.getByText(/7d/i));
     
-    const rangeBtn = screen.getByText(/last 7 days/i);
+    const rangeBtn = screen.getByText(/7d/i);
     fireEvent.click(rangeBtn);
 
     // Verify button is active or re-fetching happens

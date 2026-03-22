@@ -1,17 +1,5 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  Package, 
-  Store, 
-  Megaphone, 
-  Palette, 
-  BarChart3, 
-  Mail, 
-  History, 
-  Leaf,
-  ChevronLeft,
-  ChevronRight
-} from 'lucide-react';
 import styles from './AdminSidebar.module.css';
 
 interface AdminSidebarProps {
@@ -21,36 +9,22 @@ interface AdminSidebarProps {
 }
 
 const navItems = [
-  { path: '/admin/orders', label: 'Orders', icon: <Package size={20} /> },
-  { path: '/admin/inventory', label: 'Inventory', icon: <Store size={20} /> },
-  { path: '/admin/marketing', label: 'Marketing', icon: <Megaphone size={20} /> },
-  { path: '/admin/storefront', label: 'Storefront', icon: <Palette size={20} /> },
-  { path: '/admin/analytics', label: 'Analytics', icon: <BarChart3 size={20} /> },
-  { path: '/admin/invitations', label: 'Invitations', icon: <Mail size={20} /> },
-  { path: '/admin/email-logs', label: 'Email Logs', icon: <History size={20} /> },
-  { path: '/admin/seed', label: 'Seed Data', icon: <Leaf size={20} /> },
+  { path: '/admin/orders', label: 'ORDERS', icon: 'shopping_cart' },
+  { path: '/admin/inventory', label: 'INVENTORY', icon: 'inventory_2' },
+  { path: '/admin/storefront', label: 'STOREFRONT', icon: 'search_gear' },
+  { path: '/admin/analytics', label: 'DASHBOARD', icon: 'grid_view' },
+  { path: '/admin/invitations', label: 'ACCESS_LOGS', icon: 'terminal' },
+  { path: '/admin/email-logs', label: 'EMAIL_LOGS', icon: 'history' },
 ];
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onItemClick }) => {
-  const handleToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onToggle();
-  };
-
   return (
     <aside 
       className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}
-      onClick={() => isCollapsed && onToggle()}
-      style={{ cursor: isCollapsed ? 'pointer' : 'default' }}
     >
-      <div className={styles.toggleWrapper}>
-        <button 
-          onClick={handleToggle} 
-          className={styles.toggleBtn}
-          aria-label="Toggle Sidebar"
-        >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
+      <div className={styles.logoWrapper}>
+        <h1 className={styles.logo}>KINETIC_BRUTAL</h1>
+        <p className={styles.version}>ADMIN_V1.0</p>
       </div>
 
       <nav className={styles.nav}>
@@ -67,11 +41,18 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onIt
             }
             title={isCollapsed ? item.label : undefined}
           >
-            <span className={styles.icon}>{item.icon}</span>
+            <span className={`material-symbols-outlined ${styles.icon}`}>{item.icon}</span>
             <span className={styles.label}>{item.label}</span>
           </NavLink>
         ))}
       </nav>
+
+      <div className={styles.footer}>
+        <NavLink to="/logout" className={styles.navLink}>
+          <span className={`material-symbols-outlined ${styles.icon}`}>logout</span>
+          <span className={styles.label}>LOGOUT</span>
+        </NavLink>
+      </div>
     </aside>
   );
 };

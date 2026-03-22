@@ -57,6 +57,7 @@ const PhoneSignIn: React.FC<PhoneSignInProps> = ({ onSubmit, loading = false }) 
       <Button 
         type="submit" 
         loading={loading} 
+        disabled={phoneNumber.length < 10 || loading}
       >
         {loading ? 'Sending...' : 'Send Code'}
       </Button>
