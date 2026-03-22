@@ -43,8 +43,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onIt
       onClick={() => isCollapsed && onToggle()}
       style={{ cursor: isCollapsed ? 'pointer' : 'default' }}
     >
-      <div className={styles.header}>
-        {!isCollapsed && <span className={styles.logo}>Hopolo Admin</span>}
+      <div className={styles.toggleWrapper}>
         <button 
           onClick={handleToggle} 
           className={styles.toggleBtn}
@@ -69,7 +68,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle, onIt
             title={isCollapsed ? item.label : undefined}
           >
             <span className={styles.icon}>{item.icon}</span>
-            {!isCollapsed && <span className={styles.label}>{item.label}</span>}
+            <span className={styles.label}>{item.label}</span>
           </NavLink>
         ))}
       </nav>

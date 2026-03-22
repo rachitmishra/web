@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../Button/Button';
+import { clearRecaptcha } from '../../../services/authService';
 import styles from './Auth.module.css';
 
 interface PhoneSignInProps {
@@ -10,21 +11,31 @@ interface PhoneSignInProps {
 const PhoneSignIn: React.FC<PhoneSignInProps> = ({ onSubmit, loading = false }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
 
+  const [error, setError] = useState('');
+
+  // Clean up reCAPTCHA on unmount
+  useEffect(() => {
+    return () => {
+      clearRecaptcha();
+    };
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const digitsOnly = phoneNumber.replace(/\D/g, '');
     if (digitsOnly.length === 10) {
+      setError('');
       onSubmit(`+91${digitsOnly}`);
+    } else {
+      setError('Please enter a valid 10-digit number.');
     }
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 10);
     setPhoneNumber(value);
+    if (value.length === 10) setError('');
   };
-
-  // Button disabled if not exactly 10 digits
-  const isButtonDisabled = loading || phoneNumber.length !== 10;
 
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
@@ -39,14 +50,13 @@ const PhoneSignIn: React.FC<PhoneSignInProps> = ({ onSubmit, loading = false }) 
           disabled={loading}
           required
           autoFocus
-          pattern="[0-9]{10}"
         />
       </div>
+      {error && <div className={styles.localError}>{error}</div>}
       <div id="recaptcha-container"></div>
       <Button 
         type="submit" 
         loading={loading} 
-        disabled={isButtonDisabled}
       >
         {loading ? 'Sending...' : 'Send Code'}
       </Button>

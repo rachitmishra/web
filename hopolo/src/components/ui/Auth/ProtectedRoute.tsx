@@ -1,28 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { auth } from "../../../lib/firebase";
-import { onAuthStateChanged, type User } from "firebase/auth";
+import React from "react";
+import { Navigate, useLocation, useRouteLoaderData } from "react-router-dom";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(auth.currentUser);
-  const [loading, setLoading] = useState(true);
+  const rootData = useRouteLoaderData('root') as { serverUser: any } | undefined;
   const location = useLocation();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+  if (!rootData) return null;
 
-  if (loading) return <div>Loading auth state...</div>;
-
-  if (!user) {
+  if (!rootData.serverUser) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

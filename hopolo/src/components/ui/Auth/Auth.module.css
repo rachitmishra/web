@@ -56,3 +56,10 @@
   outline: 2px solid var(--color-primary);
   border-color: transparent;
 }
+
+.localError {
+  color: var(--color-danger);
+  font-size: 0.75rem;
+  margin-top: calc(-1 * var(--spacing-2));
+  font-weight: 500;
+}

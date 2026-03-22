@@ -1,32 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { auth } from '../../../lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import { getUserProfile } from '../../../services/profileService';
+import React from 'react';
+import { Navigate, useLocation, useRouteLoaderData } from 'react-router-dom';
 
 interface AdminRouteProps {
   children: React.ReactNode;
 }
 
 const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(true);
+  const rootData = useRouteLoaderData('root') as { serverUser: any, role: string } | undefined;
   const location = useLocation();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const profile = await getUserProfile(user.uid);
-        setIsAdmin(profile?.role === 'admin');
-      } else {
-        setIsAdmin(false);
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+  const isAdmin = rootData?.role === 'admin';
+  const isLoading = !rootData && !isAdmin; // Basic heuristic
 
-  if (loading) return <div>Checking authorization...</div>;
+  // Note: loader in AdminLayout already handles server-side check.
+  // This client-side check is for UX and avoiding flashes.
+  
+  if (!rootData) return null; // Wait for root loader
 
   if (!isAdmin) {
     return <Navigate to="/" state={{ from: location }} replace />;

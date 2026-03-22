@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, redirect } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import AdminSidebar from './AdminSidebar/AdminSidebar';
 import styles from './AdminLayout.module.css';
+import { requireRole } from '../../lib/auth.server';
+import AdminRoute from '../ui/Auth/AdminRoute';
+
+export async function loader({ request }: { request: Request }) {
+  const url = new URL(request.url);
+  try {
+    await requireRole(request, ['admin']);
+    return null;
+  } catch (error) {
+    if (error instanceof Response && error.status === 401) {
+      return redirect(`/login?from=${encodeURIComponent(url.pathname)}`);
+    }
+    // For other cases like 403 (Forbidden), we redirect to home
+    console.warn("[AdminLayout] Unauthorized access attempt:", url.pathname);
+    return redirect("/");
+  }
+}
 
 const AdminLayout: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -43,48 +60,36 @@ const AdminLayout: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <div className={styles.adminLayout} style={{ '--admin-bg-color': currentTheme.color } as React.CSSProperties}>
-      {/* Background Illustration */}
-      <div className={styles.bgIllustration} aria-hidden="true">
-        {currentTheme.emoji}
-      </div>
+    <AdminRoute>
+      <div className={styles.adminLayout} style={{ '--admin-bg-color': currentTheme.color } as React.CSSProperties}>
+        {/* Background Illustration */}
+        <div className={styles.bgIllustration} aria-hidden="true">
+          {currentTheme.emoji}
+        </div>
 
-      {/* Mobile Overlay */}
-      {isMobile && !isCollapsed && (
-        <div 
-          className={styles.overlay} 
-          onClick={() => setIsCollapsed(true)} 
-        />
-      )}
-
-      <AdminSidebar 
-        isCollapsed={isCollapsed} 
-        onToggle={() => setIsCollapsed(prev => !prev)} 
-        onItemClick={() => setIsCollapsed(true)}
-      />
-
-      <div className={styles.mainWrapper}>
-        {/* Mobile Header */}
-        {isMobile && (
-          <header className={styles.mobileHeader}>
-            <button 
-              className={styles.hamburger} 
-              onClick={() => setIsCollapsed(false)}
-              aria-label="Open Navigation"
-            >
-              <Menu size={24} />
-            </button>
-            <span className={styles.mobileLogo}>Hopolo Admin</span>
-          </header>
+        {/* Mobile Overlay */}
+        {isMobile && !isCollapsed && (
+          <div 
+            className={styles.overlay} 
+            onClick={() => setIsCollapsed(true)} 
+          />
         )}
 
-        <main className={styles.mainContent}>
-          <div className={styles.container}>
-            <Outlet />
-          </div>
-        </main>
+        <AdminSidebar 
+          isCollapsed={isCollapsed} 
+          onToggle={() => setIsCollapsed(prev => !prev)} 
+          onItemClick={() => setIsCollapsed(true)}
+        />
+
+        <div className={styles.mainWrapper}>
+          <main className={styles.mainContent}>
+            <div className={styles.container}>
+              <Outlet />
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </AdminRoute>
   );
 };
 

@@ -8,16 +8,36 @@
   position: sticky;
   top: 0;
   z-index: 50;
+  transition: all 0.3s ease;
+  height: var(--header-height);
+}
+
+.transparent {
+  background-color: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.transparent .logo,
+.transparent .link,
+.transparent .linkButton,
+.transparent .cartButton {
+  color: #fff;
+}
+
+.scrolled {
+  background-color: var(--color-surface);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
   font-family: var(--font-family-logo);
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 400;
   text-decoration: none;
   color: var(--color-primary);
-  letter-spacing: -0.05em;
-  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   transition: opacity 0.2s ease;
 }
 

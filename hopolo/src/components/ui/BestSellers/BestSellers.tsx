@@ -1,18 +1,19 @@
 import React from 'react';
 import ProductCard from '../ProductCard/ProductCard';
-import { Product } from '../../../services/productService';
+import type { Product } from '../../../services/productService';
 import styles from './BestSellers.module.css';
 import { useNavigate } from 'react-router-dom';
 
 interface BestSellersProps {
   products: Product[];
+  onAddToCart?: (product: Product) => void;
 }
 
-const BestSellers: React.FC<BestSellersProps> = ({ products }) => {
+const BestSellers: React.FC<BestSellersProps> = ({ products, onAddToCart }) => {
   const navigate = useNavigate();
 
   if (!products || products.length === 0) {
-    return null; // Or return <div className={styles.empty}>No best sellers yet.</div>
+    return null;
   }
 
   return (
@@ -23,7 +24,7 @@ const BestSellers: React.FC<BestSellersProps> = ({ products }) => {
           <ProductCard
             key={product.id}
             product={product}
-            onAddToCart={(p) => console.log('Add to cart', p)}
+            onAddToCart={onAddToCart}
             onClick={(id) => navigate(`/product/${id}`)}
           />
         ))}

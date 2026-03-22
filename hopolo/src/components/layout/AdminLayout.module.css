@@ -1,6 +1,6 @@
 .adminLayout {
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--header-height));
   background-color: var(--admin-bg-color, var(--color-bg));
   transition: background-color 0.5s ease;
   position: relative;
@@ -34,60 +34,27 @@
 }
 
 .container {
-  padding: var(--spacing-6);
-  max-width: 1200px;
+  padding: var(--spacing-10) var(--spacing-6);
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
-}
-
-/* Mobile Header */
-.mobileHeader {
-  display: flex;
-  align-items: center;
-  padding: 0 var(--spacing-4);
-  height: 64px;
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  gap: var(--spacing-4);
-  position: sticky;
-  top: 0;
-  z-index: 40;
-}
-
-.hamburger {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mobileLogo {
-  font-family: var(--font-family-logo);
-  font-size: 1.25rem;
-  color: var(--color-primary);
-  text-transform: lowercase;
-  letter-spacing: -0.04em;
 }
 
 /* Overlay */
 .overlay {
   position: fixed;
-  top: 0;
+  top: var(--header-height);
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   z-index: 90;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .container {
-    padding: var(--spacing-4);
+    padding: var(--spacing-6) var(--spacing-4);
   }
 }

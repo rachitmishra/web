@@ -3,6 +3,7 @@ import Header from './Header/Header';
 import PromoBanner from '../ui/PromoBanner/PromoBanner';
 import MaintenanceGuard from '../ui/Maintenance/MaintenanceGuard';
 import MiniCart from '../ui/MiniCart/MiniCart';
+import DebugOverlay from '../ui/Debug/DebugOverlay';
 import styles from './MainLayout.module.css';
 import { subscribeToCart } from '../../services/cartService';
 import { Link } from 'react-router-dom';
@@ -28,6 +29,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <div className={styles.container}>
+      <DebugOverlay />
       <MaintenanceGuard>
         <PromoBanner />
         <Header onOpenCart={() => setIsCartOpen(true)} />

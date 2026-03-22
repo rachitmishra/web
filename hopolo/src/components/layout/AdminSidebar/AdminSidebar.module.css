@@ -1,87 +1,70 @@
 .sidebar {
   width: 240px;
-  height: 100vh;
+  height: calc(100vh - var(--header-height));
   background-color: var(--color-surface);
   border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
   position: sticky;
-  top: 0;
+  top: var(--header-height);
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: 40;
 }
 
 .collapsed {
   width: 64px;
 }
 
-.collapsed .header {
-  padding: var(--spacing-4) 0;
-  justify-content: center;
-}
-
-.collapsed .toggleBtn {
-  width: 40px;
-  height: 40px;
-}
-
-.collapsed .navLink {
-  justify-content: center;
-  padding: var(--spacing-3) 0;
-}
-
-.header {
-  padding: var(--spacing-4) var(--spacing-3) var(--spacing-4) var(--spacing-4);
+.toggleWrapper {
+  padding: var(--spacing-4) var(--spacing-3);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 64px;
-  border-bottom: 1px solid var(--color-border);
+  justify-content: flex-end;
 }
 
-.logo {
-  font-family: var(--font-family-logo);
-  font-weight: 400;
-  font-size: 1.1rem;
-  color: var(--color-primary);
-  white-space: nowrap;
-  text-transform: lowercase;
-  letter-spacing: -0.04em;
+.collapsed .toggleWrapper {
+  justify-content: center;
 }
 
 .toggleBtn {
   background: none;
-  border: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
   padding: 8px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
 .toggleBtn:hover {
-  background-color: var(--color-bg-alt);
+  background-color: var(--color-primary);
+  color: #fff;
 }
 
 .nav {
   padding: var(--spacing-2);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .navLink {
   display: flex;
   align-items: center;
-  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-4);
   text-decoration: none;
   color: var(--color-text);
   border-radius: var(--radius-md);
   transition: all 0.2s;
   white-space: nowrap;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .navLink:hover {
@@ -91,26 +74,38 @@
 .active {
   background-color: var(--color-primary);
   color: #fff;
-  font-weight: 600;
 }
 
 .icon {
-  font-size: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
+  min-width: 20px;
 }
 
 .label {
   margin-left: var(--spacing-3);
-  font-size: 0.875rem;
+  transition: opacity 0.2s;
+}
+
+.collapsed .label {
+  display: none;
+}
+
+.collapsed .navLink {
+  justify-content: center;
+  padding: var(--spacing-3) 0;
+}
+
+.collapsed .icon {
+  margin: 0;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
+    height: calc(100vh - var(--header-height));
     z-index: 100;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
