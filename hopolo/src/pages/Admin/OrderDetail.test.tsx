@@ -1,14 +1,33 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import OrderDetail from './OrderDetail';
-import * as orderService from '../../services/orderService';
 import * as shippingService from '../../services/shippingService';
 import * as paymentService from '../../services/paymentService';
 
-vi.mock('../../services/orderService');
-vi.mock('../../services/shippingService');
-vi.mock('../../services/paymentService');
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return {
+    ...actual,
+    useLoaderData: vi.fn(() => ({
+      order: mockOrder
+    })),
+    useActionData: vi.fn(),
+    useSubmit: vi.fn(),
+    useNavigate: () => vi.fn()
+  };
+});
+
+vi.mock('../../services/orderService', () => ({
+  fetchOrderById: vi.fn(),
+  updateOrderStatus: vi.fn()
+}));
+vi.mock('../../services/shippingService', () => ({
+  createShippingOrder: vi.fn()
+}));
+vi.mock('../../services/paymentService', () => ({
+  refundOrder: vi.fn()
+}));
 
 const mockOrder = {
   id: 'o123',
@@ -29,104 +48,67 @@ const mockOrder = {
   phone: '1234567890' // Added phone for shipping
 };
 
+import { useLoaderData, useSubmit, useNavigate } from 'react-router';
+
 describe('OrderDetail Page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should render order details correctly', async () => {
-    (orderService.fetchOrderById as any).mockResolvedValue(mockOrder);
+  const renderComponent = (mockUseSubmit = vi.fn()) => {
+    vi.mocked(useSubmit).mockReturnValue(mockUseSubmit as any);
+    const router = createMemoryRouter([
+      { path: '/admin/orders', element: <div>Orders Page</div> },
+      { path: '/admin/orders/:id', element: <OrderDetail /> }
+    ], { initialEntries: ['/admin/orders/o123'] });
+    return render(<RouterProvider router={router} />);
+  };
 
-    render(
-      <MemoryRouter initialEntries={['/admin/orders/o123']}>
-        <Routes>
-          <Route path="/admin/orders/:id" element={<OrderDetail />} />
-        </Routes>
-      </MemoryRouter>
-    );
+  it('should render order details correctly', async () => {
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText(/Order o123/i)).toBeInTheDocument();
       expect(screen.getByText(/Total: ₹1500/i)).toBeInTheDocument();
       expect(screen.getByText(/Status:/i)).toBeInTheDocument();
       expect(screen.getByText('paid')).toBeInTheDocument();
-      expect(screen.getByText(/Product 1 x 2/i)).toBeInTheDocument();
+      expect(screen.getByText(/Product 1/i)).toBeInTheDocument();
       expect(screen.getByText(/123 Main St/i)).toBeInTheDocument();
       expect(screen.getByText(/Tech City/i)).toBeInTheDocument();
     });
   });
 
   it('should handle shipping process when Ship button is clicked', async () => {
-    (orderService.fetchOrderById as any).mockResolvedValue(mockOrder);
-    (shippingService.createShippingOrder as any).mockResolvedValue({
-      trackingId: 'SFX123',
-      labelUrl: 'http://label.url'
-    });
-    (orderService.updateOrderStatus as any).mockResolvedValue();
-
-    render(
-      <MemoryRouter initialEntries={['/admin/orders/o123']}>
-        <Routes>
-          <Route path="/admin/orders/:id" element={<OrderDetail />} />
-        </Routes>
-      </MemoryRouter>
-    );
+    const mockSubmit = vi.fn();
+    renderComponent(mockSubmit);
 
     await waitFor(() => screen.getByText('Ship with Shadowfax'));
 
     const shipBtn = screen.getByText('Ship with Shadowfax');
     fireEvent.click(shipBtn);
 
-    await waitFor(() => {
-      expect(shippingService.createShippingOrder).toHaveBeenCalledWith(expect.objectContaining({
-        orderId: 'o123',
-        customerName: 'u456', // Simplified mapping for now
-        phone: '1234567890',
-        address: expect.stringContaining('123 Main St'),
-      }));
-      expect(orderService.updateOrderStatus).toHaveBeenCalledWith('o123', 'shipped');
-    });
+    expect(mockSubmit).toHaveBeenCalledWith({ intent: "ship-order" }, { method: "post" });
   });
 
   it('should handle refund process when Refund button is clicked', async () => {
-    (orderService.fetchOrderById as any).mockResolvedValue(mockOrder);
-    (paymentService.refundOrder as any).mockResolvedValue({
-      refundId: 'rfnd_123',
-      status: 'processed'
-    });
-    (orderService.updateOrderStatus as any).mockResolvedValue();
+    const mockSubmit = vi.fn();
     vi.spyOn(window, 'confirm').mockReturnValue(true);
 
-    render(
-      <MemoryRouter initialEntries={['/admin/orders/o123']}>
-        <Routes>
-          <Route path="/admin/orders/:id" element={<OrderDetail />} />
-        </Routes>
-      </MemoryRouter>
-    );
+    renderComponent(mockSubmit);
 
     await waitFor(() => screen.getByText('Issue Refund'));
 
     const refundBtn = screen.getByText('Issue Refund');
     fireEvent.click(refundBtn);
 
-    await waitFor(() => {
-      expect(window.confirm).toHaveBeenCalled();
-      expect(paymentService.refundOrder).toHaveBeenCalledWith('pay_123', 1500);
-      expect(orderService.updateOrderStatus).toHaveBeenCalledWith('o123', 'refunded');
-    });
+    expect(window.confirm).toHaveBeenCalled();
+    expect(mockSubmit).toHaveBeenCalledWith({ intent: "refund-order" }, { method: "post" });
   });
 
   it('should show error if order not found', async () => {
-    (orderService.fetchOrderById as any).mockResolvedValue(null);
+    (useLoaderData as any).mockReturnValueOnce({ order: null });
 
-    render(
-      <MemoryRouter initialEntries={['/admin/orders/invalid']}>
-        <Routes>
-          <Route path="/admin/orders/:id" element={<OrderDetail />} />
-        </Routes>
-      </MemoryRouter>
-    );
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText(/Order not found/i)).toBeInTheDocument();

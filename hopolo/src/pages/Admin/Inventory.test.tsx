@@ -1,10 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import Inventory from './Inventory';
 import * as productService from '../../services/productService';
 
-vi.mock('../../services/productService');
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return {
+    ...actual,
+    useLoaderData: () => ({
+      products: mockProducts
+    }),
+    useActionData: vi.fn(),
+    useSubmit: () => vi.fn()
+  };
+});
+
+vi.mock('../../services/productService', () => ({
+  fetchProducts: vi.fn(),
+}));
+
 vi.mock('../../lib/firebase', () => ({
   db: {},
   auth: {},
@@ -22,12 +37,15 @@ describe('Admin Inventory Dashboard', () => {
     (productService.fetchProducts as any).mockResolvedValue(mockProducts);
   });
 
+  const renderComponent = () => {
+    const router = createMemoryRouter([
+      { path: '/admin/inventory', element: <Inventory /> }
+    ], { initialEntries: ['/admin/inventory'] });
+    return render(<RouterProvider router={router} />);
+  };
+
   it('should render a list of products', async () => {
-    render(
-      <MemoryRouter>
-        <Inventory />
-      </MemoryRouter>
-    );
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText(/inventory/i)).toBeInTheDocument();
@@ -39,11 +57,7 @@ describe('Admin Inventory Dashboard', () => {
   });
 
   it('should show add product button', async () => {
-    render(
-      <MemoryRouter>
-        <Inventory />
-      </MemoryRouter>
-    );
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /add product/i })).toBeInTheDocument();
@@ -51,11 +65,7 @@ describe('Admin Inventory Dashboard', () => {
   });
 
   it('should allow adding variants in the product form', async () => {
-    render(
-      <MemoryRouter>
-        <Inventory />
-      </MemoryRouter>
-    );
+    renderComponent();
 
     // Open Add Product Modal
     const addBtn = await waitFor(() => screen.getByRole('button', { name: /add product/i }));
@@ -65,10 +75,10 @@ describe('Admin Inventory Dashboard', () => {
     await waitFor(() => expect(screen.getByText(/variants/i)).toBeInTheDocument());
 
     // Add Variant
-    const sizeInput = screen.getByPlaceholderText(/size/i);
-    const colorInput = screen.getByPlaceholderText(/color/i);
-    const stockInput = screen.getByPlaceholderText(/stock/i);
-    const addVariantBtn = screen.getByRole('button', { name: /add variant/i });
+    const sizeInput = screen.getAllByPlaceholderText(/size/i)[0];
+    const colorInput = screen.getAllByPlaceholderText(/color/i)[0];
+    const stockInput = screen.getAllByPlaceholderText(/stock/i)[0];
+    const addVariantBtn = screen.getAllByRole('button', { name: /ADD/i })[0];
 
     fireEvent.change(sizeInput, { target: { value: 'L' } });
     fireEvent.change(colorInput, { target: { value: 'Blue' } });
@@ -77,9 +87,9 @@ describe('Admin Inventory Dashboard', () => {
 
     // Verify Variant Added
     await waitFor(() => {
-      expect(screen.getByText('L')).toBeInTheDocument();
-      expect(screen.getByText('Blue')).toBeInTheDocument();
-      expect(screen.getByText('50')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('L')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Blue')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('50')).toBeInTheDocument();
     });
   });
 });

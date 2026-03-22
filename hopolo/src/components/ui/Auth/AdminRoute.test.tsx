@@ -5,7 +5,11 @@ import AdminRoute from './AdminRoute';
 import * as profileService from '../../../services/profileService';
 import { auth } from '../../../lib/firebase';
 
-vi.mock('../../../services/profileService');
+vi.mock('../../../services/profileService', () => ({
+  getUserProfile: vi.fn(),
+  updateUserProfile: vi.fn(),
+  saveAddress: vi.fn()
+}));
 vi.mock('../../../lib/firebase', () => ({
   auth: { currentUser: null, onAuthStateChanged: vi.fn() },
   db: {},

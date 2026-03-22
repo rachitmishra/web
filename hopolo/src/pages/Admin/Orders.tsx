@@ -26,93 +26,146 @@ const Orders: React.FC = () => {
       ? totalSales / (orders.filter((o) => o.status !== "refunded").length || 1)
       : 0;
 
+  const [selectedOrderId, setSelectedOrderId] = React.useState<string | null>(orders[0]?.id || null);
+  const selectedOrder = orders.find(o => o.id === selectedOrderId) || orders[0];
+
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>Orders</h1>
-      </div>
+      <header className={styles.header}>
+        <h2 className={styles.title}>Order Control / Logistics</h2>
+        <div className={styles.headerActions}>
+          <div className={styles.searchWrapper}>
+            <input
+              type="text"
+              placeholder="SEARCH ORDERS..."
+              className={styles.searchInput}
+            />
+            <span className="material-symbols-outlined absolute right-3 top-2 text-black">search</span>
+          </div>
+          <button className={styles.actionBtnPrimary}><span className="material-symbols-outlined">doorbell</span></button>
+          <button className={styles.actionBtnSecondary}><span className="material-symbols-outlined">verified_user</span></button>
+        </div>
+      </header>
 
-      <div className={styles.statsGrid}>
-        <Card>
-          <div className={styles.statLabel}>Total Sales</div>
-          <div data-testid="total-sales" className={styles.statValue}>
-            ${totalSales.toFixed(2)}
+      <div className={styles.splitPane}>
+        {/* Left Pane: Order List */}
+        <section className={styles.orderListPane}>
+          <div className={styles.listTabs}>
+            <button className={styles.tabActive}>All Orders</button>
+            <button className={styles.tabInactive}>Pending</button>
+            <button className={styles.tabInactive}>Refunded</button>
           </div>
-        </Card>
-        <Card>
-          <div className={styles.statLabel}>Avg Order Value</div>
-          <div data-testid="avg-order-value" className={styles.statValue}>
-            ${aov.toFixed(2)}
-          </div>
-        </Card>
-        <Card>
-          <div className={styles.statLabel}>Total Orders</div>
-          <div data-testid="total-orders" className={styles.statValue}>
-            {totalOrders}
-          </div>
-        </Card>
-      </div>
-
-      <Card>
-        <div className={styles.tableWrapper}>
-          <table className={styles.table}>
-            <thead>
-              <tr className={styles.tr}>
-                <th className={styles.th}>Order ID</th>
-                <th className={styles.th}>User ID</th>
-                <th className={styles.th}>Date</th>
-                <th className={styles.th}>Total</th>
-                <th className={styles.th}>Status</th>
-                <th className={styles.th}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.id} className={styles.tr}>
-                  <td className={`${styles.td} ${styles.orderId}`}>
-                    {order.id}
-                  </td>
-                  <td className={`${styles.td} ${styles.userId}`}>
-                    {order.userId}
-                  </td>
-                  <td className={styles.td}>
-                    {order.createdAt?.toDate
-                      ? order.createdAt.toDate().toLocaleDateString()
-                      : "N/A"}
-                  </td>
-                  <td className={`${styles.td} ${styles.amount}`}>
-                    ${order.total.toFixed(2)}
-                  </td>
-                  <td className={styles.td}>
-                    <span
-                      className={`${styles.statusBadge} ${
-                        order.status === "paid" ? styles.statusPaid : styles.statusOther
-                      }`}
-                    >
+          <div className={styles.orderList}>
+            {orders.map((order) => {
+              const isSelected = order.id === selectedOrderId;
+              const dateStr = order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase() : "N/A";
+              return (
+                <div
+                  key={order.id}
+                  className={`${styles.orderListItem} ${isSelected ? styles.orderListItemSelected : ''}`}
+                  onClick={() => setSelectedOrderId(order.id)}
+                >
+                  <div className={styles.itemHeader}>
+                    <span className={styles.itemOrderId}>#{order.id.toUpperCase()}</span>
+                    <span className={`${styles.itemStatus} ${order.status === 'paid' ? styles.statusProcessing : order.status === 'refunded' ? styles.statusRefunded : styles.statusDelivered}`}>
                       {order.status}
                     </span>
-                  </td>
-                  <td className={styles.td}>
-                    <Button
-                      variant="outline"
-                      style={{ fontSize: "0.75rem", padding: "4px 8px" }}
-                      onClick={() => navigate(`/admin/orders/${order.id}`)}
-                    >
-                      Details
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+                  <div className={styles.itemDetails}>
+                    <div>
+                      <p className={styles.itemUser}>{order.shippingAddress?.name || order.userId}</p>
+                      <p className={styles.itemDate}>{dateStr}</p>
+                    </div>
+                    <p className={styles.itemTotal}>${Number(order.total).toFixed(2)}</p>
+                  </div>
+                </div>
+              );
+            })}
 
-        {orders.length === 0 && (
-          <div className={styles.empty}>
-            No orders found.
+            {orders.length === 0 && (
+              <div className={styles.empty}>No orders found.</div>
+            )}
           </div>
-        )}
-      </Card>
+        </section>
+
+        {/* Right Pane: Order Details */}
+        <section className={styles.orderDetailsPane}>
+          {selectedOrder ? (
+            <div className={styles.detailsContent}>
+              <div className={styles.detailsHeader}>
+                <div>
+                  <h3 className={styles.detailsTitle}>ORDER #{selectedOrder.id.toUpperCase()}</h3>
+                  <p className={styles.detailsSubtitle}>
+                    Placed on {selectedOrder.createdAt?.toDate ? selectedOrder.createdAt.toDate().toLocaleString() : "N/A"}
+                  </p>
+                </div>
+                <div className={styles.detailsActions}>
+                  <button className={styles.btnSecondary} onClick={() => navigate(`/admin/orders/${selectedOrder.id}`)}>View Full Details</button>
+                  <button className={styles.btnDanger}>Issue Refund</button>
+                </div>
+              </div>
+
+              <div className={styles.detailsGrid}>
+                {/* Customer Details */}
+                <div className={styles.brutalCard}>
+                  <h4 className={styles.cardTitle}>Shipping Details</h4>
+                  <div className={styles.cardBody}>
+                    <p><strong className={styles.cardLabel}>Recipient:</strong> {selectedOrder.shippingAddress?.name || "N/A"}</p>
+                    <p><strong className={styles.cardLabel}>Address:</strong> {selectedOrder.shippingAddress?.line1}, {selectedOrder.shippingAddress?.city}, {selectedOrder.shippingAddress?.state} {selectedOrder.shippingAddress?.postal_code}</p>
+                    <p><strong className={styles.cardLabel}>Phone:</strong> {selectedOrder.shippingAddress?.phone || "N/A"}</p>
+                  </div>
+                </div>
+
+                {/* Payment Summary */}
+                <div className={styles.brutalCard}>
+                  <h4 className={styles.cardTitle}>Order Summary</h4>
+                  <div className={styles.cardBody}>
+                    <div className={styles.summaryRow}><span>Subtotal:</span><span>${selectedOrder.total.toFixed(2)}</span></div>
+                    <div className={styles.summaryRow}><span>Shipping:</span><span>$0.00</span></div>
+                    <div className={styles.summaryRow}><span>Tax:</span><span>$0.00</span></div>
+                    <div className={styles.summaryTotal}>
+                      <span>TOTAL:</span><span>${selectedOrder.total.toFixed(2)}</span>
+                    </div>
+                    <p className={styles.paymentBadge}>PAID VIA SECURE_CHECKOUT (TXN_{selectedOrder.paymentIntentId?.substring(0, 5) || "N/A"})</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Items List */}
+              <div className={styles.itemsTableWrapper}>
+                <table className={styles.itemsTable}>
+                  <thead>
+                    <tr>
+                      <th className="text-left">Item</th>
+                      <th className="text-center">Qty</th>
+                      <th className="text-right">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(selectedOrder.items || []).map((item, idx) => (
+                      <tr key={idx}>
+                        <td className={styles.itemCell}>
+                          <div className={styles.itemImageWrapper}>
+                            <img src={item.product?.images?.[0] || 'https://via.placeholder.com/64'} alt="Product" />
+                          </div>
+                          <div>
+                            <p className={styles.itemName}>{item.product?.name || "Unknown Item"}</p>
+                            <span className={styles.itemVariant}>SIZE: {item.variant?.size || "OS"}</span>
+                          </div>
+                        </td>
+                        <td className="text-center font-bold">{item.quantity.toString().padStart(2, '0')}</td>
+                        <td className="text-right">${((item.product?.price || 0) * item.quantity).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.emptySelection}>Select an order to view details</div>
+          )}
+        </section>
+      </div>
     </div>
   );
 };
