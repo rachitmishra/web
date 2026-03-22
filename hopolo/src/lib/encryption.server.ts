@@ -47,3 +47,14 @@ export function decrypt(encryptedText: string, secretKey: string): string {
   
   return decrypted;
 }
+
+/**
+ * Creates a deterministic HMAC hash of a string.
+ * Useful for lookups (e.g. searching for a phone number) while keeping the original field encrypted.
+ * @param text The plain text to hash.
+ * @param secretKey The secret key used for HMAC.
+ * @returns The hex-encoded hash.
+ */
+export function hash(text: string, secretKey: string): string {
+  return crypto.createHmac('sha256', secretKey).update(text).digest('hex');
+}
