@@ -1,5 +1,4 @@
-import { collection, addDoc, setDoc, doc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
-import { db, auth } from '../lib/firebase';
+import { adminDb, FieldValue } from '../lib/firebase-admin.server';
 
 const DUMMY_PRODUCTS = [
   {
@@ -46,61 +45,52 @@ const DUMMY_REVIEWS = [
 export const seedCategories = async () => {
   const categories = ["Accessories", "Bags", "Home"];
   for (const cat of categories) {
-    // Check if exists (simple check)
-    const q = query(collection(db, 'categories'), where('name', '==', cat));
-    const snap = await getDocs(q);
-    if (snap.empty) {
-      await addDoc(collection(db, 'categories'), { name: cat, id: cat.toLowerCase() });
+    const q = await adminDb.collection('categories').where('name', '==', cat).get();
+    if (q.empty) {
+      await adminDb.collection('categories').add({ name: cat, id: cat.toLowerCase() });
     }
   }
 };
 
 export const seedProducts = async () => {
-  await seedCategories(); // Ensure categories exist
-  
+  await seedCategories();
   for (const prod of DUMMY_PRODUCTS) {
-    await addDoc(collection(db, 'products'), {
+    await adminDb.collection('products').add({
       ...prod,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp()
     });
   }
 };
 
 export const seedReviews = async () => {
-  // Get all products
-  const productsSnap = await getDocs(collection(db, 'products'));
+  const productsSnap = await adminDb.collection('products').get();
   if (productsSnap.empty) return;
 
   const products = productsSnap.docs.map(d => d.id);
 
   for (const review of DUMMY_REVIEWS) {
-    // Assign random product
     const randomProductId = products[Math.floor(Math.random() * products.length)];
-    await addDoc(collection(db, 'reviews'), {
+    await adminDb.collection('reviews').add({
       ...review,
       productId: randomProductId,
       userId: 'dummy_user_' + Math.random().toString(36).substring(7),
-      createdAt: serverTimestamp()
+      createdAt: FieldValue.serverTimestamp()
     });
   }
 };
 
-export const seedUserProfile = async () => {
-  const user = auth.currentUser;
-  if (!user) throw new Error("No user logged in");
-
-  const userRef = doc(db, 'profiles', user.uid);
-  
-  await setDoc(userRef, {
-    uid: user.uid,
+export async function seedUserProfile(uid: string) {
+  const userRef = adminDb.collection('profiles').doc(uid);
+  await userRef.set({
+    uid,
     displayName: "Test User",
     emoji: "🚀",
-    role: 'admin', // Promote to admin for ease of testing
+    role: 'admin',
     addresses: [
       { street: "123 Test Lane", city: "Testerville", zip: "12345" },
       { street: "456 Mock Blvd", city: "Mock City", zip: "67890" }
     ],
-    updatedAt: serverTimestamp()
+    updatedAt: FieldValue.serverTimestamp()
   }, { merge: true });
-};
+}

@@ -1,6 +1,3 @@
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-
 export interface CustomerReview {
   name: string;
   emoji: string;
@@ -19,9 +16,6 @@ export interface StorefrontSettings {
   heroCtaText: string;
   reviews: CustomerReview[];
 }
-
-const SETTINGS_DOC_ID = 'storefront';
-const SETTINGS_COLLECTION = 'settings';
 
 export const DEFAULT_SETTINGS: StorefrontSettings = {
   bannerText: "Welcome to Hopolo!",
@@ -50,36 +44,4 @@ export const DEFAULT_SETTINGS: StorefrontSettings = {
       text: "The emoji-based review system is so fun and easy!",
     },
   ],
-};
-
-export const getStorefrontSettings = async (): Promise<StorefrontSettings> => {
-  const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    return { ...DEFAULT_SETTINGS, ...docSnap.data() } as StorefrontSettings;
-  }
-  return DEFAULT_SETTINGS;
-};
-
-export const updateStorefrontSettings = async (settings: Partial<StorefrontSettings>): Promise<void> => {
-  const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
-  await setDoc(docRef, settings, { merge: true });
-};
-
-export const subscribeToStorefrontSettings = (callback: (settings: StorefrontSettings) => void) => {
-  const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
-  return onSnapshot(docRef, 
-    (docSnap) => {
-      if (docSnap.exists()) {
-        callback({ ...DEFAULT_SETTINGS, ...docSnap.data() } as StorefrontSettings);
-      } else {
-        callback(DEFAULT_SETTINGS);
-      }
-    },
-    (error) => {
-      console.error("Error subscribing to storefront settings:", error);
-      callback(DEFAULT_SETTINGS);
-    }
-  );
 };

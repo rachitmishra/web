@@ -1,6 +1,5 @@
-import { adminDb, adminAuth } from '../lib/firebase-admin.server';
-import { encrypt, decrypt } from '../lib/encryption.server';
-import * as admin from 'firebase-admin';
+import { adminDb, adminAuth, FieldValue } from '../lib/firebase-admin.server';
+import { encrypt, decrypt, hash } from '../lib/encryption.server';
 import { v4 as uuidv4 } from 'uuid';
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'test_secret_key_32_chars_long_!!'; // fallback for dev
@@ -40,19 +39,19 @@ export async function getSecureProfile(uid: string): Promise<SecureProfile | nul
         if (!inviteQuery.empty) {
           const inviteDoc = inviteQuery.docs[0];
           role = inviteDoc.data().role;
-          await inviteDoc.ref.update({ status: 'consumed', usedBy: uid, updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+          await inviteDoc.ref.update({ status: 'consumed', usedBy: uid, updatedAt: FieldValue.serverTimestamp() });
         }
       }
 
       const newProfile = {
         uid,
         email: email || '',
-        phoneNumber: phoneNumber || '',
+        phoneNumber: phoneNumber ? encrypt(phoneNumber, key) : '',
         role,
         addresses: encrypt(JSON.stringify([]), key),
         displayName: encrypt('', key),
         emoji: encrypt('', key),
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
+        createdAt: FieldValue.serverTimestamp()
       };
 
       await docRef.set(newProfile);
@@ -66,17 +65,28 @@ export async function getSecureProfile(uid: string): Promise<SecureProfile | nul
   const data = doc.data()!;
 
   try {
+    const decryptIfPossible = (val: string | undefined) => {
+      if (!val) return '';
+      if (!val.includes(':')) return val; // Probably plain text from before encryption was enabled
+      try {
+        return decrypt(val, key);
+      } catch (e) {
+        console.warn('Failed to decrypt value:', val);
+        return val;
+      }
+    };
+
     return {
       uid,
       email: data.email || '',
-      phoneNumber: data.phoneNumber || '',
+      phoneNumber: decryptIfPossible(data.phoneNumber),
       role: data.role || 'user',
-      displayName: data.displayName ? decrypt(data.displayName, key) : '',
-      emoji: data.emoji ? decrypt(data.emoji, key) : '',
-      addresses: data.addresses ? JSON.parse(decrypt(data.addresses, key)) : []
+      displayName: decryptIfPossible(data.displayName),
+      emoji: decryptIfPossible(data.emoji),
+      addresses: data.addresses ? JSON.parse(decryptIfPossible(data.addresses)) : []
     };
   } catch (error) {
-    console.error(`Failed to decrypt profile for ${uid}:`, error);
+    console.error(`Failed to process profile data for ${uid}:`, error);
     return null;
   }
 }
@@ -87,7 +97,7 @@ export async function getSecureProfile(uid: string): Promise<SecureProfile | nul
 export async function updateSecureProfile(uid: string, updates: Partial<SecureProfile>): Promise<void> {
   const key = ENCRYPTION_KEY;
   const updateData: any = {
-    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    updatedAt: FieldValue.serverTimestamp()
   };
 
   if (updates.displayName !== undefined) {
@@ -96,11 +106,40 @@ export async function updateSecureProfile(uid: string, updates: Partial<SecurePr
   if (updates.emoji !== undefined) {
     updateData.emoji = encrypt(updates.emoji, key);
   }
+  if (updates.phoneNumber !== undefined) {
+    updateData.phoneNumber = updates.phoneNumber ? encrypt(updates.phoneNumber, key) : '';
+  }
   if (updates.addresses !== undefined) {
     updateData.addresses = encrypt(JSON.stringify(updates.addresses), key);
   }
 
   await adminDb.collection('profiles').doc(uid).update(updateData);
+}
+
+/**
+ * Saves a new address to the user's profile (server-side).
+ */
+export async function saveAddress(uid: string, address: any): Promise<void> {
+  const profile = await getSecureProfile(uid);
+  if (!profile) throw new Error('Profile not found');
+  
+  const addresses = profile.addresses || [];
+  const updatedAddresses = [...addresses, address];
+  
+  await updateSecureProfile(uid, { addresses: updatedAddresses });
+}
+
+/**
+ * Deletes an address from the user's profile (server-side).
+ */
+export async function deleteAddress(uid: string, index: number): Promise<void> {
+  const profile = await getSecureProfile(uid);
+  if (!profile || !profile.addresses) return;
+  
+  const updatedAddresses = [...profile.addresses];
+  updatedAddresses.splice(index, 1);
+  
+  await updateSecureProfile(uid, { addresses: updatedAddresses });
 }
 
 /**
@@ -121,8 +160,9 @@ export async function createInvitation(creatorUid: string, phoneNumber: string, 
     inviteCode,
     status: 'pending',
     createdBy: creatorUid,
-    createdAt: admin.firestore.FieldValue.serverTimestamp()
+    createdAt: FieldValue.serverTimestamp()
   });
 
   return { inviteCode };
 }
+
