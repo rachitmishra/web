@@ -8,7 +8,7 @@ This plan outlines the steps to resolve the OTP dialog dismissal issue and imple
     - [x] Review the existing login logic to understand how successful authentication is handled and where the redirection is currently (or should be) triggered. (Action function in Login.tsx handles redirection)
     - [x] Verify how user roles (Admin vs. Standard User) are determined in the frontend. (Via profile role check in action)
 
-## Phase 2: Implementation of Fixes (TDD)
+## Phase 2: Implementation of Fixes (TDD) [checkpoint: 032a843]
 - [x] **Task 2: Implement Automatic OTP Dialog Dismissal**
     - [x] **Red Phase:** Write a unit test for the login component to verify that the OTP verification dialog remains open upon successful login (demonstrating the bug).
     - [x] **Green Phase:** Modify the login logic to ensure that the state responsible for the dialog's visibility is correctly updated (dismissed) upon successful OTP verification.
