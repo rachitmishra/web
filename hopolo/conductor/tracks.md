@@ -12,4 +12,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 - [x] Track: Admin Panel UI Polish & Consistency
   *Link: [./conductor/tracks/admin_ui_polish_20260304/](./conductor/tracks/admin_ui_polish_20260304/)*
 
+---
 
+- [ ] **Track: Fix OTP Verification Redirection and Error Handling**
+*Link: [./conductor/tracks/otp_verification_fix_20260322/](./conductor/tracks/otp_verification_fix_20260322/)*
