@@ -60,6 +60,21 @@ describe('LoginDialog', () => {
     });
   });
 
+  it('should redirect standard user to /profile when actionData.role is user', async () => {
+    const mockOnClose = vi.fn();
+    mockFetcher.data = { success: true, role: 'user' };
+    
+    render(
+      <MemoryRouter>
+        <LoginDialog isOpen={true} onClose={mockOnClose} />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/profile', { replace: true });
+    });
+  });
+
   it('should transition from phone to otp step when phone is submitted', async () => {
     vi.mocked(authService.signInWithPhone).mockResolvedValue({} as any);
     

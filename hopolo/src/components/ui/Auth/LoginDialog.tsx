@@ -42,10 +42,13 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose }) => {
         // 1. Dismiss the dialog first
         onClose();
         
-        // 2. Redirect to admin if role matches
+        // 2. Redirect based on role
         if (role === 'admin') {
-          console.log('[LoginDialog] Admin detected, redirecting...');
+          console.log('[LoginDialog] Admin detected, redirecting to admin panel...');
           navigate('/admin', { replace: true });
+        } else {
+          console.log('[LoginDialog] Standard user detected, redirecting to profile...');
+          navigate('/profile', { replace: true });
         }
       } else if (actionData.success === false) {
         const errMsg = actionData.error || 'Server error during login';
@@ -64,9 +67,9 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose }) => {
       setConfirmationResult(result);
       setStep('otp');
     } catch (err: any) {
-      const errMsg = err.message || 'Failed to send code';
-      setError(errMsg);
-      addDebugError(errMsg, 'FirebaseSignIn');
+      console.error('[LoginDialog] Phone Sign-In Error:', err);
+      setError(err.message || 'Failed to send code');
+      addDebugError(err.message || 'Failed to send code', 'FirebaseSignIn');
     } finally {
       setLoading(false);
     }
@@ -77,13 +80,30 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     setError('');
     try {
+      console.log('[LoginDialog] Verifying OTP...');
       const userCredential = await verifyOtp(confirmationResult, otp);
+      
+      if (!userCredential || !userCredential.user) {
+        throw new Error('Login failed: No user data returned from Firebase.');
+      }
+
       const idToken = await userCredential.user.getIdToken();
+      console.log('[LoginDialog] OTP verified, submitting to server action...');
       
       // Use fetcher to submit without navigation
       fetcher.submit({ idToken, uid: userCredential.user.uid }, { method: "post", action: "/login" });
     } catch (err: any) {
-      const errMsg = err.message || 'Invalid code';
+      console.error('[LoginDialog] OTP Verification Error:', err);
+      let errMsg = 'Invalid code. Please try again.';
+      
+      if (err.code === 'auth/invalid-verification-code') {
+        errMsg = 'The verification code is incorrect. Please check and try again.';
+      } else if (err.code === 'auth/code-expired') {
+        errMsg = 'The verification code has expired. Please request a new one.';
+      } else if (err.message) {
+        errMsg = err.message;
+      }
+      
       setError(errMsg);
       addDebugError(errMsg, 'FirebaseVerifyOTP');
       setLoading(false);
