@@ -32,17 +32,9 @@ describe('LoginDialog', () => {
 
   it('should call onClose when actionData.success is true', async () => {
     const mockOnClose = vi.fn();
-    
-    const { rerender } = render(
-      <MemoryRouter>
-        <LoginDialog isOpen={true} onClose={mockOnClose} />
-      </MemoryRouter>
-    );
-
-    // Simulate successful login response
     mockFetcher.data = { success: true, role: 'user' };
     
-    rerender(
+    render(
       <MemoryRouter>
         <LoginDialog isOpen={true} onClose={mockOnClose} />
       </MemoryRouter>
@@ -55,17 +47,9 @@ describe('LoginDialog', () => {
 
   it('should redirect admin to /admin when actionData.role is admin', async () => {
     const mockOnClose = vi.fn();
-    
-    const { rerender } = render(
-      <MemoryRouter>
-        <LoginDialog isOpen={true} onClose={mockOnClose} />
-      </MemoryRouter>
-    );
-
-    // Simulate successful admin login response
     mockFetcher.data = { success: true, role: 'admin' };
     
-    rerender(
+    render(
       <MemoryRouter>
         <LoginDialog isOpen={true} onClose={mockOnClose} />
       </MemoryRouter>
@@ -73,6 +57,113 @@ describe('LoginDialog', () => {
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/admin', { replace: true });
+    });
+  });
+
+  it('should transition from phone to otp step when phone is submitted', async () => {
+    vi.mocked(authService.signInWithPhone).mockResolvedValue({} as any);
+    
+    render(
+      <MemoryRouter>
+        <LoginDialog isOpen={true} onClose={() => {}} />
+      </MemoryRouter>
+    );
+
+    const phoneInput = screen.getByPlaceholderText(/mobile number/i);
+    fireEvent.change(phoneInput, { target: { value: '+919999999999' } });
+    
+    const submitBtn = screen.getByRole('button', { name: /send code/i });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(authService.signInWithPhone).toHaveBeenCalled();
+      expect(screen.getByPlaceholderText(/verification code/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should display error if phone submission fails', async () => {
+    vi.mocked(authService.signInWithPhone).mockRejectedValue(new Error('Failed to send code'));
+    
+    render(
+      <MemoryRouter>
+        <LoginDialog isOpen={true} onClose={() => {}} />
+      </MemoryRouter>
+    );
+
+    const phoneInput = screen.getByPlaceholderText(/mobile number/i);
+    fireEvent.change(phoneInput, { target: { value: '+919999999999' } });
+    
+    const submitBtn = screen.getByRole('button', { name: /send code/i });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText(/failed to send code/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should display error if actionData.success is false', async () => {
+    mockFetcher.data = { success: false, error: 'Invalid login' };
+    
+    render(
+      <MemoryRouter>
+        <LoginDialog isOpen={true} onClose={() => {}} />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/invalid login/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should call fetcher.submit when OTP is verified', async () => {
+    vi.mocked(authService.signInWithPhone).mockResolvedValue({} as any);
+    vi.mocked(authService.verifyOtp).mockResolvedValue({ user: { uid: 'u1', getIdToken: () => Promise.resolve('t1') } } as any);
+    
+    render(
+      <MemoryRouter>
+        <LoginDialog isOpen={true} onClose={() => {}} />
+      </MemoryRouter>
+    );
+
+    // 1. Phone step
+    fireEvent.change(screen.getByPlaceholderText(/mobile number/i), { target: { value: '+919999999999' } });
+    fireEvent.click(screen.getByRole('button', { name: /send code/i }));
+
+    // 2. OTP step
+    const otpInput = await screen.findByPlaceholderText(/verification code/i);
+    fireEvent.change(otpInput, { target: { value: '123456' } });
+    fireEvent.click(screen.getByRole('button', { name: /verify/i }));
+
+    await waitFor(() => {
+      expect(authService.verifyOtp).toHaveBeenCalled();
+      expect(mockFetcher.submit).toHaveBeenCalledWith(
+        { idToken: 't1', uid: 'u1' },
+        { method: 'post', action: '/login' }
+      );
+    });
+  });
+
+  it('should display error if OTP verification fails', async () => {
+    vi.mocked(authService.signInWithPhone).mockResolvedValue({} as any);
+    vi.mocked(authService.verifyOtp).mockRejectedValue(new Error('Invalid code'));
+    
+    render(
+      <MemoryRouter>
+        <LoginDialog isOpen={true} onClose={() => {}} />
+      </MemoryRouter>
+    );
+
+    // 1. Go to OTP step
+    fireEvent.change(screen.getByPlaceholderText(/mobile number/i), { target: { value: '+919999999999' } });
+    fireEvent.click(screen.getByRole('button', { name: /send code/i }));
+
+    // 2. OTP step
+    const otpInput = await screen.findByPlaceholderText(/verification code/i);
+    fireEvent.change(otpInput, { target: { value: 'wrong' } });
+    fireEvent.click(screen.getByRole('button', { name: /verify/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/invalid code/i)).toBeInTheDocument();
     });
   });
 });

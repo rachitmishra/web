@@ -14,7 +14,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: bug fix: on login with mobile number the after succesful login the otp verification dialog is not dismissed. also after successful login admin is not redirected to admin page.**
+- [x] **Track: bug fix: on login with mobile number the after succesful login the otp verification dialog is not dismissed. also after successful login admin is not redirected to admin page.**
 *Link: [./tracks/login_redirection_20260320/](./tracks/login_redirection_20260320/)*
 
 
