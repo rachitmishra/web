@@ -25,6 +25,9 @@ type Pages = {
   "/login": {
     params: {};
   };
+  "/logout": {
+    params: {};
+  };
   "/checkout": {
     params: {};
   };
@@ -80,12 +83,15 @@ type Pages = {
   "/admin/storefront": {
     params: {};
   };
+  "/admin/upload": {
+    params: {};
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/product/:id" | "/cart" | "/login" | "/checkout" | "/checkout/success/:orderId" | "/about" | "/shipping" | "/contact" | "/profile" | "/maintenance" | "/admin" | "/admin/orders" | "/admin/orders/:id" | "/admin/email-logs" | "/admin/inventory" | "/admin/marketing" | "/admin/seed" | "/admin/analytics" | "/admin/invitations" | "/admin/storefront";
+    page: "/" | "/product/:id" | "/cart" | "/login" | "/logout" | "/checkout" | "/checkout/success/:orderId" | "/about" | "/shipping" | "/contact" | "/profile" | "/maintenance" | "/admin" | "/admin/orders" | "/admin/orders/:id" | "/admin/email-logs" | "/admin/inventory" | "/admin/marketing" | "/admin/seed" | "/admin/analytics" | "/admin/invitations" | "/admin/storefront" | "/admin/upload";
   };
   "../src/pages/Home.tsx": {
     id: "../src/pages/Home";
@@ -102,6 +108,10 @@ type RouteFiles = {
   "../src/pages/Login.tsx": {
     id: "../src/pages/Login";
     page: "/login";
+  };
+  "../src/pages/Logout.tsx": {
+    id: "../src/pages/Logout";
+    page: "/logout";
   };
   "../src/pages/Checkout.tsx": {
     id: "../src/pages/Checkout";
@@ -131,7 +141,7 @@ type RouteFiles = {
   };
   "../src/components/layout/AdminLayout.tsx": {
     id: "../src/components/layout/AdminLayout";
-    page: "/admin" | "/admin/orders" | "/admin/orders/:id" | "/admin/email-logs" | "/admin/inventory" | "/admin/marketing" | "/admin/seed" | "/admin/analytics" | "/admin/invitations" | "/admin/storefront";
+    page: "/admin" | "/admin/orders" | "/admin/orders/:id" | "/admin/email-logs" | "/admin/inventory" | "/admin/marketing" | "/admin/seed" | "/admin/analytics" | "/admin/invitations" | "/admin/storefront" | "/admin/upload";
   };
   "../src/pages/Admin/Orders.tsx": {
     id: "admin-index";
@@ -172,6 +182,10 @@ type RouteFiles = {
     id: "../src/pages/Admin/Storefront";
     page: "/admin/storefront";
   };
+  "../src/pages/Admin/Upload.tsx": {
+    id: "../src/pages/Admin/Upload";
+    page: "/admin/upload";
+  };
 };
 
 type RouteModules = {
@@ -180,6 +194,7 @@ type RouteModules = {
   "../src/pages/ProductDetail": unknown;
   "../src/pages/Cart": unknown;
   "../src/pages/Login": unknown;
+  "../src/pages/Logout": unknown;
   "../src/pages/Checkout": unknown;
   "../src/pages/Success": unknown;
   "about": unknown;
@@ -198,4 +213,5 @@ type RouteModules = {
   "../src/pages/Admin/Analytics": unknown;
   "../src/pages/Admin/Invitations": unknown;
   "../src/pages/Admin/Storefront": unknown;
+  "../src/pages/Admin/Upload": unknown;
 };
