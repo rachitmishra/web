@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { addToCart, subscribeToCart } from './cartService';
+import { addToCart, subscribeToCart, clearCart } from './cartService';
 import { setDoc, onSnapshot, getDoc, doc } from 'firebase/firestore';
 
 // Mock firebase/firestore
@@ -38,12 +38,12 @@ describe('cartService', () => {
       exists: () => false,
     });
 
-    await addToCart(mockProduct, 2);
+    await addToCart(mockProduct as any, 2);
 
     expect(doc).toHaveBeenCalled();
     expect(setDoc).toHaveBeenCalledWith(expect.anything(), {
-      items: [{ product: mockProduct, quantity: 2 }]
-    });
+      items: [{ product: mockProduct, quantity: 2, selectedSize: undefined, selectedColor: undefined }]
+    }, { merge: true });
   });
 
   it('addToCart should support product variants (size/color)', async () => {
@@ -51,7 +51,7 @@ describe('cartService', () => {
     
     (getDoc as any).mockResolvedValue({ exists: () => false });
 
-    await addToCart(mockProduct, 1, { size: 'M', color: 'Blue' });
+    await addToCart(mockProduct as any, 1, 'M', 'Blue');
 
     expect(setDoc).toHaveBeenCalledWith(expect.anything(), {
       items: [{ 
@@ -60,7 +60,7 @@ describe('cartService', () => {
         selectedSize: 'M', 
         selectedColor: 'Blue' 
       }]
-    });
+    }, { merge: true });
   });
 
   it('subscribeToCart should call onSnapshot and trigger callback', () => {
@@ -83,22 +83,12 @@ describe('cartService', () => {
       data: () => ({ items: mockItems })
     });
 
-        expect(callback).toHaveBeenCalledWith(mockItems);
+    expect(callback).toHaveBeenCalledWith(mockItems);
+  });
 
-      });
+  it('clearCart should call setDoc with empty items', async () => {
+    await clearCart();
+    expect(setDoc).toHaveBeenCalledWith(expect.anything(), { items: [] });
+  });
 
-    
-
-      it('clearCart should call setDoc with empty items', async () => {
-
-        const { clearCart } = await import('./cartService');
-
-        await clearCart();
-
-        expect(setDoc).toHaveBeenCalledWith(expect.anything(), { items: [] });
-
-      });
-
-    });
-
-    
+});

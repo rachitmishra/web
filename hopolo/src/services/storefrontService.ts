@@ -1,3 +1,6 @@
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
 export interface CustomerReview {
   name: string;
   emoji: string;
@@ -44,4 +47,49 @@ export const DEFAULT_SETTINGS: StorefrontSettings = {
       text: "The emoji-based review system is so fun and easy!",
     },
   ],
+};
+
+const SETTINGS_DOC_ID = 'storefront';
+const SETTINGS_COLLECTION = 'settings';
+
+export const getStorefrontSettings = async (): Promise<StorefrontSettings> => {
+  try {
+    const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { ...DEFAULT_SETTINGS, ...docSnap.data() } as StorefrontSettings;
+    } else {
+      return DEFAULT_SETTINGS;
+    }
+  } catch (error) {
+    console.error("Error fetching storefront settings:", error);
+    return DEFAULT_SETTINGS;
+  }
+};
+
+export const updateStorefrontSettings = async (settings: Partial<StorefrontSettings>): Promise<void> => {
+  try {
+    const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
+    await setDoc(docRef, settings, { merge: true });
+  } catch (error) {
+    console.error("Error updating storefront settings:", error);
+    throw error;
+  }
+};
+
+export const subscribeToStorefrontSettings = (
+  callback: (settings: StorefrontSettings) => void
+): (() => void) => {
+  const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
+
+  return onSnapshot(docRef, (docSnap) => {
+    if (docSnap.exists()) {
+      callback({ ...DEFAULT_SETTINGS, ...docSnap.data() } as StorefrontSettings);
+    } else {
+      callback(DEFAULT_SETTINGS);
+    }
+  }, (error) => {
+    console.error("Error subscribing to storefront settings:", error);
+  });
 };

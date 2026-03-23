@@ -1,12 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import MainLayout from './MainLayout';
 import * as storefrontService from '../../services/storefrontService';
-import * as profileService from '../../services/profileService';
 
-vi.mock('../../services/storefrontService');
-vi.mock('../../services/profileService');
+vi.mock('../../services/storefrontService', () => ({
+  subscribeToStorefrontSettings: vi.fn(),
+}));
+
+vi.mock('../../services/profileService', () => ({
+  getUserProfile: vi.fn()
+}));
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useRouteLoaderData: () => ({ serverUser: null, role: null, storefrontSettings: { isMaintenanceMode: false } }),
+    useLocation: () => ({ pathname: '/' }),
+  };
+});
+
 vi.mock('../../lib/firebase', () => ({
   auth: {},
   db: {}
@@ -27,24 +41,20 @@ describe('MainLayout', () => {
     });
   });
 
+  const renderComponent = () => {
+    const router = createMemoryRouter([
+      { path: '/', element: <MainLayout><div data-testid="child-content">Child Content</div></MainLayout> }
+    ]);
+    return render(<RouterProvider router={router} />);
+  };
+
   it('should render children content', () => {
-    render(
-      <MemoryRouter>
-        <MainLayout>
-          <div data-testid="child-content">Child Content</div>
-        </MainLayout>
-      </MemoryRouter>
-    );
+    renderComponent();
     expect(screen.getByTestId('child-content')).toBeInTheDocument();
   });
 
   it('should render structural landmarks', () => {
-    render(
-      <MemoryRouter>
-        <MainLayout>Content</MainLayout>
-      </MemoryRouter>
-    );
-    
+    renderComponent();
     expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
     expect(screen.getByRole('contentinfo')).toBeInTheDocument(); // Footer
     expect(screen.getByRole('main')).toBeInTheDocument(); // Main content

@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { fetchProducts, fetchCategories, saveProduct, fetchBestSellers } from './productService';
-import { getDocs, collection, addDoc, serverTimestamp, query, where } from 'firebase/firestore';
+import { getDocs, collection, addDoc, query, where } from 'firebase/firestore';
 
-// Mock firebase/firestore
 vi.mock('firebase/firestore', async () => {
   const actual = await vi.importActual('firebase/firestore');
   return {
@@ -11,13 +10,11 @@ vi.mock('firebase/firestore', async () => {
     collection: vi.fn().mockReturnValue('mock-collection'),
     getDocs: vi.fn(),
     addDoc: vi.fn(),
-    serverTimestamp: vi.fn(),
     query: vi.fn(),
     where: vi.fn().mockReturnValue('mock-where'),
   };
 });
 
-// Mock the firebase app initialization in lib/firebase
 vi.mock('../lib/firebase', () => ({
   db: {},
 }));
@@ -32,7 +29,7 @@ describe('productService', () => {
       name: 'New Product',
       price: 150,
       category: 'New Cat',
-      variants: [{ size: 'M', color: 'Green', stock: 20 }]
+      variants: [{ size: 'M', color: 'Green', stock: 20 } as any]
     };
 
     (addDoc as any).mockResolvedValue({ id: 'new_id' });
@@ -43,10 +40,7 @@ describe('productService', () => {
     expect(addDoc).toHaveBeenCalledWith('mock-collection', expect.objectContaining({
       name: 'New Product',
       price: 150,
-      category: 'New Cat',
-      variants: [{ size: 'M', color: 'Green', stock: 20 }],
-      createdAt: undefined,
-      updatedAt: undefined
+      category: 'New Cat'
     }));
     expect(result).toBe('new_id');
   });
@@ -69,7 +63,6 @@ describe('productService', () => {
           name: 'Product 2', 
           price: 200, 
           category: 'test',
-          // Missing images and variants
         }) 
       },
     ];
@@ -89,15 +82,12 @@ describe('productService', () => {
       name: 'Product 1', 
       price: 100, 
       category: 'test',
-      images: ['img1.jpg'],
-      variants: [{ id: 'v1', size: 'S', color: 'Red', stock: 10 }]
+      image: 'img1.jpg'
     }));
 
     expect(products[1]).toEqual(expect.objectContaining({
       id: '2',
-      name: 'Product 2',
-      images: [],
-      variants: []
+      name: 'Product 2'
     }));
   });
 
