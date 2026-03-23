@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { AppRoutes } from './App';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { routes } from './App';
 import * as productService from './services/productService';
 import * as cartService from './services/cartService';
 import * as reviewService from './services/reviewService';
@@ -13,6 +13,7 @@ vi.mock('./services/productService');
 vi.mock('./services/cartService', () => ({
   subscribeToCart: vi.fn(() => vi.fn()),
   addToCart: vi.fn(),
+  getCartItems: vi.fn().mockResolvedValue([])
 }));
 vi.mock('./services/reviewService');
 vi.mock('./services/storefrontService');
@@ -43,9 +44,10 @@ describe('App Routing', () => {
     (productService.fetchProducts as any).mockResolvedValue(mockProducts);
     (productService.fetchCategories as any).mockResolvedValue(mockCategories);
     (productService.fetchBestSellers as any).mockResolvedValue(mockProducts);
+    (productService.fetchProductById as any).mockResolvedValue(mockProducts[0]);
     (reviewService.fetchReviews as any).mockResolvedValue([]);
     (storefrontService.subscribeToStorefrontSettings as any).mockImplementation((cb: any) => {
-      cb({ isMaintenanceMode: false });
+      cb({ isMaintenanceMode: false, heroTitle: 'Hopolo Boutique', reviews: [] });
       return () => {};
     });
     (storefrontService.getStorefrontSettings as any).mockResolvedValue({
@@ -58,12 +60,15 @@ describe('App Routing', () => {
     (auth.currentUser as any) = { uid: 'user123' }; 
   });
 
+  const renderApp = (initialEntry = '/') => {
+    const router = createMemoryRouter(routes, {
+      initialEntries: [initialEntry]
+    });
+    return render(<RouterProvider router={router} />);
+  };
+
   it('should navigate from Home to Product Detail when a card is clicked', async () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <AppRoutes />
-      </MemoryRouter>
-    );
+    renderApp('/');
     
     const productCard = await waitFor(() => screen.getByTestId('product-card-1'));
     fireEvent.click(productCard);
@@ -74,15 +79,11 @@ describe('App Routing', () => {
   });
 
   it('should navigate back to Home from Product Detail', async () => {
-    render(
-      <MemoryRouter initialEntries={['/', '/product/1']} initialIndex={1}>
-        <AppRoutes />
-      </MemoryRouter>
-    );
+    renderApp('/product/1');
     
     await waitFor(() => screen.getByRole('heading', { name: /product 1/i }));
     
-    const backButton = screen.getByRole('button', { name: /back/i });
+    const backButton = screen.getByRole('button', { name: /← back/i });
     fireEvent.click(backButton);
     
     await waitFor(() => {
@@ -97,14 +98,10 @@ describe('App Routing', () => {
       return vi.fn();
     });
 
-    render(
-      <MemoryRouter initialEntries={['/profile']}>
-        <AppRoutes />
-      </MemoryRouter>
-    );
+    renderApp('/profile');
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /auth/i })).toBeInTheDocument();
     });
   });
 });

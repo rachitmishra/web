@@ -1,14 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createOrder } from './orderService';
-import { addDoc } from 'firebase/firestore';
+import { createOrder, updateOrderStatus, fetchAllOrders } from './orderService';
+import { addDoc, getDocs, getDoc, updateDoc } from 'firebase/firestore';
 import { sendEmail } from './emailService';
 
-vi.mock('./emailService');
-vi.mock('../templates/orderConfirmation', () => ({
-  generateOrderConfirmationHtml: vi.fn().mockReturnValue('<html>Confirmation HTML</html>'),
+vi.mock('./emailService', () => ({
+  sendEmail: vi.fn(),
 }));
+
+vi.mock('../templates/orderConfirmation', () => ({
+  getOrderConfirmationEmailHtml: vi.fn().mockReturnValue('<html>Confirmation HTML</html>'),
+}));
+
 vi.mock('../templates/deliveryFeedback', () => ({
-  generateDeliveryFeedbackHtml: vi.fn().mockReturnValue('<html>Feedback HTML</html>'),
+  getDeliveryFeedbackHtml: vi.fn().mockReturnValue('<html>Feedback HTML</html>'),
 }));
 
 vi.mock('firebase/firestore', async () => {
@@ -24,6 +28,8 @@ vi.mock('firebase/firestore', async () => {
     updateDoc: vi.fn(),
     query: vi.fn(),
     orderBy: vi.fn(),
+    where: vi.fn(),
+    serverTimestamp: vi.fn(() => 'mock-timestamp')
   };
 });
 
@@ -39,12 +45,12 @@ describe('orderService', () => {
   it('createOrder should call addDoc with order details and send confirmation email', async () => {
     const mockOrder = {
       userId: 'user123',
-      items: [{ productId: 'p1', name: 'P1', price: 100, quantity: 1 }],
+      items: [{ productId: 'p1', name: 'P1', price: 100, quantity: 1 } as any],
       total: 100,
       paymentId: 'pay_123',
-      status: 'paid',
-      address: { street: '123' },
-      userEmail: 'test@example.com', // New field
+      status: 'paid' as const,
+      address: { street: '123', city: 'City' },
+      userEmail: 'test@example.com',
     };
 
     (addDoc as any).mockResolvedValue({ id: 'order_123' });
@@ -62,9 +68,6 @@ describe('orderService', () => {
   });
 
   it('updateOrderStatus should update firestore and send feedback email if delivered', async () => {
-    const { getDoc, updateDoc } = await import('firebase/firestore');
-    const { updateOrderStatus } = await import('./orderService');
-    
     (getDoc as any).mockResolvedValue({
       exists: () => true,
       id: 'o123',
@@ -83,14 +86,12 @@ describe('orderService', () => {
   });
 
   it('fetchAllOrders should return mapped orders', async () => {
-    const { getDocs } = await import('firebase/firestore');
     const mockDocs = [
       { id: 'o1', data: () => ({ total: 100 }) },
       { id: 'o2', data: () => ({ total: 200 }) },
     ];
     (getDocs as any).mockResolvedValue({ docs: mockDocs });
 
-    const { fetchAllOrders } = await import('./orderService');
     const result = await fetchAllOrders();
 
     expect(getDocs).toHaveBeenCalled();
