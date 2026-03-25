@@ -3,8 +3,8 @@ import { db } from '../lib/firebase';
 import type { CartItem } from "./cartService";
 import type { Address } from "./profileService";
 import { sendEmail } from "./emailService";
-import { getOrderConfirmationEmailHtml } from '../templates/orderConfirmation';
-import { getDeliveryFeedbackHtml } from '../templates/deliveryFeedback';
+import { generateOrderConfirmationHtml } from '../templates/orderConfirmation';
+import { generateDeliveryFeedbackHtml } from '../templates/deliveryFeedback';
 
 export interface Order {
   id: string;
@@ -29,7 +29,7 @@ export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt'>) =>
       await sendEmail({
         to: orderData.userEmail,
         subject: 'Order Confirmed - Hopolo',
-        html: getOrderConfirmationEmailHtml({ id: docRef.id, ...orderData } as any)
+        html: generateOrderConfirmationHtml({ id: docRef.id, ...orderData } as any)
       });
     } catch (e) {
       console.error("Failed to send order confirmation email", e);
@@ -50,7 +50,7 @@ export const updateOrderStatus = async (orderId: string, status: Order['status']
         await sendEmail({
           to: order.userEmail,
           subject: 'Your order has arrived! 📦',
-          html: getDeliveryFeedbackHtml(order)
+          html: generateDeliveryFeedbackHtml(order)
         });
       }
     } catch (e) {
